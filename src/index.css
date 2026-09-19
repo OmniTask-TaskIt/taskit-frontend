@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme {
+  --color-nordic: #263BAA;
+  --color-vanilla: #FFF4D6;
+  --color-nordicDark: #1a297a;
+}
+
+body {
+  background-color: #0B132B;
+  color: #FFFFFF;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+  cursor: pointer;
+}
