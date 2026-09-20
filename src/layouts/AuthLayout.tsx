@@ -10,7 +10,7 @@ export default function AuthLayout({ children, title, subtitle }: { children: Re
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-65"
         style={{ backgroundImage: `url(${bgImage})` }}
       />
-      <div className="absolute inset-0 z-0 bg-gradient-to-br from-[#f7f3f0]/88 via-[#f0edf4]/78 to-[#e4e0ee]/82" />
+      <div className="absolute inset-0 z-0 bg-transparent" />
       <div className="absolute -left-24 top-16 z-0 h-72 w-72 rounded-full bg-[#aeb9e8]/20 blur-3xl" />
       <div className="absolute -right-24 bottom-8 z-0 h-80 w-80 rounded-full bg-[#FFF4D6]/60 blur-3xl" />
 
