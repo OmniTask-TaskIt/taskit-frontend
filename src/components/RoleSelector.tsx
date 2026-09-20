@@ -14,7 +14,7 @@ export default function RoleSelector({ selectedRole, onSelectRole }: RoleSelecto
           onClick={() => onSelectRole('SEEKER')}
           className={`cursor-pointer p-3.5 rounded-xl border flex flex-col items-center text-center transition-all ${
             selectedRole === 'SEEKER'
-              ? 'bg-vanilla text-[#0B132B] font-bold border-vanilla shadow-lg scale-[1.02]'
+              ? 'border-[#263BAA] bg-[#263BAA] font-bold text-white shadow-[0_10px_22px_rgba(38,59,170,0.22)] scale-[1.02]'
               : 'border-[#dbe1f0] bg-[#f8faff] text-[#34405f] hover:border-[#aab7e8] hover:bg-[#eef2ff]'
           }`}
         >
@@ -26,7 +26,7 @@ export default function RoleSelector({ selectedRole, onSelectRole }: RoleSelecto
           onClick={() => onSelectRole('PROVIDER')}
           className={`cursor-pointer p-3.5 rounded-xl border flex flex-col items-center text-center transition-all ${
             selectedRole === 'PROVIDER'
-              ? 'bg-vanilla text-[#0B132B] font-bold border-vanilla shadow-lg scale-[1.02]'
+              ? 'border-[#263BAA] bg-[#263BAA] font-bold text-white shadow-[0_10px_22px_rgba(38,59,170,0.22)] scale-[1.02]'
               : 'border-[#dbe1f0] bg-[#f8faff] text-[#34405f] hover:border-[#aab7e8] hover:bg-[#eef2ff]'
           }`}
         >

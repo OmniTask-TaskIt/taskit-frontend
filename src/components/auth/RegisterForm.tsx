@@ -125,8 +125,8 @@ export default function RegisterForm() {
           className="w-full rounded-xl border border-[#dbe1f0] bg-[#f8faff] p-3.5 text-sm font-medium text-[#17213f] outline-none transition-all placeholder:text-[#8a94ae] focus:border-[#263BAA] focus:ring-4 focus:ring-[#263BAA]/10"
         />
         {formData.email.length > 0 && !isEmailValid && (
-          <span className="px-1 text-[11px] font-medium text-amber-700">
-            ⚠️ {backendMessages.emailRegex}
+          <span className="px-1 text-[11px] font-medium text-rose-700">
+            {backendMessages.emailRegex}
           </span>
         )}
       </div>
