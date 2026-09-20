@@ -90,7 +90,7 @@ export default function RegisterForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full flex flex-col gap-3.5">
+    <form onSubmit={handleSubmit} className="flex w-full flex-col gap-3 sm:gap-3.5">
       <AnimatePresence>
         {error && (
           <motion.div 
@@ -111,7 +111,7 @@ export default function RegisterForm() {
         value={formData.name}
         onChange={handleChange}
         required
-        className="w-full rounded-xl border border-[#dbe1f0] bg-[#f8faff] p-3.5 text-sm font-medium text-[#17213f] outline-none transition-all placeholder:text-[#8a94ae] focus:border-[#263BAA] focus:ring-4 focus:ring-[#263BAA]/10"
+        className="w-full rounded-xl border border-[#cbd6f4] bg-[#f1f4ff] p-3 sm:p-3.5 text-sm font-medium text-[#17213f] outline-none transition-all placeholder:text-[#7d89aa] focus:border-[#263BAA] focus:ring-4 focus:ring-[#263BAA]/10"
       />
 
       <div className="flex flex-col gap-1">
@@ -122,7 +122,7 @@ export default function RegisterForm() {
           value={formData.email}
           onChange={handleChange}
           required
-          className="w-full rounded-xl border border-[#dbe1f0] bg-[#f8faff] p-3.5 text-sm font-medium text-[#17213f] outline-none transition-all placeholder:text-[#8a94ae] focus:border-[#263BAA] focus:ring-4 focus:ring-[#263BAA]/10"
+          className="w-full rounded-xl border border-[#cbd6f4] bg-[#f1f4ff] p-3 sm:p-3.5 text-sm font-medium text-[#17213f] outline-none transition-all placeholder:text-[#7d89aa] focus:border-[#263BAA] focus:ring-4 focus:ring-[#263BAA]/10"
         />
         {formData.email.length > 0 && !isEmailValid && (
           <span className="px-1 text-[11px] font-medium text-rose-700">
