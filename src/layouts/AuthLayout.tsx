@@ -5,22 +5,20 @@ import logoImage from '../assets/Logo.jpeg';
 
 export default function AuthLayout({ children, title, subtitle }: { children: ReactNode, title: string, subtitle: string }) {
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen w-full overflow-hidden p-4 py-8">
-      {/* Imagen de fondo */}
-      <div 
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat filter brightness-[0.75]"
+    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-[#eef2ff] p-4 py-8">
+      <div
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-50"
         style={{ backgroundImage: `url(${bgImage})` }}
       />
+      <div className="absolute inset-0 z-0 bg-gradient-to-br from-[#f8fafc]/95 via-[#eef2ff]/88 to-[#dce3ff]/80" />
+      <div className="absolute -left-24 top-16 z-0 h-72 w-72 rounded-full bg-[#263BAA]/15 blur-3xl" />
+      <div className="absolute -right-24 bottom-8 z-0 h-80 w-80 rounded-full bg-[#FFF4D6]/60 blur-3xl" />
 
-      {/* Capa oscura de contraste */}
-      <div className="absolute inset-0 z-0 bg-[#0B132B]/45 backdrop-blur-[2px]" />
-
-      {/* Contenedor Principal (Mismo ancho max-w-lg para Register y Login) */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.9, y: 30 }}
+        initial={{ opacity: 0, scale: 0.96, y: 24 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
-        className="relative z-10 bg-[#0B132B]/85 backdrop-blur-xl p-8 sm:p-10 rounded-[2.5rem] shadow-2xl flex flex-col items-center max-w-lg w-full text-vanilla border border-white/15 my-auto"
+        className="relative z-10 my-auto flex w-full max-w-lg flex-col items-center rounded-[2rem] border border-white/80 bg-white/82 p-7 text-[#17213f] shadow-[0_24px_70px_rgba(38,59,170,0.18)] backdrop-blur-xl sm:p-10"
       >
         {/* Cabecera del Logo (Logo animado por sí mismo) */}
         <motion.div 
@@ -48,15 +46,15 @@ export default function AuthLayout({ children, title, subtitle }: { children: Re
                 duration: 3.5,
                 ease: "easeInOut" 
               }}
-              className="w-16 h-16 rounded-2xl object-cover border border-white/20 relative z-10" 
+              className="relative z-10 h-16 w-16 rounded-2xl border border-[#dce3ff] object-cover shadow-[0_10px_22px_rgba(38,59,170,0.18)]" 
             />
 
           </div>
-          <span className="text-[11px] font-semibold tracking-widest text-vanilla/60 uppercase mt-2">Tu tiempo, nuestra tarea</span>
+          <span className="mt-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#6b7696]">Tu tiempo, nuestra tarea</span>
         </motion.div>
 
         <h2 className="text-2xl sm:text-3xl font-bold mb-1 text-center">{title}</h2>
-        <p className="text-xs sm:text-sm text-vanilla/70 mb-6 text-center px-4">{subtitle}</p>
+        <p className="text-xs sm:text-sm text-[#66718e] mb-6 text-center px-4">{subtitle}</p>
         
         {children}
       </motion.div>

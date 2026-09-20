@@ -29,24 +29,24 @@ export default function ProfileSearchSection() {
 
   return (
     <div className="mx-auto flex w-full max-w-[760px] flex-col gap-6">
-      <div className="flex w-full flex-col overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.1)] bg-[#171A34]/90 backdrop-blur-md shadow-2xl p-6 md:p-8">
-        <h1 className="text-2xl font-bold tracking-tight text-white mb-6">Directorio de profesionales</h1>
+      <div className="flex w-full flex-col overflow-hidden rounded-2xl border border-[#e4e8f3] bg-white/95 shadow-[0_18px_45px_rgba(47,61,110,0.12)] p-6 md:p-8">
+        <h1 className="text-2xl font-bold tracking-tight text-[#17213f] mb-6">Directorio de profesionales</h1>
         
         <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40" size={18} />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#17213f]/40" size={18} />
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Buscar por nombre o categoría..."
-              className="w-full rounded-xl border border-[rgba(255,255,255,0.08)] bg-white/5 pl-10 pr-4 py-3 text-sm text-white outline-none placeholder:text-white/30 focus:border-[#263BAA]"
+              className="w-full rounded-xl border border-[rgba(255,255,255,0.08)] bg-white/5 pl-10 pr-4 py-3 text-sm text-[#17213f] outline-none placeholder:text-[#17213f]/30 focus:border-[#263BAA]"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="flex items-center justify-center gap-2 rounded-xl bg-[#263BAA] px-6 py-3 text-sm font-medium text-white hover:bg-[#1a297a] transition-colors cursor-pointer disabled:opacity-60 shadow-md"
+            className="flex items-center justify-center gap-2 rounded-xl bg-[#263BAA] px-6 py-3 text-sm font-medium text-[#17213f] hover:bg-[#1a297a] transition-colors cursor-pointer disabled:opacity-60 shadow-md"
           >
             {loading ? 'Buscando...' : 'Buscar'}
           </button>
@@ -55,7 +55,7 @@ export default function ProfileSearchSection() {
         {/* Lista de Resultados */}
         <div className="mt-6 flex flex-col gap-3">
           {results.length === 0 && !loading && (
-            <p className="text-sm text-white/50 text-center py-8">No se encontraron profesionales con ese criterio.</p>
+            <p className="text-sm text-[#17213f]/50 text-center py-8">No se encontraron profesionales con ese criterio.</p>
           )}
 
           {results.map((prof) => {
@@ -79,7 +79,7 @@ export default function ProfileSearchSection() {
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h2 className="text-sm font-semibold text-white">{prof.fullName || 'Profesional TaskIt'}</h2>
+                      <h2 className="text-sm font-semibold text-[#17213f]">{prof.fullName || 'Profesional TaskIt'}</h2>
                       {isVerified ? (
                         <span title="Verificado">
                           <ShieldCheck size={14} className="text-emerald-400 cursor-pointer" />
@@ -90,11 +90,11 @@ export default function ProfileSearchSection() {
                         </span>
                       ) : null}
                     </div>
-                    <p className="text-xs text-white/60 mt-0.5 truncate max-w-[240px] sm:max-w-md">
+                    <p className="text-xs text-[#17213f]/60 mt-0.5 truncate max-w-[240px] sm:max-w-md">
                       {prof.description || 'Sin descripción disponible'}
                     </p>
                     {prof.locationCoverage && (
-                      <span className="flex items-center gap-1 text-[11px] text-white/50 mt-1">
+                      <span className="flex items-center gap-1 text-[11px] text-[#17213f]/50 mt-1">
                         <MapPin size={12} /> Zona: {prof.locationCoverage}
                       </span>
                     )}
@@ -102,9 +102,9 @@ export default function ProfileSearchSection() {
                 </div>
 
                 <div className="flex flex-col items-end gap-1 flex-shrink-0">
-                  <span className="flex items-center gap-1 text-xs font-semibold text-white">
+                  <span className="flex items-center gap-1 text-xs font-semibold text-[#17213f]">
                     <Star size={14} className="fill-amber-400 text-amber-400" />
-                    {prof.reputationScore} <span className="text-white/40">({prof.totalReviews})</span>
+                    {prof.reputationScore} <span className="text-[#17213f]/40">({prof.totalReviews})</span>
                   </span>
                   <span className="text-[11px] text-[#7c93fc] font-medium hover:underline">Ver perfil</span>
                 </div>
@@ -122,11 +122,11 @@ export default function ProfileSearchSection() {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="w-full max-w-[600px] max-h-[90vh] overflow-y-auto rounded-2xl border border-[rgba(255,255,255,0.15)] bg-[#171A34] p-6 sm:p-8 shadow-2xl text-white relative"
+              className="w-full max-w-[600px] max-h-[90vh] overflow-y-auto rounded-2xl border border-[rgba(255,255,255,0.15)] bg-[#171A34] p-6 sm:p-8 shadow-2xl text-[#17213f] relative"
             >
               <button
                 onClick={() => setSelectedProfile(null)}
-                className="absolute top-5 right-5 p-2 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+                className="absolute top-5 right-5 p-2 text-[#17213f]/60 hover:text-[#17213f] hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
               >
                 <X size={20} />
               </button>
@@ -158,7 +158,7 @@ export default function ProfileSearchSection() {
                       <Star size={16} className="fill-amber-400" />
                       {selectedProfile.reputationScore}
                     </span>
-                    <span className="text-xs text-white/50">({selectedProfile.totalReviews} reseñas)</span>
+                    <span className="text-xs text-[#17213f]/50">({selectedProfile.totalReviews} reseñas)</span>
                   </div>
                 </div>
               </div>
@@ -166,40 +166,40 @@ export default function ProfileSearchSection() {
               {/* Cuerpo del Detalle */}
               <div className="mt-6 flex flex-col gap-6">
                 <div>
-                  <div className="flex items-center gap-2 text-white/70 mb-2">
-                    <FileText {...iconProps} className="text-white/40" />
+                  <div className="flex items-center gap-2 text-[#17213f]/70 mb-2">
+                    <FileText {...iconProps} className="text-[#17213f]/40" />
                     <h3 className="text-sm font-medium">Descripción profesional</h3>
                   </div>
-                  <p className="text-sm text-white/90 leading-relaxed bg-white/5 p-4 rounded-xl border border-[rgba(255,255,255,0.05)]">
+                  <p className="text-sm text-[#17213f]/90 leading-relaxed bg-white/5 p-4 rounded-xl border border-[rgba(255,255,255,0.05)]">
                     {selectedProfile.description || 'Este usuario aún no ha agregado una descripción.'}
                   </p>
                 </div>
 
                 <div>
-                  <div className="flex items-center gap-2 text-white/70 mb-2">
-                    <MapPin {...iconProps} className="text-white/40" />
+                  <div className="flex items-center gap-2 text-[#17213f]/70 mb-2">
+                    <MapPin {...iconProps} className="text-[#17213f]/40" />
                     <h3 className="text-sm font-medium">Zona de cobertura</h3>
                   </div>
-                  <p className="text-sm text-white">
+                  <p className="text-sm text-[#17213f]">
                     {selectedProfile.locationCoverage || 'No especificada'}
                   </p>
                 </div>
 
                 <div>
-                  <div className="flex items-center gap-2 text-white/70 mb-2">
-                    <Tag {...iconProps} className="text-white/40" />
+                  <div className="flex items-center gap-2 text-[#17213f]/70 mb-2">
+                    <Tag {...iconProps} className="text-[#17213f]/40" />
                     <h3 className="text-sm font-medium">Categorías y servicios</h3>
                   </div>
                   {selectedProfile.categories && selectedProfile.categories.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
                       {selectedProfile.categories.map((cat) => (
-                        <span key={cat} className="rounded-md border border-[rgba(255,255,255,0.08)] bg-white/5 px-3 py-1.5 text-xs text-white">
+                        <span key={cat} className="rounded-md border border-[rgba(255,255,255,0.08)] bg-white/5 px-3 py-1.5 text-xs text-[#17213f]">
                           {cat}
                         </span>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-sm text-white/50">Sin categorías registradas.</p>
+                    <p className="text-sm text-[#17213f]/50">Sin categorías registradas.</p>
                   )}
                 </div>
               </div>
@@ -207,7 +207,7 @@ export default function ProfileSearchSection() {
               <div className="mt-8 pt-4 border-t border-[rgba(255,255,255,0.08)] flex justify-end">
                 <button
                   onClick={() => setSelectedProfile(null)}
-                  className="rounded-xl bg-[#263BAA] px-6 py-2.5 text-sm font-medium text-white hover:bg-[#1a297a] transition-colors cursor-pointer shadow-md"
+                  className="rounded-xl bg-[#263BAA] px-6 py-2.5 text-sm font-medium text-[#17213f] hover:bg-[#1a297a] transition-colors cursor-pointer shadow-md"
                 >
                   Cerrar
                 </button>

@@ -97,7 +97,7 @@ export default function RegisterForm() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="bg-red-500/20 border border-red-500 text-vanilla p-3 rounded-xl text-xs sm:text-sm text-center font-medium"
+            className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-center text-xs font-medium text-rose-800 sm:text-sm"
           >
             {error}
           </motion.div>
@@ -111,7 +111,7 @@ export default function RegisterForm() {
         value={formData.name}
         onChange={handleChange}
         required
-        className="w-full p-3.5 rounded-xl bg-[#1e2e85]/60 border border-white/10 text-vanilla outline-none focus:ring-2 focus:ring-vanilla/50 placeholder:text-vanilla/50 text-sm font-medium transition-all"
+        className="w-full rounded-xl border border-[#dbe1f0] bg-[#f8faff] p-3.5 text-sm font-medium text-[#17213f] outline-none transition-all placeholder:text-[#8a94ae] focus:border-[#263BAA] focus:ring-4 focus:ring-[#263BAA]/10"
       />
 
       <div className="flex flex-col gap-1">
@@ -122,10 +122,10 @@ export default function RegisterForm() {
           value={formData.email}
           onChange={handleChange}
           required
-          className="w-full p-3.5 rounded-xl bg-[#1e2e85]/60 border border-white/10 text-vanilla outline-none focus:ring-2 focus:ring-vanilla/50 placeholder:text-vanilla/50 text-sm font-medium transition-all"
+          className="w-full rounded-xl border border-[#dbe1f0] bg-[#f8faff] p-3.5 text-sm font-medium text-[#17213f] outline-none transition-all placeholder:text-[#8a94ae] focus:border-[#263BAA] focus:ring-4 focus:ring-[#263BAA]/10"
         />
         {formData.email.length > 0 && !isEmailValid && (
-          <span className="text-[11px] text-amber-300/90 px-1 font-medium">
+          <span className="px-1 text-[11px] font-medium text-amber-700">
             ⚠️ {backendMessages.emailRegex}
           </span>
         )}
@@ -143,13 +143,13 @@ export default function RegisterForm() {
         onSelectRole={(role) => setFormData({ ...formData, role })}
       />
 
-      <label className="flex items-start gap-2.5 text-xs text-vanilla/80 mt-1 cursor-pointer">
+      <label className="mt-1 flex cursor-pointer items-start gap-2.5 text-xs text-[#66718e]">
         <input
           type="checkbox"
           name="acceptedTerms"
           checked={formData.acceptedTerms}
           onChange={handleChange}
-          className="w-4 h-4 mt-0.5 accent-vanilla rounded cursor-pointer"
+          className="mt-0.5 h-4 w-4 cursor-pointer rounded accent-[#263BAA]"
         />
         <span>
           Acepto los{' '}
@@ -157,7 +157,7 @@ export default function RegisterForm() {
             href="https://taskit.blob.core.windows.net/legal-docs/terminos-y-condiciones.pdf?sp=r&st=2026-09-16T17:55:47Z&se=2026-09-17T02:10:47Z&spr=https&sv=2026-02-06&sr=b&sig=0HQGSvNEnWj67SU5YAr4P2OEL5iltqToZomPeNVik6s%3D"
             target="_blank"
             rel="noopener noreferrer"
-            className="underline hover:text-white font-semibold"
+            className="font-semibold text-[#263BAA] hover:underline"
           >
             Términos y Condiciones
           </a>
@@ -169,15 +169,15 @@ export default function RegisterForm() {
         whileTap={{ scale: 0.97 }}
         type="submit"
         disabled={loading}
-        className="w-full mt-2 py-3.5 bg-vanilla text-[#0B132B] font-bold rounded-xl hover:bg-white transition-all shadow-lg disabled:opacity-50 cursor-pointer text-sm"
+        className="mt-2 w-full cursor-pointer rounded-xl bg-[#263BAA] py-3.5 text-sm font-bold text-white shadow-[0_12px_28px_rgba(38,59,170,0.28)] transition-all hover:bg-[#1a297a] hover:shadow-[0_16px_36px_rgba(38,59,170,0.38)] disabled:opacity-50"
       >
         {loading ? 'Registrando cuenta...' : 'Crear cuenta'}
       </motion.button>
 
       <div className="flex flex-col items-center gap-1.5 mt-2">
-        <p className="text-xs text-center text-vanilla/70">
+        <p className="text-center text-xs text-[#6b7696]">
           ¿Ya tienes una cuenta en TaskIt?{' '}
-          <Link to="/login" className="underline font-semibold hover:text-white">
+          <Link to="/login" className="font-semibold text-[#263BAA] hover:underline">
             Inicia sesión aquí
           </Link>
         </p>
