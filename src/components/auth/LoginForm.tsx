@@ -90,7 +90,7 @@ export default function LoginForm() {
           value={formData.email}
           onChange={handleChange}
           required
-          className="w-full rounded-xl border border-[#dbe1f0] bg-[#f8faff] p-3.5 text-sm font-medium text-[#17213f] outline-none transition-all placeholder:text-[#8a94ae] focus:border-[#263BAA] focus:ring-4 focus:ring-[#263BAA]/10"
+          className="w-full rounded-xl border border-[#d7d3e3] bg-[#f3f0f7] p-3.5 text-sm font-medium text-[#17213f] outline-none transition-all placeholder:text-[#8a94ae] focus:border-[#263BAA] focus:ring-4 focus:ring-[#263BAA]/10"
         />
       </div>
 
@@ -111,9 +111,9 @@ export default function LoginForm() {
 
       {/* 🌟 Botón de Inicio de Sesión con Google integrado */}
       <div className="relative flex items-center py-2">
-        <div className="flex-grow border-t border-[#dbe1f0]"></div>
+        <div className="flex-grow border-t border-[#d7d3e3]"></div>
         <span className="mx-4 flex-shrink text-xs uppercase tracking-wider text-[#a3afc8]">o</span>
-        <div className="flex-grow border-t border-[#dbe1f0]"></div>
+        <div className="flex-grow border-t border-[#d7d3e3]"></div>
       </div>
 
       <GoogleLoginButton onError={(msg) => setError(msg)} />
