@@ -75,7 +75,7 @@ export default function LoginForm() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="bg-amber-500/20 border border-amber-500 text-vanilla p-3 rounded-xl text-xs sm:text-sm text-center font-medium"
+            className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-center text-xs font-medium text-amber-800 sm:text-sm"
           >
             {error}
           </motion.div>
@@ -90,7 +90,7 @@ export default function LoginForm() {
           value={formData.email}
           onChange={handleChange}
           required
-          className="w-full p-3.5 rounded-xl bg-[#1e2e85]/60 border border-white/10 text-vanilla outline-none focus:ring-2 focus:ring-vanilla/50 placeholder:text-vanilla/50 text-sm font-medium transition-all"
+          className="w-full rounded-xl border border-[#d7d3e3] bg-[#f3f0f7] p-3.5 text-sm font-medium text-[#17213f] outline-none transition-all placeholder:text-[#8a94ae] focus:border-[#263BAA] focus:ring-4 focus:ring-[#263BAA]/10"
         />
       </div>
 
@@ -104,24 +104,24 @@ export default function LoginForm() {
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.97 }}
         disabled={loading}
-        className="w-full mt-2 py-3.5 bg-vanilla text-[#0B132B] font-bold rounded-xl hover:bg-white transition-all shadow-lg disabled:opacity-50 cursor-pointer text-sm"
+        className="mt-2 w-full cursor-pointer rounded-xl bg-[#263BAA] py-3.5 text-sm font-bold text-white shadow-[0_12px_28px_rgba(38,59,170,0.28)] transition-all hover:bg-[#1a297a] hover:shadow-[0_16px_36px_rgba(38,59,170,0.38)] disabled:opacity-50"
       >
         {loading ? 'Iniciando sesión...' : 'Entrar'}
       </motion.button>
 
       {/* 🌟 Botón de Inicio de Sesión con Google integrado */}
-      <div className="relative flex py-2 items-center">
-        <div className="flex-grow border-t border-white/10"></div>
-        <span className="flex-shrink mx-4 text-vanilla/40 text-xs uppercase tracking-wider">o</span>
-        <div className="flex-grow border-t border-white/10"></div>
+      <div className="relative flex items-center py-2">
+        <div className="flex-grow border-t border-[#d7d3e3]"></div>
+        <span className="mx-4 flex-shrink text-xs uppercase tracking-wider text-[#a3afc8]">o</span>
+        <div className="flex-grow border-t border-[#d7d3e3]"></div>
       </div>
 
       <GoogleLoginButton onError={(msg) => setError(msg)} />
 
       <div className="flex flex-col items-center gap-1.5 mt-2">
-        <p className="text-xs text-center text-vanilla/70">
+        <p className="text-center text-xs text-[#6b7696]">
           ¿No tienes una cuenta?{' '}
-          <Link to="/register" className="underline font-semibold hover:text-white">
+          <Link to="/register" className="font-semibold text-[#263BAA] hover:underline">
             Regístrate aquí
           </Link>
         </p>

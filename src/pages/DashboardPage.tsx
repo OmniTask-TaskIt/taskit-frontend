@@ -15,22 +15,21 @@ export default function DashboardPage() {
   
   return (
     <div 
-      className="w-full min-h-screen flex relative overflow-hidden bg-cover bg-center selection:bg-[#FFF4D6] selection:text-[#0B132B]"
+      className="relative flex min-h-screen w-full overflow-hidden bg-[#eef2fb] bg-cover bg-center text-[#17213f] selection:bg-[#dce3ff] selection:text-[#17213f]"
       style={{ backgroundImage: `url(${fondoImage})` }}
     >
-      {/* 🌟 OVERLAY SUTIL */}
-      <div className="absolute inset-0 bg-[#0B132B]/40 backdrop-blur-[1px] pointer-events-none" />
+      <div className="pointer-events-none absolute inset-0 bg-[#f5f7ff]/75 backdrop-blur-[3px]" />
 
       {/* 🌟 SIDEBAR ANCHO Y CON ALTO CONTRASTE */}
       <motion.aside 
         initial={{ width: 88, x: 0 }}
         whileHover={{ width: 280 }}
         transition={{ duration: 0.35, ease: [0.25, 1, 0.5, 1] }}
-        className="h-[94vh] my-auto ml-4 rounded-3xl flex flex-col justify-between border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.5)] z-20 overflow-hidden group backdrop-blur-xl bg-[#171A34]/85"
+        className="z-20 my-auto ml-4 flex h-[94vh] flex-col justify-between overflow-hidden rounded-3xl border border-white/80 bg-white/90 shadow-[0_18px_50px_rgba(47,61,110,0.16)] backdrop-blur-xl group"
       >
         <div className="w-[280px]">
           {/* Logo / Marca */}
-          <div className="p-5 h-20 border-b border-white/15 flex items-center gap-4">
+          <div className="flex h-20 items-center gap-4 border-b border-[#e8ebf5] p-5">
             <div className="w-10 h-10 flex-shrink-0 rounded-xl bg-[#FFF4D6] text-[#0B132B] flex items-center justify-center font-black text-xl shadow-lg">
               T
             </div>
@@ -46,8 +45,8 @@ export default function DashboardPage() {
               onClick={() => setActiveSection('profile')}
               className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer border truncate ${
                 activeSection === 'profile' 
-                  ? 'bg-[#263BAA] border-white/30 text-white shadow-md font-semibold' 
-                  : 'bg-transparent border-transparent text-white/80 hover:bg-white/10 hover:text-white'
+                  ? 'bg-[#263BAA] border-[#263BAA] text-white shadow-[0_8px_18px_rgba(38,59,170,0.22)] font-semibold' 
+                  : 'bg-transparent border-transparent text-[#6b7696] hover:bg-[#eef2ff] hover:text-[#263BAA]'
               }`}
             >
               <UserRound size={20} strokeWidth={activeSection === 'profile' ? 2.5 : 2} className="flex-shrink-0" />
@@ -58,8 +57,8 @@ export default function DashboardPage() {
               onClick={() => setActiveSection('search')}
               className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer border truncate ${
                 activeSection === 'search' 
-                  ? 'bg-[#263BAA] border-white/30 text-white shadow-md font-semibold' 
-                  : 'bg-transparent border-transparent text-white/80 hover:bg-white/10 hover:text-white'
+                  ? 'bg-[#263BAA] border-[#263BAA] text-white shadow-[0_8px_18px_rgba(38,59,170,0.22)] font-semibold' 
+                  : 'bg-transparent border-transparent text-[#6b7696] hover:bg-[#eef2ff] hover:text-[#263BAA]'
               }`}
             >
               <Search size={20} strokeWidth={activeSection === 'search' ? 2.5 : 2} className="flex-shrink-0" />
@@ -70,8 +69,8 @@ export default function DashboardPage() {
               onClick={() => setActiveSection('tasks')}
               className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer border truncate ${
                 activeSection === 'tasks' 
-                  ? 'bg-[#263BAA] border-white/30 text-white shadow-md font-semibold' 
-                  : 'bg-transparent border-transparent text-white/80 hover:bg-white/10 hover:text-white'
+                  ? 'bg-[#263BAA] border-[#263BAA] text-white shadow-[0_8px_18px_rgba(38,59,170,0.22)] font-semibold' 
+                  : 'bg-transparent border-transparent text-[#6b7696] hover:bg-[#eef2ff] hover:text-[#263BAA]'
               }`}
             >
               <ClipboardList size={20} strokeWidth={activeSection === 'tasks' ? 2.5 : 2} className="flex-shrink-0" />
@@ -81,10 +80,10 @@ export default function DashboardPage() {
         </div>
 
         {/* Botón Salir con Contraste Adecuado */}
-        <div className="p-3 border-t border-white/15 w-[280px]">
+        <div className="w-[280px] border-t border-[#e8ebf5] p-3">
           <button 
             onClick={() => { authStore.clearSession(); localStorage.clear(); window.location.href = '/login'; }}
-            className="w-full flex items-center gap-4 py-3 px-4 text-red-300 hover:bg-red-500/20 hover:text-white rounded-xl text-sm font-medium transition-all cursor-pointer overflow-hidden border border-transparent hover:border-red-500/40"
+            className="w-full cursor-pointer overflow-hidden rounded-xl border border-transparent px-4 py-3 text-left text-sm font-medium text-[#c15a6b] transition-all hover:border-[#f0ccd3] hover:bg-[#fff2f4] hover:text-[#a73e51] flex items-center gap-4"
           >
             <LogOut size={20} strokeWidth={2} className="flex-shrink-0" />
             <span className="opacity-0 group-hover:opacity-100 whitespace-nowrap transition-opacity truncate">Cerrar sesión</span>
@@ -93,7 +92,7 @@ export default function DashboardPage() {
       </motion.aside>
 
       {/* 🌟 CONTENEDOR PRINCIPAL */}
-      <main className="flex-1 flex flex-col z-10 p-6 sm:p-10 h-screen overflow-y-auto custom-scrollbar">
+      <main className="z-10 flex h-screen flex-1 flex-col overflow-y-auto p-5 sm:p-8 custom-scrollbar">
         <div className="w-full flex-1">
           <AnimatePresence mode="wait">
             {activeSection === 'profile' && (
