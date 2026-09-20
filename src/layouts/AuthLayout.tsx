@@ -5,20 +5,20 @@ import logoImage from '../assets/Logo.jpeg';
 
 export default function AuthLayout({ children, title, subtitle }: { children: ReactNode, title: string, subtitle: string }) {
   return (
-    <div className="relative flex min-h-screen w-full items-center justify-center overflow-x-hidden bg-[#dfe6fb] p-3 py-6 sm:p-6 sm:py-8">
+    <div className="relative flex min-h-screen w-full items-center justify-center overflow-x-hidden bg-[#f0edf4] p-3 py-6 sm:p-6 sm:py-8">
       <div
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-65"
         style={{ backgroundImage: `url(${bgImage})` }}
       />
-      <div className="absolute inset-0 z-0 bg-gradient-to-br from-[#e8edff]/88 via-[#dfe6fb]/76 to-[#cbd6f4]/82" />
-      <div className="absolute -left-24 top-16 z-0 h-72 w-72 rounded-full bg-[#263BAA]/15 blur-3xl" />
+      <div className="absolute inset-0 z-0 bg-gradient-to-br from-[#f7f3f0]/88 via-[#f0edf4]/78 to-[#e4e0ee]/82" />
+      <div className="absolute -left-24 top-16 z-0 h-72 w-72 rounded-full bg-[#aeb9e8]/20 blur-3xl" />
       <div className="absolute -right-24 bottom-8 z-0 h-80 w-80 rounded-full bg-[#FFF4D6]/60 blur-3xl" />
 
       <motion.div
         initial={{ opacity: 0, scale: 0.96, y: 24 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
-        className="relative z-10 my-auto flex w-full max-w-lg flex-col items-center rounded-[1.5rem] border border-[#cbd6f4]/80 bg-[#eaf0ff]/92 p-5 text-[#17213f] shadow-[0_24px_70px_rgba(38,59,170,0.2)] backdrop-blur-xl sm:rounded-[2rem] sm:p-10"
+        className="relative z-10 my-auto flex w-full max-w-lg flex-col items-center rounded-[1.5rem] border border-[#d9d4e5]/90 bg-[#f6f2f2]/94 p-5 text-[#17213f] shadow-[0_24px_70px_rgba(54,63,115,0.16)] backdrop-blur-xl sm:rounded-[2rem] sm:p-10"
       >
         {/* Cabecera del Logo (Logo animado por sí mismo) */}
         <motion.div 

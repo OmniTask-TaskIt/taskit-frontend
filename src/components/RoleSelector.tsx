@@ -15,7 +15,7 @@ export default function RoleSelector({ selectedRole, onSelectRole }: RoleSelecto
           className={`cursor-pointer p-3.5 rounded-xl border flex flex-col items-center text-center transition-all ${
             selectedRole === 'SEEKER'
               ? 'border-[#5667c9] bg-[#5667c9] font-bold text-white shadow-[0_10px_22px_rgba(86,103,201,0.28)] scale-[1.02]'
-              : 'border-[#cbd6f4] bg-[#edf1ff] text-[#34405f] hover:border-[#9eabe0] hover:bg-[#e1e7ff]'
+              : 'border-[#d7d3e3] bg-[#f1eef6] text-[#34405f] hover:border-[#b8b1d2] hover:bg-[#e8e4f1]'
           }`}
         >
           <span className="flex items-center gap-2 text-sm"><Search size={16} strokeWidth={2} />Demandante</span>
@@ -27,7 +27,7 @@ export default function RoleSelector({ selectedRole, onSelectRole }: RoleSelecto
           className={`cursor-pointer p-3.5 rounded-xl border flex flex-col items-center text-center transition-all ${
             selectedRole === 'PROVIDER'
               ? 'border-[#5667c9] bg-[#5667c9] font-bold text-white shadow-[0_10px_22px_rgba(86,103,201,0.28)] scale-[1.02]'
-              : 'border-[#cbd6f4] bg-[#edf1ff] text-[#34405f] hover:border-[#9eabe0] hover:bg-[#e1e7ff]'
+              : 'border-[#d7d3e3] bg-[#f1eef6] text-[#34405f] hover:border-[#b8b1d2] hover:bg-[#e8e4f1]'
           }`}
         >
           <span className="flex items-center gap-2 text-sm"><BriefcaseBusiness size={16} strokeWidth={2} />Prestador</span>
