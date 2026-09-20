@@ -21,7 +21,7 @@ export default function PasswordField({ value, onChange, isValid, errorMessage }
           value={value}
           onChange={onChange}
           required
-          className={`w-full rounded-xl border bg-[#f8faff] p-3.5 pr-12 text-sm font-medium text-[#17213f] outline-none transition-all placeholder:text-[#8a94ae] focus:ring-4 ${
+          className={`w-full rounded-xl border bg-[#f1f4ff] p-3.5 pr-12 text-sm font-medium text-[#17213f] outline-none transition-all placeholder:text-[#8a94ae] focus:ring-4 ${
             value.length > 0 && !isValid
               ? 'border-rose-300 focus:border-rose-500 focus:ring-rose-500/10'
               : 'border-[#dbe1f0] focus:border-[#263BAA] focus:ring-[#263BAA]/10'
