@@ -6,6 +6,8 @@ import LoginPasswordField from './LoginPasswordField';
 import { authService } from '../../services/authService';
 import { authStore } from '../../store/authStore';
 import GoogleLoginButton from './GoogleLoginButton';
+import GithubLoginButton from './GithubLoginButton';
+import OAuthConsentCheckbox from './OAuthConsentCheckbox';
 
 export default function LoginForm() {
   const navigate = useNavigate();
@@ -15,6 +17,7 @@ export default function LoginForm() {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [oauthConsent, setOauthConsent] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -109,14 +112,25 @@ export default function LoginForm() {
         {loading ? 'Iniciando sesión...' : 'Entrar'}
       </motion.button>
 
-      {/* 🌟 Botón de Inicio de Sesión con Google integrado */}
+      {/* 🌟 Botones de inicio de sesión social */}
       <div className="relative flex items-center py-2">
         <div className="flex-grow border-t border-[#d7d3e3]"></div>
         <span className="mx-4 flex-shrink text-xs uppercase tracking-wider text-[#a3afc8]">o</span>
         <div className="flex-grow border-t border-[#d7d3e3]"></div>
       </div>
 
-      <GoogleLoginButton onError={(msg) => setError(msg)} />
+      <OAuthConsentCheckbox checked={oauthConsent} onChange={setOauthConsent} />
+
+      <GoogleLoginButton
+        onError={(msg) => setError(msg)}
+        disabled={!oauthConsent}
+        onBlockedClick={() => setError('Debes aceptar los Términos y Condiciones para continuar con Google.')}
+      />
+
+      <GithubLoginButton
+        disabled={!oauthConsent}
+        onBlockedClick={() => setError('Debes aceptar los Términos y Condiciones para continuar con GitHub.')}
+      />
 
       <div className="flex flex-col items-center gap-1.5 mt-2">
         <p className="text-center text-xs text-[#6b7696]">

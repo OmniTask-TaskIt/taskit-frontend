@@ -22,3 +22,56 @@ body {
 button {
   cursor: pointer;
 }
+
+html {
+  transition: filter 0.2s ease;
+}
+
+/* Scrollbar delgado usado en el dashboard (custom-scrollbar) */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #263BAA33 transparent;
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #263BAA55;
+  border-radius: 999px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Modo alto contraste (widget de accesibilidad) */
+.a11y-high-contrast {
+  filter: contrast(1.2) saturate(1.15);
+}
+.a11y-high-contrast :where(button, a, input, select, textarea) {
+  outline-offset: 2px;
+}
+.a11y-high-contrast :where(button, a):focus-visible,
+.a11y-high-contrast :where(input, select, textarea):focus-visible {
+  outline: 3px solid #263BAA;
+}
+
+/* Reducir animaciones (respaldo CSS; framer-motion se controla vía MotionConfig) */
+.a11y-reduce-motion *,
+.a11y-reduce-motion *::before,
+.a11y-reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

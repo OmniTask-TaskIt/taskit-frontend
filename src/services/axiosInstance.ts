@@ -1,10 +1,12 @@
 import axios from 'axios';
 import { authStore } from '../store/authStore';
+import { env } from '../config/env';
 
-const API_URL = 'http://localhost:8080/api/v1/auth';
+const API_BASE = `${env.apiUrl}/api/v1`;
+const AUTH_URL = `${API_BASE}/auth`;
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8080/api/v1',
+  baseURL: API_BASE,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -65,11 +67,11 @@ axiosInstance.interceptors.response.use(
       }
 
       try {
-        const response = await axios.post(`${API_URL}/refresh`, { refreshToken });
+        const response = await axios.post(`${AUTH_URL}/refresh`, { refreshToken });
         const { accessToken, newRefreshToken } = response.data;
 
         authStore.setTokens(accessToken, newRefreshToken || refreshToken);
-        
+
         axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
         processQueue(null, accessToken);
 

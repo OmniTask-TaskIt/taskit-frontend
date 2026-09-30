@@ -41,8 +41,13 @@ export const authService = {
     return response.data;
   },
 
-  async googleLogin(googleToken: string) {
-    const response = await axiosInstance.post('/auth/google', { token: googleToken });
+  async googleLogin(googleToken: string, acceptedTerms = false) {
+    const response = await axiosInstance.post('/auth/google', { token: googleToken, acceptedTerms });
+    return response.data;
+  },
+
+  async githubLogin(code: string, acceptedTerms = false) {
+    const response = await axiosInstance.post('/auth/github', { code, acceptedTerms });
     return response.data;
   },
 };

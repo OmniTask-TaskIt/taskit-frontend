@@ -55,5 +55,24 @@ export const profileService = {
   async deleteAccount(email: string) {
     const response = await axiosInstance.delete(`/profiles/${email}`);
     return response.data;
-  }
+  },
+
+  /** RF-AUTHPR-9: reportar un perfil por comportamiento inapropiado o fraude. */
+  async reportProfile(userId: string, reason: string, comment: string): Promise<Report> {
+    const response = await axiosInstance.post(`/profiles/${userId}/reports`, { reason, comment });
+    return response.data;
+  },
 };
+
+export interface Report {
+  id: string;
+  reporterId: string;
+  revieweeId: string;
+  reason: string;
+  comment: string;
+  status: 'OPEN' | 'RESOLVED' | 'DISMISSED';
+  createdAt: string;
+  resolvedBy?: string;
+  resolvedAt?: string;
+  resolutionNote?: string;
+}
