@@ -6,6 +6,8 @@ import axios from 'axios';
 
 interface GoogleLoginButtonProps {
   onError: (msg: string) => void;
+  disabled?: boolean;
+  onBlockedClick?: () => void;
 }
 
 function parseJwt(token: string) {
@@ -25,18 +27,41 @@ function parseJwt(token: string) {
   }
 }
 
-export default function GoogleLoginButton({ onError }: GoogleLoginButtonProps) {
+export default function GoogleLoginButton({ onError, disabled, onBlockedClick }: GoogleLoginButtonProps) {
   const navigate = useNavigate();
 
   return (
-    <div 
-      className="w-full flex justify-center mt-3"
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
+    <div
+      className="relative w-full flex justify-center mt-3"
+      onClickCapture={(e) => {
+        if (disabled) {
+          e.preventDefault();
+          e.stopPropagation();
+          onBlockedClick?.();
+        }
       }}
     >
-      <GoogleLogin
+      {disabled && (
+        // Google renderiza su botón dentro de un iframe propio; para poder
+        // bloquear el click y mostrar el aviso de "acepta los términos"
+        // se superpone una capa transparente en vez de depender de `disabled`.
+        <div
+          className="absolute inset-0 z-10 cursor-not-allowed rounded-full"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onBlockedClick?.();
+          }}
+        />
+      )}
+      <div
+        className={disabled ? 'pointer-events-none opacity-50 grayscale' : ''}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+      >
+        <GoogleLogin
         onSuccess={async (credentialResponse) => {
           try {
             if (!credentialResponse.credential) {
@@ -51,7 +76,7 @@ export default function GoogleLoginButton({ onError }: GoogleLoginButtonProps) {
               localStorage.setItem('userEmail', googleEmail);
             }
 
-            const data = await authService.googleLogin(credentialResponse.credential);
+            const data = await authService.googleLogin(credentialResponse.credential, true);
             
             if (!data.accessToken) {
               onError('El servidor no devolvió un token de acceso válido.');
@@ -82,7 +107,8 @@ export default function GoogleLoginButton({ onError }: GoogleLoginButtonProps) {
         shape="pill"
         size="large"
         width="380"
-      />
+        />
+      </div>
     </div>
   );
 }

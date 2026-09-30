@@ -4,6 +4,8 @@ import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import RoleSelector from '../RoleSelector';
 import PasswordField from './PasswordField';
+import GoogleLoginButton from './GoogleLoginButton';
+import GithubLoginButton from './GithubLoginButton';
 import { authService, type RegisterData } from '../../services/authService';
 
 export default function RegisterForm() {
@@ -153,14 +155,14 @@ export default function RegisterForm() {
         />
         <span>
           Acepto los{' '}
-          <a
-            href="https://taskit.blob.core.windows.net/legal-docs/terminos-y-condiciones.pdf?sp=r&st=2026-09-16T17:55:47Z&se=2026-09-17T02:10:47Z&spr=https&sv=2026-02-06&sr=b&sig=0HQGSvNEnWj67SU5YAr4P2OEL5iltqToZomPeNVik6s%3D"
+          <Link
+            to="/terms"
             target="_blank"
             rel="noopener noreferrer"
             className="font-semibold text-[#263BAA] hover:underline"
           >
             Términos y Condiciones
-          </a>
+          </Link>
         </span>
       </label>
 
@@ -173,6 +175,26 @@ export default function RegisterForm() {
       >
         {loading ? 'Registrando cuenta...' : 'Crear cuenta'}
       </motion.button>
+
+      {/* 🌟 Alta con proveedores sociales: usa el mismo checkbox de arriba como
+          consentimiento explícito, ya que el backend crea la cuenta y marca
+          los términos como aceptados apenas Google/GitHub confirman el correo. */}
+      <div className="relative flex items-center py-1">
+        <div className="flex-grow border-t border-[#d7d3e3]"></div>
+        <span className="mx-4 flex-shrink text-xs uppercase tracking-wider text-[#a3afc8]">o</span>
+        <div className="flex-grow border-t border-[#d7d3e3]"></div>
+      </div>
+
+      <GoogleLoginButton
+        onError={(msg) => setError(msg)}
+        disabled={!formData.acceptedTerms}
+        onBlockedClick={() => setError('Debes aceptar los Términos y Condiciones para continuar con Google.')}
+      />
+
+      <GithubLoginButton
+        disabled={!formData.acceptedTerms}
+        onBlockedClick={() => setError('Debes aceptar los Términos y Condiciones para continuar con GitHub.')}
+      />
 
       <div className="flex flex-col items-center gap-1.5 mt-2">
         <p className="text-center text-xs text-[#6b7696]">

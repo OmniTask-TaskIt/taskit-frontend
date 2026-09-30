@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Star, MapPin, ShieldCheck, ShieldAlert, X, FileText, Tag } from 'lucide-react';
+import { Search, Star, MapPin, ShieldCheck, ShieldAlert, X, FileText, Tag, Flag, MessageSquare } from 'lucide-react';
 import { profileService, type Profile } from '../../services/profileService';
+import ProfileReviews from './ProfileReviews';
+import ReportProfileModal from './ReportProfileModal';
 
 const iconProps = { size: 18, strokeWidth: 2 };
 
@@ -10,6 +12,10 @@ export default function ProfileSearchSection() {
   const [results, setResults] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
+  const [reportingProfile, setReportingProfile] = useState(false);
+
+  // No tiene sentido (ni el backend lo permite) reportarse a uno mismo.
+  const ownUserId = localStorage.getItem('userId') ?? '';
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,7 +72,10 @@ export default function ProfileSearchSection() {
               <motion.div
                 key={prof.userId}
                 whileHover={{ scale: 1.01 }}
-                onClick={() => setSelectedProfile(prof)}
+                onClick={() => {
+                  setSelectedProfile(prof);
+                  setReportingProfile(false);
+                }}
                 className="flex items-center justify-between p-4 rounded-xl border border-[rgba(255,255,255,0.08)] bg-white/5 hover:bg-white/10 transition-all cursor-pointer shadow-md"
               >
                 <div className="flex items-center gap-4">
@@ -202,9 +211,31 @@ export default function ProfileSearchSection() {
                     <p className="text-sm text-[#17213f]/50">Sin categorías registradas.</p>
                   )}
                 </div>
+
+                <div>
+                  <div className="flex items-center gap-2 text-[#17213f]/70 mb-2">
+                    <MessageSquare {...iconProps} className="text-[#17213f]/40" />
+                    <h3 className="text-sm font-medium">Reseñas</h3>
+                  </div>
+                  {selectedProfile.userId ? (
+                    <ProfileReviews userId={selectedProfile.userId} />
+                  ) : (
+                    <p className="text-sm text-[#17213f]/50">No disponible.</p>
+                  )}
+                </div>
               </div>
 
-              <div className="mt-8 pt-4 border-t border-[rgba(255,255,255,0.08)] flex justify-end">
+              <div className="mt-8 pt-4 border-t border-[rgba(255,255,255,0.08)] flex items-center justify-between">
+                {selectedProfile.userId && selectedProfile.userId !== ownUserId ? (
+                  <button
+                    onClick={() => setReportingProfile(true)}
+                    className="flex items-center gap-1.5 text-xs font-semibold text-rose-400 hover:text-rose-300 transition-colors cursor-pointer"
+                  >
+                    <Flag size={14} /> Reportar perfil
+                  </button>
+                ) : (
+                  <span />
+                )}
                 <button
                   onClick={() => setSelectedProfile(null)}
                   className="rounded-xl bg-[#263BAA] px-6 py-2.5 text-sm font-medium text-[#17213f] hover:bg-[#1a297a] transition-colors cursor-pointer shadow-md"
@@ -216,6 +247,14 @@ export default function ProfileSearchSection() {
           </div>
         )}
       </AnimatePresence>
+
+      {reportingProfile && selectedProfile && (
+        <ReportProfileModal
+          userId={selectedProfile.userId}
+          userName={selectedProfile.fullName || 'este perfil'}
+          onClose={() => setReportingProfile(false)}
+        />
+      )}
     </div>
   );
 }

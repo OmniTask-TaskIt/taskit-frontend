@@ -1,10 +1,16 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import OtpVerificationPage from './pages/OtpVerificationPage';
-import SelectRolePage from './pages/SelectRolePage';
-import ProtectedRoute from './components/ProtectedRoute';
-import DashboardPage from './pages/DashboardPage';
+import {
+  LoginPage,
+  RegisterPage,
+  OtpVerificationPage,
+  SelectRolePage,
+  TermsPage,
+  GithubCallbackPage,
+} from './modules/authentication';
+import { DashboardPage } from './modules/dashboard';
+import { AdminPage } from './modules/admin';
+import ProtectedRoute from './shared/Components/ProtectedRoute';
+import AdminRoute from './shared/Components/AdminRoute';
 
 function App() {
   return (
@@ -14,10 +20,16 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/verify-otp" element={<OtpVerificationPage />} />
+        <Route path="/terms" element={<TermsPage />} />
+        <Route path="/auth/github/callback" element={<GithubCallbackPage />} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="/select-role" element={<SelectRolePage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+        </Route>
+
+        <Route element={<AdminRoute />}>
+          <Route path="/admin" element={<AdminPage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/login" replace />} />
