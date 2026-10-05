@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import AuthLayout from '../../../shared/layouts/AuthLayout';
+import AuthLayout from '../Components/ui/AuthLayout';
 import { authService } from '../services/authService';
-import { authStore } from '../../../shared/store/authStore';
+import { authStore } from '../services/authStore';
 import { BriefcaseBusiness, Search } from 'lucide-react';
 
 export default function SelectRolePage() {

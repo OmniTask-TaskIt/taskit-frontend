@@ -29,8 +29,8 @@
 - **Autenticación Robusta:** Registro con verificación OTP, validación estricta de contraseñas, roles configurables (Demandante / Prestador) e integración fluida con **Google** y **GitHub** OAuth.
 - **Cumplimiento Legal (T&C):** Aceptación explícita de Términos, Condiciones y Política de Privacidad v1.0 integrada antes de cualquier acceso o registro mediante redes sociales.
 - **Directorio y Reputación:** Búsqueda avanzada de perfiles profesionales, visualización de reseñas paginadas y sistema completo de reportes de perfiles con motivos y comentarios.
-- **Panel de Administración Exclusivo (`/admin`):** Gestión integral de usuarios (suspensiones, bloqueos, reactivación, filtros por estado), revisión de identidad documental de profesionales y resolución/descarte de reportes.
-- **Accesibilidad de Vanguardia:** Widget flotante con filtros de simulación de daltonismo (*protanopia, deuteranopia, tritanopia, escala de grises*), ajuste dinámico de tamaño de texto, alto contraste y reducción de animaciones (con persistencia en `localStorage`).
+- **Panel de Administración Exclusivo (`/admin`):** Gestión integral de usuarios (suspensiones, bloqueos, reactivación, filtros por estado), **cola de verificaciones de identidad** (pendientes, verificadas y rechazadas, con paginación) y resolución/descarte de reportes.
+- **Accesibilidad:** Widget flotante con **corrección de daltonismo** (*protanopia, deuteranopia, tritanopia*, método de daltonización), escala de grises, tamaño de texto, alto contraste y reducción de animaciones, con persistencia en `localStorage`. Incluye además una **simulación de daltonismo para diseño** (no es una ayuda para el usuario).
 - **Experiencia Móvil y PWA:** Interfaz adaptativa con barra superior y pestañas inferiores optimizadas para pantallas menores a 768px, además de soporte para instalación nativa vía `manifest.webmanifest` y `sw.js`.
 
 ---
@@ -79,41 +79,38 @@ Configura las siguientes variables en tu archivo `.env` o en el panel de desplie
 
 ## 📂 Arquitectura del Proyecto
 
-El código fuente se organiza por **módulos de dominio** independientes (cada uno con sus propios componentes, páginas y servicios) y un módulo `shared/` para utilidades globales:
+El código se organiza por **módulos de dominio**. El módulo `authentication` corresponde al backend **AuthAndProfiles** e incluye autenticación, perfiles, reseñas, reportes y panel de administración. Los demás equipos organizan sus módulos a su manera dentro de `src/modules/`.
 
 ```text
 src/
+├── assets/                       # Imágenes (FondoP.jpeg, Logo.jpeg, ...)
 ├── modules/
-│   ├── authentication/
-│   │   ├── Components/   # LoginForm, RegisterForm, GoogleLoginButton, GithubLoginButton, OAuthConsentCheckbox, etc.
-│   │   ├── pages/        # LoginPage, RegisterPage, OtpVerificationPage, SelectRolePage, TermsPage, GithubCallbackPage
-│   │   ├── services/     # authService.ts
-│   │   └── index.ts      # Barril de exportación pública del módulo
-│   ├── dashboard/
-│   │   ├── Components/   # ProfileSearchSection, UserProfileCard, ProfileReviews, ReportProfileModal, TaskSectionPlaceholder
-│   │   ├── Hooks/        # useProfileSearch
-│   │   ├── pages/        # DashboardPage
-│   │   ├── services/     # profileService.ts, reviewService.ts
-│   │   ├── types/        # profile.ts
-│   │   └── index.ts
-│   └── admin/
-│       ├── Components/   # UsersTab, VerificationsTab, ReportsTab, StatusBadge, ReasonPromptModal
-│       ├── pages/        # AdminPage
-│       ├── services/     # adminService.ts
-│       └── index.ts
+│   └── authentication/           # Backend AuthAndProfiles
+│       ├── Components/
+│       │   ├── auth/             # LoginForm, GoogleLoginButton, GithubLoginButton, OAuthConsentCheckbox, ProtectedRoute, AdminRoute
+│       │   ├── register/         # RegisterForm, PasswordField, RoleSelector
+│       │   ├── profile/          # UserProfileCard, DeleteAccountSection, ProfileSearchSection, ProfileReviews, ReportProfileModal
+│       │   ├── admin/            # UsersTab, VerificationsTab, ReportsTab
+│       │   └── ui/               # AuthLayout, StatusBadge, ReasonPromptModal, TaskSectionPlaceholder
+│       ├── Config/               # axios.ts (interceptores + refresh de tokens), env.ts (variables de entorno)
+│       ├── Hooks/                # useLogin, useRegister, useProfileSearch
+│       ├── pages/                # Login, Register, OtpVerification, SelectRole, Terms, GithubCallback, Dashboard, Admin
+│       ├── services/             # authService, profileService, reviewService, adminService, authStore
+│       ├── styles/index.css      # Tailwind + estilos globales
+│       ├── types/                # auth.types.ts, profile.types.ts, admin.types.ts
+│       └── index.ts              # API pública del módulo (lo único que se importa desde fuera)
 ├── shared/
-│   ├── Components/       # ProtectedRoute, AdminRoute (Guards de navegación)
-│   ├── Config/           # env.ts (Lectura centralizada de variables de entorno)
-│   ├── accessibility/    # Contexto, widget flotante y filtros SVG
-│   ├── layouts/          # AuthLayout
-│   ├── services/         # axiosInstance.ts (Interceptors y refresh automático de tokens)
-│   └── store/            # authStore.ts (Manejo de estado global y tokens en localStorage)
-├── App.tsx, main.tsx, index.css
-public/                   # Manifest web, Service Worker e íconos PWA
-vercel.json               # Reglas de reescritura SPA (rutas /terms, /auth/github/callback, etc.)
+│   └── accessibility/            # Contexto, widget flotante y filtros SVG (afecta a toda la app)
+├── test/                         # setup.ts y helpers de pruebas (makeJwt, makeAxiosError)
+├── utils/navigation.ts           # redirectTo / redirectToLogin (aislados para poder probarlos)
+├── App.tsx
+└── main.tsx
+public/                           # Manifest web, Service Worker e íconos PWA
+.github/workflows/ci.yml          # CI: lint + pruebas + build en cada push/PR
+vercel.json                       # Reglas de reescritura SPA
 ```
 
-> 📌 **Buenas prácticas:** Cada archivo de prueba (`*.test.tsx` / `*.test.ts`) reside junto al archivo que prueba. Para importar entre distintos módulos, utiliza siempre el archivo barril principal (ej. `from './modules/authentication'`).
+> 📌 **Buenas prácticas:** cada archivo de prueba (`*.test.tsx` / `*.test.ts`) vive junto al archivo que prueba. Desde fuera del módulo importa siempre su barril: `from './modules/authentication'`.
 
 ---
 
@@ -126,21 +123,34 @@ vercel.json               # Reglas de reescritura SPA (rutas /terms, /auth/githu
 
 ## 🧪 Pruebas y Calidad
 
-La cobertura de pruebas unitarias y de integración abarca:
-- `authStore` (validación y expiración de tokens JWT).
-- `RegisterForm` (validaciones de campos, restricción de aceptaciones de T&C y enlaces de navegación).
-- `AccessibilityProvider` (persistencia y aplicación de filtros).
-- `TermsPage` (renderizado estático).
-- Mocks dedicados para componentes de autenticación externa de Google.
+```bash
+npm run lint            # ESLint
+npm test                # Vitest (una pasada)
+npm run test:coverage   # Cobertura (requiere @vitest/coverage-v8)
+```
+
+El CI (`.github/workflows/ci.yml`) ejecuta lint, pruebas y build en cada push y pull request.
+
+**Qué se prueba**
+- **Contrato HTTP** (`services/services.test.ts`): rutas, verbos y dónde viaja cada dato hacia el backend (p. ej. `PATCH /profiles/{id}` envía *query params*, no body).
+- **Sesión:** `authStore` (JWT, expiración, base64url) y el interceptor de `axios` (renovación de token enviando `email` + `refreshToken`, reintento, limpieza de sesión).
+- **Flujos de autenticación:** login, registro, OTP, selección de rol, callback de GitHub, botones de Google/GitHub y el bloqueo por Términos y Condiciones.
+- **Perfiles y dashboard:** mi perfil (edición, foto, documento), directorio, reseñas, reportes y navegación.
+- **Admin:** usuarios, cola de verificaciones y reportes.
+- **Accesibilidad:** filtros, persistencia y la eficacia de la corrección de daltonismo (`colorMatrices.test.ts`).
 
 ---
 
 ## 📝 Notas y Pendientes del Sistema
 
-- **T&C en OAuth:** El frontend envía el parámetro `acceptedTerms` en las peticiones a `/auth/google` y `/auth/github`. El backend lo exige al crear cuentas nuevas y almacena `termsAccepted`, `termsAcceptedAt` y `termsVersion`.
-- **Gestión de Tareas:** La sección actual se mantiene en estado de *placeholder*.
-- **Creación de Reseñas (`POST /reviews`):** Pendiente de integración con el microservicio *Task & AI Core* para obtener un `taskId` válido.
-- **Verificaciones sin Cola:** Actualmente la pestaña de verificaciones en `/admin` busca por nombre al no existir un endpoint para listar solicitudes pendientes (`GET /admin/verification-documents?status=PENDING_REVIEW`).
-- **Reportes:** `GET /admin/reports` retorna únicamente `reporterId` y `revieweeId`. Idealmente el backend debería incluir nombres y correos asociados.
-- **Filtro de Daltonismo:** Opera como una simulación SVG global en la pantalla para pruebas de usabilidad.
-- **Optimización de Bundle:** El peso actual (~520 kB) puede reducirse implementando *code-splitting* dinámico por rutas.
+- **T&C en OAuth:** el frontend envía `acceptedTerms` a `/auth/google` y `/auth/github`; en Login y Registro los botones sociales permanecen bloqueados hasta aceptar los Términos. El backend lo exige al crear cuentas y guarda `termsAccepted`, `termsAcceptedAt` y `termsVersion`.
+- **Daltonismo:** los modos *Protanopia / Deuteranopia / Tritanopia* **corrigen** el color (daltonización: `C = I + M·(I − S)`, ver `colorMatrices.ts`). Los modos *Simular …* reproducen cómo ve una persona daltónica y son solo para el equipo de diseño.
+- **Cola de verificaciones:** la pestaña *Verificaciones* usa `GET /admin/verification-documents` (por defecto `PENDING_REVIEW`, de la más antigua a la más reciente).
+- **Móvil:** una sola base de código responsive (barra superior y pestañas inferiores bajo 768 px) más PWA instalable; no se mantiene una app móvil separada.
+- **Gestión de Tareas:** la sección sigue como *placeholder* (módulo de otro equipo).
+- **Creación de reseñas (`POST /reviews`):** pendiente de integración con *Task & AI Core* para obtener un `taskId` válido.
+- **Contrato front↔back:** los tipos de `types/` son espejo de los DTOs del backend (`ProfileResponseDTO`, `AdminReportDTO`, ...). El backend **no envía la URL del documento de identidad**: el panel de verificación depende solo de `identityVerificationStatus`. Las categorías del perfil viajan como `categories=a&categories=b` (`paramsSerializer: { indexes: null }`), que es lo que Spring bindea.
+- **Eliminar cuenta:** en *Mi perfil → Zona de peligro*. Llama a `DELETE /profiles/{email}` (borrado permanente en el backend) y exige escribir el correo para confirmar.
+- **Reportes (admin):** `GET /admin/reports` devuelve `AdminReportDTO` con nombre y correo de reportante y reportado; si una cuenta ya no existe se muestra su ID.
+- **Seguridad OAuth (GitHub):** el botón envía un `state` aleatorio de un solo uso (`services/oauthState.ts`) y el callback lo verifica antes de llamar al backend (protección CSRF).
+- **Optimización de bundle:** el peso (~550 kB) puede reducirse con *code-splitting* por rutas.

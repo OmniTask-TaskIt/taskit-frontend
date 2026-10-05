@@ -6,11 +6,11 @@ import {
   SelectRolePage,
   TermsPage,
   GithubCallbackPage,
+  DashboardPage,
+  AdminPage,
+  ProtectedRoute,
+  AdminRoute,
 } from './modules/authentication';
-import { DashboardPage } from './modules/dashboard';
-import { AdminPage } from './modules/admin';
-import ProtectedRoute from './shared/Components/ProtectedRoute';
-import AdminRoute from './shared/Components/AdminRoute';
 
 function App() {
   return (

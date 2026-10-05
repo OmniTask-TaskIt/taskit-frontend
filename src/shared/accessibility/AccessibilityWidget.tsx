@@ -11,6 +11,13 @@ const COLOR_MODES: { value: ColorBlindMode; label: string }[] = [
   { value: 'achromatopsia', label: 'Escala de grises' },
 ];
 
+// Solo para el equipo de diseño: muestran cómo ve la app una persona daltónica.
+const SIMULATION_MODES: { value: ColorBlindMode; label: string }[] = [
+  { value: 'sim-protanopia', label: 'Simular protanopia' },
+  { value: 'sim-deuteranopia', label: 'Simular deuteranopia' },
+  { value: 'sim-tritanopia', label: 'Simular tritanopia' },
+];
+
 const FONT_SCALES: { value: FontScale; label: string }[] = [
   { value: 'normal', label: 'A' },
   { value: 'large', label: 'A+' },
@@ -68,11 +75,38 @@ export default function AccessibilityWidget() {
             </div>
 
             <div className="mb-4">
-              <p className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold text-[#34405f]">
-                <Eye size={14} /> Filtro de daltonismo
+              <p className="mb-1 flex items-center gap-1.5 text-xs font-semibold text-[#34405f]">
+                <Eye size={14} /> Corrección de daltonismo
+              </p>
+              <p className="mb-1.5 text-[11px] leading-snug text-[#6b7696]">
+                Ajusta los colores para que sean más fáciles de distinguir según tu tipo de daltonismo.
               </p>
               <div className="grid grid-cols-2 gap-1.5">
                 {COLOR_MODES.map((mode) => (
+                  <button
+                    key={mode.value}
+                    type="button"
+                    onClick={() => setColorBlindMode(mode.value)}
+                    aria-pressed={colorBlindMode === mode.value}
+                    className={`rounded-lg border px-2 py-1.5 text-[11px] font-medium transition-colors ${
+                      colorBlindMode === mode.value
+                        ? 'border-[#263BAA] bg-[#263BAA] text-white'
+                        : 'border-[#d7d3e3] bg-[#f6f4fa] text-[#34405f] hover:border-[#b8b1d2]'
+                    }`}
+                  >
+                    {mode.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <p className="mb-1 text-xs font-semibold text-[#34405f]">Simulación (para diseño)</p>
+              <p className="mb-1.5 text-[11px] leading-snug text-[#6b7696]">
+                Muestra cómo ve TaskIt una persona daltónica. No es una ayuda de accesibilidad.
+              </p>
+              <div className="grid grid-cols-2 gap-1.5">
+                {SIMULATION_MODES.map((mode) => (
                   <button
                     key={mode.value}
                     type="button"
