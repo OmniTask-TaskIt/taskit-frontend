@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import AuthLayout from '../../../shared/layouts/AuthLayout';
+import AuthLayout from '../Components/ui/AuthLayout';
 import { authService } from '../services/authService';
-import { authStore } from '../../../shared/store/authStore';
+import { authStore } from '../services/authStore';
+import { consumeOauthState } from '../services/oauthState';
 
 /**
  * GitHub redirige aquí con ?code=... (o ?error=... si el usuario canceló).
@@ -13,18 +14,19 @@ import { authStore } from '../../../shared/store/authStore';
 function readCallbackParams() {
   const params = new URLSearchParams(window.location.search);
   const code = params.get('code');
+  const state = params.get('state');
   const githubError = params.get('error_description') || params.get('error');
 
   let earlyError = '';
   if (githubError) earlyError = 'Inicio de sesión con GitHub cancelado.';
   else if (!code) earlyError = 'No se recibió el código de autorización de GitHub.';
 
-  return { code, earlyError };
+  return { code, state, earlyError };
 }
 
 export default function GithubCallbackPage() {
   const navigate = useNavigate();
-  const [{ code, earlyError }] = useState(readCallbackParams);
+  const [{ code, state, earlyError }] = useState(readCallbackParams);
   const [asyncError, setAsyncError] = useState('');
   const error = earlyError || asyncError;
   const ranOnce = useRef(false);
@@ -34,11 +36,20 @@ export default function GithubCallbackPage() {
     ranOnce.current = true;
 
     if (earlyError || !code) {
+      sessionStorage.removeItem('githubOauthState');
       setTimeout(() => navigate('/login'), 2000);
       return;
     }
 
     (async () => {
+      // Protección CSRF: el `state` de vuelta debe ser el que este navegador generó al salir.
+      if (!consumeOauthState(state)) {
+        sessionStorage.removeItem('githubOauthTermsAccepted');
+        setAsyncError('No se pudo verificar la seguridad del inicio de sesión. Inténtalo de nuevo.');
+        setTimeout(() => navigate('/login'), 2500);
+        return;
+      }
+
       try {
         const acceptedTerms = sessionStorage.getItem('githubOauthTermsAccepted') === 'true';
         sessionStorage.removeItem('githubOauthTermsAccepted');
@@ -66,7 +77,7 @@ export default function GithubCallbackPage() {
         setTimeout(() => navigate('/login'), 2500);
       }
     })();
-  }, [navigate, code, earlyError]);
+  }, [navigate, code, state, earlyError]);
 
   return (
     <AuthLayout title="Conectando con GitHub" subtitle={error || 'Verificando tu cuenta, un momento...'}>

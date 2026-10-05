@@ -1,6 +1,21 @@
 import { createContext, useContext } from 'react';
 
-export type ColorBlindMode = 'none' | 'protanopia' | 'deuteranopia' | 'tritanopia' | 'achromatopsia';
+/**
+ * - protanopia / deuteranopia / tritanopia: CORRIGEN el color para quien tiene esa deficiencia.
+ * - sim-*: SIMULAN la deficiencia (para que diseño pruebe la app).
+ * - achromatopsia: escala de grises.
+ */
+export const COLOR_BLIND_MODES = [
+  'none',
+  'protanopia',
+  'deuteranopia',
+  'tritanopia',
+  'achromatopsia',
+  'sim-protanopia',
+  'sim-deuteranopia',
+  'sim-tritanopia',
+] as const;
+export type ColorBlindMode = (typeof COLOR_BLIND_MODES)[number];
 export type FontScale = 'normal' | 'large' | 'xlarge';
 
 export interface AccessibilitySettings {

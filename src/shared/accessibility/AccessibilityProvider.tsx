@@ -5,6 +5,7 @@ import ColorBlindFilters from './ColorBlindFilters';
 import AccessibilityWidget from './AccessibilityWidget';
 import {
   AccessibilityContext,
+  COLOR_BLIND_MODES,
   type AccessibilityContextValue,
   type AccessibilitySettings,
   type ColorBlindMode,
@@ -25,7 +26,10 @@ function loadSettings(): AccessibilitySettings {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULT_SETTINGS;
-    return { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
+    const stored = { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
+    // Un valor guardado desconocido (p. ej. de una versión anterior) no debe romper el filtro.
+    if (!COLOR_BLIND_MODES.includes(stored.colorBlindMode)) stored.colorBlindMode = 'none';
+    return stored;
   } catch {
     return DEFAULT_SETTINGS;
   }

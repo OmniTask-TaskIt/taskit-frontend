@@ -1,17 +1,5 @@
-import { axiosInstance } from '../../../shared/services/axiosInstance';
-
-export interface LoginCredentials {
-  email: string;
-  password: string;
-}
-
-export interface RegisterData {
-  name: string;
-  email: string;
-  password: string;
-  role: 'SEEKER' | 'PROVIDER';
-  acceptedTerms: boolean;
-}
+import { axiosInstance } from '../Config/axios';
+import type { LoginCredentials, RegisterData, SelectableRole } from '../types/auth.types';
 
 export const authService = {
   async login(credentials: LoginCredentials) {
@@ -24,7 +12,7 @@ export const authService = {
     return response.data;
   },
 
-  async switchRole(email: string, newRole: 'SEEKER' | 'PROVIDER') {
+  async switchRole(email: string, newRole: SelectableRole) {
     const response = await axiosInstance.post('/profiles/switch-role', null, {
       params: { email, newRole },
     });

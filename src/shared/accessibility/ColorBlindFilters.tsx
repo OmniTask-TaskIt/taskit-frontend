@@ -1,47 +1,29 @@
-// Matrices estándar (aproximación de Machado, Oliveira & Fernandes) usadas por
-// simuladores de daltonismo de referencia. Se inyectan como <filter> ocultos y
-// se aplican con `filter: url(#taskit-<modo>)` sobre <html> desde
-// AccessibilityProvider, así que corrigen/simulan el color de TODA la app.
+import { CORRECTION, GRAYSCALE, SIMULATION, toValues, type Matrix3 } from './colorMatrices';
+
+function MatrixFilter({ id, matrix }: { id: string; matrix: Matrix3 }) {
+  return (
+    <filter id={id}>
+      <feColorMatrix type="matrix" values={toValues(matrix)} />
+    </filter>
+  );
+}
+
+// Se inyectan como <filter> ocultos y se aplican con `filter: url(#taskit-<modo>)`
+// sobre <html> desde AccessibilityProvider, así que afectan el color de TODA la app.
+//   taskit-protanopia | -deuteranopia | -tritanopia → CORRECCIÓN para el usuario
+//   taskit-sim-<tipo>                               → SIMULACIÓN para diseñadores
+//   taskit-achromatopsia                            → escala de grises
 export default function ColorBlindFilters() {
   return (
     <svg aria-hidden="true" focusable="false" style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}>
       <defs>
-        <filter id="taskit-protanopia">
-          <feColorMatrix
-            type="matrix"
-            values="0.567, 0.433, 0,     0, 0
-                    0.558, 0.442, 0,     0, 0
-                    0,     0.242, 0.758, 0, 0
-                    0,     0,     0,     1, 0"
-          />
-        </filter>
-        <filter id="taskit-deuteranopia">
-          <feColorMatrix
-            type="matrix"
-            values="0.625, 0.375, 0,   0, 0
-                    0.7,   0.3,   0,   0, 0
-                    0,     0.3,   0.7, 0, 0
-                    0,     0,     0,   1, 0"
-          />
-        </filter>
-        <filter id="taskit-tritanopia">
-          <feColorMatrix
-            type="matrix"
-            values="0.95, 0.05,  0,     0, 0
-                    0,    0.433, 0.567, 0, 0
-                    0,    0.475, 0.525, 0, 0
-                    0,    0,     0,     1, 0"
-          />
-        </filter>
-        <filter id="taskit-achromatopsia">
-          <feColorMatrix
-            type="matrix"
-            values="0.299, 0.587, 0.114, 0, 0
-                    0.299, 0.587, 0.114, 0, 0
-                    0.299, 0.587, 0.114, 0, 0
-                    0,     0,     0,     1, 0"
-          />
-        </filter>
+        <MatrixFilter id="taskit-protanopia" matrix={CORRECTION.protanopia} />
+        <MatrixFilter id="taskit-deuteranopia" matrix={CORRECTION.deuteranopia} />
+        <MatrixFilter id="taskit-tritanopia" matrix={CORRECTION.tritanopia} />
+        <MatrixFilter id="taskit-sim-protanopia" matrix={SIMULATION.protanopia} />
+        <MatrixFilter id="taskit-sim-deuteranopia" matrix={SIMULATION.deuteranopia} />
+        <MatrixFilter id="taskit-sim-tritanopia" matrix={SIMULATION.tritanopia} />
+        <MatrixFilter id="taskit-achromatopsia" matrix={GRAYSCALE} />
       </defs>
     </svg>
   );

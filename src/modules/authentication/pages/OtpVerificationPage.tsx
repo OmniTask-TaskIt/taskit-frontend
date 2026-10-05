@@ -1,9 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import AuthLayout from '../../../shared/layouts/AuthLayout';
+import AuthLayout from '../Components/ui/AuthLayout';
 import { authService } from '../services/authService';
-import { authStore } from '../../../shared/store/authStore';
 
 export default function OtpVerificationPage() {
   const navigate = useNavigate();
@@ -64,17 +63,15 @@ export default function OtpVerificationPage() {
     setLoading(true);
 
     try {
-      const response = await authService.verifyOtp(email, finalOtpCode);
-      
-      if (response.accessToken) {
-        authStore.setTokens(response.accessToken, response.refreshToken);
-      }
+      // El backend responde solo { message }: verificar el correo NO inicia sesión, así que se
+      // va al login con el correo ya llenado (antes se intentaba entrar a /select-role sin tokens).
+      await authService.verifyOtp(email, finalOtpCode);
 
       setIsSuccessAnim(true);
-      setSuccessMsg('¡Código verificado con éxito! Redirigiendo...');
+      setSuccessMsg('¡Código verificado con éxito! Redirigiendo al inicio de sesión...');
       
       setTimeout(() => {
-        navigate('/select-role');
+        navigate('/login', { replace: true, state: { verifiedEmail: email } });
       }, 1500);
 
     } catch (err: unknown) {
