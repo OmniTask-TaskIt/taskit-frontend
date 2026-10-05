@@ -6,6 +6,9 @@
 export { default as LoginPage } from './pages/LoginPage';
 export { default as RegisterPage } from './pages/RegisterPage';
 export { default as OtpVerificationPage } from './pages/OtpVerificationPage';
+export { default as ForgotPasswordPage } from './pages/ForgotPasswordPage';
+export { default as ResetPasswordPage } from './pages/ResetPasswordPage';
+export { default as PublicProfilePage } from './pages/PublicProfilePage';
 export { default as SelectRolePage } from './pages/SelectRolePage';
 export { default as TermsPage } from './pages/TermsPage';
 export { default as GithubCallbackPage } from './pages/GithubCallbackPage';

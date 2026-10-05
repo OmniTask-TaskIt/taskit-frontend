@@ -29,6 +29,18 @@ export const authService = {
     return response.data;
   },
 
+  /** RF-AUTH-4: envía un código temporal al correo (el backend debe responder igual exista o no la cuenta). */
+  async forgotPassword(email: string) {
+    const response = await axiosInstance.post('/auth/forgot-password', { email });
+    return response.data;
+  },
+
+  /** RF-AUTH-4: cambia la contraseña con el código recibido por correo. */
+  async resetPassword(email: string, code: string, newPassword: string) {
+    const response = await axiosInstance.post('/auth/reset-password', { email, code, newPassword });
+    return response.data;
+  },
+
   async googleLogin(googleToken: string, acceptedTerms = false) {
     const response = await axiosInstance.post('/auth/google', { token: googleToken, acceptedTerms });
     return response.data;

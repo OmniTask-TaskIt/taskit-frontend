@@ -3,6 +3,9 @@ import {
   LoginPage,
   RegisterPage,
   OtpVerificationPage,
+  ForgotPasswordPage,
+  ResetPasswordPage,
+  PublicProfilePage,
   SelectRolePage,
   TermsPage,
   GithubCallbackPage,
@@ -20,12 +23,15 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/verify-otp" element={<OtpVerificationPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/terms" element={<TermsPage />} />
         <Route path="/auth/github/callback" element={<GithubCallbackPage />} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="/select-role" element={<SelectRolePage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/profile/:userId" element={<PublicProfilePage />} />
         </Route>
 
         <Route element={<AdminRoute />}>
