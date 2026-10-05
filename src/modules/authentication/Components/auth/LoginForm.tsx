@@ -51,6 +51,12 @@ export default function LoginForm() {
         onChange={handleChange}
       />
 
+      <div className="-mt-1 flex justify-end">
+        <Link to="/forgot-password" className="text-xs font-semibold text-[#1f2f8f] hover:underline">
+          ¿Olvidaste tu contraseña?
+        </Link>
+      </div>
+
       <motion.button
         type="submit"
         whileHover={{ scale: 1.02 }}

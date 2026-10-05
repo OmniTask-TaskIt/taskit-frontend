@@ -27,7 +27,9 @@ function handleLogout() {
 
 export default function DashboardPage() {
   const [activeSection, setActiveSection] = useState<SectionType>('profile');
-  
+  // Permite abrir el sidebar también con el teclado (Tab), no solo con hover.
+  const [sidebarFocused, setSidebarFocused] = useState(false);
+
   return (
     <div 
       className="relative flex min-h-screen w-full overflow-hidden bg-[#eef2fb] bg-cover bg-center text-[#17213f] selection:bg-[#dce3ff] selection:text-[#17213f]"
@@ -73,8 +75,8 @@ export default function DashboardPage() {
             key={key}
             onClick={() => setActiveSection(key)}
             aria-current={activeSection === key}
-            className={`flex flex-1 flex-col items-center gap-0.5 px-2 py-2.5 text-[10px] font-medium transition-colors ${
-              activeSection === key ? 'text-[#263BAA]' : 'text-[#8a94ae]'
+            className={`flex flex-1 flex-col items-center gap-0.5 px-2 py-2.5 text-[11px] font-medium transition-colors ${
+              activeSection === key ? 'text-[#263BAA]' : 'text-[#5b6685]'
             }`}
           >
             <Icon size={20} strokeWidth={activeSection === key ? 2.5 : 2} />
@@ -86,19 +88,22 @@ export default function DashboardPage() {
       {/* 🌟 SIDEBAR ANCHO Y CON ALTO CONTRASTE (solo desktop/tablet, md+) */}
       <motion.aside 
         initial={{ width: 88, x: 0 }}
+        animate={{ width: sidebarFocused ? 280 : 88 }}
         whileHover={{ width: 280 }}
+        onFocus={() => setSidebarFocused(true)}
+        onBlur={() => setSidebarFocused(false)}
         transition={{ duration: 0.35, ease: [0.25, 1, 0.5, 1] }}
         className="z-20 my-auto ml-4 hidden h-[94vh] flex-col justify-between overflow-hidden rounded-3xl border border-white/80 bg-white/90 shadow-[0_18px_50px_rgba(47,61,110,0.16)] backdrop-blur-xl group md:flex"
       >
         <div className="w-[280px]">
           {/* Logo / Marca */}
           <div className="flex h-20 items-center gap-4 border-b border-[#e8ebf5] p-5">
-            <div className="w-10 h-10 flex-shrink-0 rounded-xl bg-[#FFF4D6] text-[#0B132B] flex items-center justify-center font-black text-xl shadow-lg">
+            <div className="w-10 h-10 flex-shrink-0 rounded-xl bg-[#263BAA] text-[#FFF4D6] flex items-center justify-center font-black text-xl shadow-lg">
               T
             </div>
-            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 overflow-hidden pr-4">
-              <h2 className="text-sm font-bold text-white tracking-wide truncate">TaskIt</h2>
-              <p className="text-[11px] text-white/70 font-semibold tracking-wider uppercase truncate">Workspace</p>
+            <div className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-300 overflow-hidden pr-4">
+              <h2 className="text-base font-bold text-[#0B132B] tracking-wide truncate">TaskIt</h2>
+              <p className="text-xs text-[#2f3b63] font-semibold truncate">Workspace</p>
             </div>
           </div>
 
@@ -109,11 +114,11 @@ export default function DashboardPage() {
               className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer border truncate ${
                 activeSection === 'profile' 
                   ? 'bg-[#263BAA] border-[#263BAA] text-white shadow-[0_8px_18px_rgba(38,59,170,0.22)] font-semibold' 
-                  : 'bg-transparent border-transparent text-[#6b7696] hover:bg-[#eef2ff] hover:text-[#263BAA]'
+                  : 'bg-transparent border-transparent text-[#2f3b63] hover:bg-[#eef2ff] hover:text-[#263BAA]'
               }`}
             >
               <UserRound size={20} strokeWidth={activeSection === 'profile' ? 2.5 : 2} className="flex-shrink-0" />
-              <span className="opacity-0 group-hover:opacity-100 whitespace-nowrap transition-opacity truncate">Mi perfil</span>
+              <span className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap transition-opacity truncate">Mi perfil</span>
             </button>
 
             <button
@@ -121,11 +126,11 @@ export default function DashboardPage() {
               className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer border truncate ${
                 activeSection === 'search' 
                   ? 'bg-[#263BAA] border-[#263BAA] text-white shadow-[0_8px_18px_rgba(38,59,170,0.22)] font-semibold' 
-                  : 'bg-transparent border-transparent text-[#6b7696] hover:bg-[#eef2ff] hover:text-[#263BAA]'
+                  : 'bg-transparent border-transparent text-[#2f3b63] hover:bg-[#eef2ff] hover:text-[#263BAA]'
               }`}
             >
               <Search size={20} strokeWidth={activeSection === 'search' ? 2.5 : 2} className="flex-shrink-0" />
-              <span className="opacity-0 group-hover:opacity-100 whitespace-nowrap transition-opacity truncate">Buscar profesionales</span>
+              <span className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap transition-opacity truncate">Buscar profesionales</span>
             </button>
 
             <button
@@ -133,11 +138,11 @@ export default function DashboardPage() {
               className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer border truncate ${
                 activeSection === 'tasks' 
                   ? 'bg-[#263BAA] border-[#263BAA] text-white shadow-[0_8px_18px_rgba(38,59,170,0.22)] font-semibold' 
-                  : 'bg-transparent border-transparent text-[#6b7696] hover:bg-[#eef2ff] hover:text-[#263BAA]'
+                  : 'bg-transparent border-transparent text-[#2f3b63] hover:bg-[#eef2ff] hover:text-[#263BAA]'
               }`}
             >
               <ClipboardList size={20} strokeWidth={activeSection === 'tasks' ? 2.5 : 2} className="flex-shrink-0" />
-              <span className="opacity-0 group-hover:opacity-100 whitespace-nowrap transition-opacity truncate">Gestión de tareas</span>
+              <span className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap transition-opacity truncate">Gestión de tareas</span>
             </button>
           </nav>
         </div>
@@ -150,7 +155,7 @@ export default function DashboardPage() {
               className="mb-1.5 w-full cursor-pointer overflow-hidden rounded-xl border border-transparent px-4 py-3 text-left text-sm font-medium text-[#263BAA] transition-all hover:border-[#c9d2f7] hover:bg-[#eef1ff] flex items-center gap-4"
             >
               <ShieldCheck size={20} strokeWidth={2} className="flex-shrink-0" />
-              <span className="opacity-0 group-hover:opacity-100 whitespace-nowrap transition-opacity truncate">Panel de administración</span>
+              <span className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap transition-opacity truncate">Panel de administración</span>
             </Link>
           )}
           <button 
@@ -158,7 +163,7 @@ export default function DashboardPage() {
             className="w-full cursor-pointer overflow-hidden rounded-xl border border-transparent px-4 py-3 text-left text-sm font-medium text-[#c15a6b] transition-all hover:border-[#f0ccd3] hover:bg-[#fff2f4] hover:text-[#a73e51] flex items-center gap-4"
           >
             <LogOut size={20} strokeWidth={2} className="flex-shrink-0" />
-            <span className="opacity-0 group-hover:opacity-100 whitespace-nowrap transition-opacity truncate">Cerrar sesión</span>
+            <span className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap transition-opacity truncate">Cerrar sesión</span>
           </button>
         </div>
       </motion.aside>

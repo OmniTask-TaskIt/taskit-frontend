@@ -41,7 +41,9 @@ export function useLogin() {
       authStore.setTokens(data.accessToken, data.refreshToken);
       localStorage.setItem('userEmail', formData.email);
 
-      navigate('/select-role');
+      // El administrador NO elige rol: /select-role llama a switch-role y le cambiaría el rol a
+      // SEEKER/PROVIDER en la base de datos. Va directo al panel.
+      navigate(authStore.getRole() === 'ADMIN' ? '/admin' : '/select-role');
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const errorData = err.response?.data as { error?: string; message?: string };
