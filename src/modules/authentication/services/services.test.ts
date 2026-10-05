@@ -42,6 +42,23 @@ describe('servicios HTTP de AuthAndProfiles', () => {
       expect(http.post).toHaveBeenCalledWith('/auth/resend-otp', { email: 'a@gmail.com' });
     });
 
+    it('forgotPassword y resetPassword usan los endpoints de recuperación (RF-AUTH-4)', async () => {
+      await authService.forgotPassword('a@gmail.com');
+      expect(http.post).toHaveBeenCalledWith('/auth/forgot-password', { email: 'a@gmail.com' });
+
+      await authService.resetPassword('a@gmail.com', '123456', 'NuevaClave1!');
+      expect(http.post).toHaveBeenCalledWith('/auth/reset-password', {
+        email: 'a@gmail.com',
+        code: '123456',
+        newPassword: 'NuevaClave1!',
+      });
+    });
+
+    it('logout hace POST a /auth/logout sin cuerpo y con timeout corto (RF-AUTH-8)', async () => {
+      await authService.logout();
+      expect(http.post).toHaveBeenCalledWith('/auth/logout', null, { timeout: 5000 });
+    });
+
     it('googleLogin y githubLogin envían acceptedTerms (false por defecto)', async () => {
       await authService.googleLogin('tok');
       expect(http.post).toHaveBeenCalledWith('/auth/google', { token: 'tok', acceptedTerms: false });

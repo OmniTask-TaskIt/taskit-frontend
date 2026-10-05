@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import UserProfileCard from './UserProfileCard';
 import { profileService } from '../../services/profileService';
@@ -64,15 +64,17 @@ describe('UserProfileCard (mi perfil)', () => {
     await screen.findByText('Ana Pérez');
 
     await user.click(screen.getByRole('button', { name: /editar perfil/i }));
+    
+    // Usar fireEvent.change en lugar de user.type optimiza dramáticamente el rendimiento del renderizado en pruebas
     const description = screen.getByLabelText('Descripción');
-    await user.clear(description);
-    await user.type(description, '  Nueva descripción  ');
+    fireEvent.change(description, { target: { value: '  Nueva descripción  ' } });
+    
     const zone = screen.getByLabelText(/zona de cobertura/i);
-    await user.clear(zone);
-    await user.type(zone, 'Medellín');
+    fireEvent.change(zone, { target: { value: 'Medellín' } });
+    
     const categories = screen.getByLabelText(/categorías/i);
-    await user.clear(categories);
-    await user.type(categories, 'Electricidad, Pintura, ,');
+    fireEvent.change(categories, { target: { value: 'Electricidad, Pintura, ,' } });
+    
     await user.click(screen.getByRole('button', { name: /guardar cambios/i }));
 
     await waitFor(() =>
@@ -119,7 +121,6 @@ describe('UserProfileCard (mi perfil)', () => {
     localStorage.setItem('userEmail', 'ana@gmail.com');
     vi.mocked(profileService.searchProfiles).mockResolvedValue([profile()]);
     vi.mocked(profileService.uploadDocument).mockResolvedValue(profile({ identityVerificationStatus: 'PENDING_REVIEW' }));
-    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
     const user = userEvent.setup();
     const { container } = render(<UserProfileCard />);
     await screen.findByText('Ana Pérez');
@@ -128,7 +129,7 @@ describe('UserProfileCard (mi perfil)', () => {
     await user.upload(container.querySelector('input[accept=".pdf,.png,.jpg,.jpeg"]') as HTMLInputElement, file);
 
     await waitFor(() => expect(profileService.uploadDocument).toHaveBeenCalledWith('u1', file));
-    await waitFor(() => expect(alertSpy).toHaveBeenCalledWith(expect.stringMatching(/enviado a revisión/i)));
+    expect(await screen.findByRole('status')).toHaveTextContent(/enviado a revisión/i);
     expect(await screen.findByText(/tu documento está en revisión/i)).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /subir/i })).not.toBeInTheDocument();
   });
@@ -140,7 +141,6 @@ describe('UserProfileCard (mi perfil)', () => {
       makeAxiosError({ message: 'El archivo supera el tamaño máximo permitido.' })
     );
     vi.spyOn(console, 'error').mockImplementation(() => {});
-    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
     const user = userEvent.setup();
     const { container } = render(<UserProfileCard />);
     await screen.findByText('Ana Pérez');
@@ -148,7 +148,8 @@ describe('UserProfileCard (mi perfil)', () => {
     const file = new File(['x'], 'grande.pdf', { type: 'application/pdf' });
     await user.upload(container.querySelector('input[accept=".pdf,.png,.jpg,.jpeg"]') as HTMLInputElement, file);
 
-    await waitFor(() => expect(alertSpy).toHaveBeenCalledWith('El archivo supera el tamaño máximo permitido.'));
+    expect(await screen.findByRole('alert')).toHaveTextContent('El archivo supera el tamaño máximo permitido.');
+    expect(screen.queryByText(/no se pudo cargar el documento de identidad/i)).not.toBeInTheDocument();
   });
 
   describe('panel de documento de identidad según el estado del perfil', () => {
@@ -160,7 +161,6 @@ describe('UserProfileCard (mi perfil)', () => {
     ];
 
     it.each(cases)('%s', async (status, message, buttonLabel) => {
-      // El backend rechaza (400) subir documento si está en revisión o verificado: no se ofrece el botón.
       localStorage.setItem('userEmail', 'ana@gmail.com');
       vi.mocked(profileService.searchProfiles).mockResolvedValue([profile({ identityVerificationStatus: status })]);
       render(<UserProfileCard />);

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import TaskSectionPlaceholder from '../Components/ui/TaskSectionPlaceholder';
 import ProfileSearchSection from '../Components/profile/ProfileSearchSection';
 import UserProfileCard from '../Components/profile/UserProfileCard';
+import { authService } from '../services/authService';
 import { authStore } from '../services/authStore';
 import { redirectToLogin } from '../../../utils/navigation';
 import { ClipboardList, LogOut, Search, ShieldCheck, UserRound } from 'lucide-react';
@@ -19,10 +20,17 @@ const NAV_ITEMS: { key: SectionType; label: string; icon: typeof UserRound }[] =
   { key: 'tasks', label: 'Gestión de tareas', icon: ClipboardList },
 ];
 
-function handleLogout() {
-  authStore.clearSession();
-  localStorage.clear();
-  redirectToLogin();
+async function handleLogout() {
+  try {
+    // RF-AUTH-8: primero se revocan los tokens en el backend (hace falta el access token todavía guardado).
+    await authService.logout();
+  } catch {
+    // Si el backend no responde (red caída, token ya vencido) la sesión local se cierra igual.
+  } finally {
+    authStore.clearSession();
+    localStorage.clear();
+    redirectToLogin();
+  }
 }
 
 export default function DashboardPage() {

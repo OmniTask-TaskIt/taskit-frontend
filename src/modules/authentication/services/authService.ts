@@ -41,6 +41,15 @@ export const authService = {
     return response.data;
   },
 
+  /**
+   * RF-AUTH-8: pide al backend revocar el access token de la sesión (lo manda el interceptor)
+   * y borrar el refresh token. Tiene timeout corto para no dejar al usuario esperando al salir.
+   */
+  async logout() {
+    const response = await axiosInstance.post('/auth/logout', null, { timeout: 5000 });
+    return response.data;
+  },
+
   async googleLogin(googleToken: string, acceptedTerms = false) {
     const response = await axiosInstance.post('/auth/google', { token: googleToken, acceptedTerms });
     return response.data;
