@@ -2,6 +2,7 @@ import axios from 'axios';
 import { authStore } from '../services/authStore';
 import { env } from './env';
 import { redirectToLogin } from '../../../utils/navigation';
+import { deviceId } from '../services/deviceId';
 
 const API_BASE = `${env.apiUrl}/api/v1`;
 const AUTH_URL = `${API_BASE}/auth`;
@@ -19,6 +20,8 @@ axiosInstance.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    // RF-AUTH-11/13: el backend reconoce el dispositivo por este identificador (ver services/deviceId.ts).
+    config.headers['X-Device-Id'] = deviceId.get();
     return config;
   },
   (error) => Promise.reject(error)

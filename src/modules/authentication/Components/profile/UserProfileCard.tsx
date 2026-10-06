@@ -1,3 +1,4 @@
+import ProfileActivity from './ProfileActivity';
 import React, { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { FileText, MapPin, Pencil, ShieldCheck, ShieldAlert, Star, Tag, Upload, Camera } from 'lucide-react';
@@ -236,6 +237,7 @@ export default function UserProfileCard() {
                   <span className="text-sm text-[#17213f]/70">Sin reseñas todavía</span>
                 )}
               </div>
+              <ProfileActivity tasksCompleted={profile.tasksCompleted} memberSince={profile.memberSince} />
             </div>
           </div>
 

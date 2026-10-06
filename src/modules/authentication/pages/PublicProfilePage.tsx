@@ -1,3 +1,4 @@
+import ProfileActivity from '../Components/profile/ProfileActivity';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -106,6 +107,7 @@ export default function PublicProfilePage() {
                     <span className="text-[#17213f]/80">Sin reseñas todavía</span>
                   )}
                 </div>
+                <ProfileActivity tasksCompleted={profile.tasksCompleted} memberSince={profile.memberSince} />
               </div>
             </header>
 

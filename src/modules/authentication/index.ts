@@ -24,6 +24,7 @@ export { authService } from './services/authService';
 export { profileService } from './services/profileService';
 export { reviewService } from './services/reviewService';
 export { adminService } from './services/adminService';
+export { sessionService } from './services/sessionService';
 export { authStore } from './services/authStore';
 export { env } from './Config/env';
 
@@ -31,3 +32,4 @@ export { env } from './Config/env';
 export type * from './types/auth.types';
 export type * from './types/profile.types';
 export type * from './types/admin.types';
+export type * from './types/session.types';

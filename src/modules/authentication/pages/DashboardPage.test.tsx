@@ -10,6 +10,7 @@ import { makeJwt } from '../../../test/helpers';
 
 vi.mock('../Components/profile/UserProfileCard', () => ({ default: () => <div>SECCION-PERFIL</div> }));
 vi.mock('../Components/profile/ProfileSearchSection', () => ({ default: () => <div>SECCION-BUSCAR</div> }));
+vi.mock('../Components/security/ActiveSessionsSection', () => ({ default: () => <div>SECCION-SEGURIDAD</div> }));
 vi.mock('../Components/ui/TaskSectionPlaceholder', () => ({ default: () => <div>SECCION-TAREAS</div> }));
 vi.mock('../../../utils/navigation', () => ({ redirectToLogin: vi.fn() }));
 vi.mock('../services/authService', () => ({ authService: { logout: vi.fn() } }));
@@ -37,6 +38,9 @@ describe('DashboardPage', () => {
 
     await user.click(screen.getAllByRole('button', { name: /gestión de tareas/i })[0]);
     expect(await screen.findByText('SECCION-TAREAS')).toBeInTheDocument();
+
+    await user.click(screen.getAllByRole('button', { name: /seguridad/i })[0]);
+    expect(await screen.findByText('SECCION-SEGURIDAD')).toBeInTheDocument();
 
     await user.click(screen.getAllByRole('button', { name: /mi perfil/i })[0]);
     expect(await screen.findByText('SECCION-PERFIL')).toBeInTheDocument();
