@@ -4,20 +4,22 @@ import { motion, AnimatePresence } from 'framer-motion';
 import TaskSectionPlaceholder from '../Components/ui/TaskSectionPlaceholder';
 import ProfileSearchSection from '../Components/profile/ProfileSearchSection';
 import UserProfileCard from '../Components/profile/UserProfileCard';
+import ActiveSessionsSection from '../Components/security/ActiveSessionsSection';
 import { authService } from '../services/authService';
 import { authStore } from '../services/authStore';
 import { redirectToLogin } from '../../../utils/navigation';
-import { ClipboardList, LogOut, Search, ShieldCheck, UserRound } from 'lucide-react';
+import { ClipboardList, Lock, LogOut, Search, ShieldCheck, UserRound } from 'lucide-react';
 
 import fondoImage from '../../../assets/FondoP.jpeg';
 import logoImage from '../../../assets/Logo.jpeg';
 
-type SectionType = 'profile' | 'search' | 'tasks';
+type SectionType = 'profile' | 'search' | 'tasks' | 'security';
 
 const NAV_ITEMS: { key: SectionType; label: string; icon: typeof UserRound }[] = [
   { key: 'profile', label: 'Mi perfil', icon: UserRound },
   { key: 'search', label: 'Buscar profesionales', icon: Search },
   { key: 'tasks', label: 'Gestión de tareas', icon: ClipboardList },
+  { key: 'security', label: 'Seguridad', icon: Lock },
 ];
 
 async function handleLogout() {
@@ -152,6 +154,17 @@ export default function DashboardPage() {
               <ClipboardList size={20} strokeWidth={activeSection === 'tasks' ? 2.5 : 2} className="flex-shrink-0" />
               <span className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap transition-opacity truncate">Gestión de tareas</span>
             </button>
+            <button
+              onClick={() => setActiveSection('security')}
+              className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer border truncate ${
+                activeSection === 'security' 
+                  ? 'bg-[#263BAA] border-[#263BAA] text-white shadow-[0_8px_18px_rgba(38,59,170,0.22)] font-semibold' 
+                  : 'bg-transparent border-transparent text-[#2f3b63] hover:bg-[#eef2ff] hover:text-[#263BAA]'
+              }`}
+            >
+              <Lock size={20} strokeWidth={activeSection === 'security' ? 2.5 : 2} className="flex-shrink-0" />
+              <span className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap transition-opacity truncate">Seguridad</span>
+            </button>
           </nav>
         </div>
 
@@ -196,6 +209,12 @@ export default function DashboardPage() {
             {activeSection === 'tasks' && (
               <motion.div key="tasks" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.2 }}>
                 <TaskSectionPlaceholder />
+              </motion.div>
+            )}
+
+            {activeSection === 'security' && (
+              <motion.div key="security" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.2 }}>
+                <ActiveSessionsSection />
               </motion.div>
             )}
           </AnimatePresence>

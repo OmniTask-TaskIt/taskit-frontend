@@ -11,8 +11,11 @@ export interface Profile {
   locationCoverage: string;
   reputationScore: number;
   totalReviews: number;
+  /** RF-AUTHPR-8: tareas completadas como prestador. */
+  tasksCompleted?: number;
+  /** RF-AUTHPR-8: fecha de alta (ISO-8601); la antigüedad se calcula a partir de ella. */
+  memberSince?: string;
   identityVerificationStatus: VerificationStatus;
-  institutionalVerificationStatus?: VerificationStatus;
 }
 
 /** Campos editables por el dueño del perfil (los acepta PATCH /profiles/{id} como query params). */

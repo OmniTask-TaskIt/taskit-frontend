@@ -195,4 +195,16 @@ describe('UserProfileCard (mi perfil)', () => {
 
     expect(screen.getByRole('button', { name: /eliminar mi cuenta/i })).toBeInTheDocument();
   });
+
+  it('muestra el historial de actividad: tareas completadas y antigüedad (RF-AUTHPR-8)', async () => {
+    localStorage.setItem('userEmail', 'ana@gmail.com');
+    vi.mocked(profileService.searchProfiles).mockResolvedValue([
+      profile({ tasksCompleted: 7, memberSince: '2026-01-10T10:00:00Z' }),
+    ]);
+    render(<UserProfileCard />);
+    await screen.findByText('Ana Pérez');
+
+    expect(screen.getByText('7 tareas completadas')).toBeInTheDocument();
+    expect(screen.getByText(/miembro desde enero de 2026/i)).toBeInTheDocument();
+  });
 });
