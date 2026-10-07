@@ -108,4 +108,20 @@ describe('GoogleLoginButton', () => {
     expect(onBlockedClick).toHaveBeenCalled();
     expect(authService.googleLogin).not.toHaveBeenCalled();
   });
+
+  it('con 2FA activo: guarda el reto y va a /verify-2fa sin guardar tokens (RF-AUTH-9)', async () => {
+    window.__GOOGLE_CREDENTIAL__ = makeJwt({ sub: 'ana@gmail.com' });
+    vi.mocked(authService.googleLogin).mockResolvedValue({ twoFactorRequired: true, challengeId: 'ch-1', email: 'ana@gmail.com' });
+    renderButton();
+
+    await userEvent.click(screen.getByText('google-ok'));
+
+    await waitFor(() => expect(screen.getByTestId('location')).toHaveTextContent('/verify-2fa'));
+    expect(JSON.parse(sessionStorage.getItem('twoFactorChallenge') ?? 'null')).toEqual({
+      challengeId: 'ch-1',
+      email: 'ana@gmail.com',
+    });
+    expect(authStore.getAccessToken()).toBeNull();
+    sessionStorage.clear();
+  });
 });
