@@ -157,4 +157,19 @@ describe('LoginForm', () => {
     expect(await screen.findByText(/aún no has verificado tu cuenta/i)).toBeInTheDocument();
     await waitFor(() => expect(screen.getByTestId('location')).toHaveTextContent('/verify-otp'), { timeout: 3000 });
   });
+
+  it('con 2FA activo: guarda el reto, no guarda tokens y navega a /verify-2fa (RF-AUTH-9)', async () => {
+    vi.mocked(authService.login).mockResolvedValue({ twoFactorRequired: true, challengeId: 'ch-1', email: 'ana@gmail.com' });
+    renderLogin();
+
+    await fillAndSubmit();
+
+    await waitFor(() => expect(screen.getByTestId('location')).toHaveTextContent('/verify-2fa'));
+    expect(JSON.parse(sessionStorage.getItem('twoFactorChallenge') ?? 'null')).toEqual({
+      challengeId: 'ch-1',
+      email: 'ana@gmail.com',
+    });
+    expect(authStore.getAccessToken()).toBeNull();
+    sessionStorage.clear();
+  });
 });

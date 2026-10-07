@@ -50,6 +50,12 @@ export const authService = {
     return response.data;
   },
 
+  /** RF-AUTH-9: segundo paso del login, canjea el reto y el código del correo por los tokens de la sesión. */
+  async verifyTwoFactorLogin(challengeId: string, code: string) {
+    const response = await axiosInstance.post('/auth/2fa/verify-login', { challengeId, code });
+    return response.data;
+  },
+
   async googleLogin(googleToken: string, acceptedTerms = false) {
     const response = await axiosInstance.post('/auth/google', { token: googleToken, acceptedTerms });
     return response.data;

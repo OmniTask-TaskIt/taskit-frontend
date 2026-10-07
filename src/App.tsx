@@ -11,6 +11,7 @@ import {
   GithubCallbackPage,
   DashboardPage,
   AdminPage,
+  TwoFactorLoginPage,
   ProtectedRoute,
   AdminRoute,
 } from './modules/authentication';
@@ -23,6 +24,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/verify-otp" element={<OtpVerificationPage />} />
+        <Route path="/verify-2fa" element={<TwoFactorLoginPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/terms" element={<TermsPage />} />

@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { authService } from '../services/authService';
 import { authStore } from '../services/authStore';
+import { twoFactorChallenge } from '../services/twoFactorChallenge';
 
 /**
  * Estado y lógica del formulario de inicio de sesión (correo/contraseña).
@@ -37,6 +38,13 @@ export function useLogin() {
 
     try {
       const data = await authService.login(formData);
+
+      // RF-AUTH-9: con el segundo factor activo no hay tokens todavía; se pide el código enviado al correo.
+      if (data.twoFactorRequired && data.challengeId) {
+        twoFactorChallenge.start({ challengeId: data.challengeId, email: formData.email });
+        navigate('/verify-2fa');
+        return;
+      }
 
       authStore.setTokens(data.accessToken, data.refreshToken);
       localStorage.setItem('userEmail', formData.email);

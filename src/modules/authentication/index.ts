@@ -14,6 +14,7 @@ export { default as TermsPage } from './pages/TermsPage';
 export { default as GithubCallbackPage } from './pages/GithubCallbackPage';
 export { default as DashboardPage } from './pages/DashboardPage';
 export { default as AdminPage } from './pages/AdminPage';
+export { default as TwoFactorLoginPage } from './pages/TwoFactorLoginPage';
 
 // Guardas de ruta
 export { default as ProtectedRoute } from './Components/auth/ProtectedRoute';
@@ -25,6 +26,7 @@ export { profileService } from './services/profileService';
 export { reviewService } from './services/reviewService';
 export { adminService } from './services/adminService';
 export { sessionService } from './services/sessionService';
+export { twoFactorService } from './services/twoFactorService';
 export { authStore } from './services/authStore';
 export { env } from './Config/env';
 

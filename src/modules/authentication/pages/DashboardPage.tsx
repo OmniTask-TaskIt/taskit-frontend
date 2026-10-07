@@ -5,6 +5,7 @@ import TaskSectionPlaceholder from '../Components/ui/TaskSectionPlaceholder';
 import ProfileSearchSection from '../Components/profile/ProfileSearchSection';
 import UserProfileCard from '../Components/profile/UserProfileCard';
 import ActiveSessionsSection from '../Components/security/ActiveSessionsSection';
+import TwoFactorSection from '../Components/security/TwoFactorSection';
 import { authService } from '../services/authService';
 import { authStore } from '../services/authStore';
 import { redirectToLogin } from '../../../utils/navigation';
@@ -214,6 +215,7 @@ export default function DashboardPage() {
 
             {activeSection === 'security' && (
               <motion.div key="security" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.2 }}>
+                <TwoFactorSection />
                 <ActiveSessionsSection />
               </motion.div>
             )}

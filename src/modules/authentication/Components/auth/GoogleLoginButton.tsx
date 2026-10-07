@@ -2,6 +2,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../../services/authService';
 import { authStore } from '../../services/authStore';
+import { twoFactorChallenge } from '../../services/twoFactorChallenge';
 import axios from 'axios';
 
 interface GoogleLoginButtonProps {
@@ -77,7 +78,14 @@ export default function GoogleLoginButton({ onError, disabled, onBlockedClick }:
             }
 
             const data = await authService.googleLogin(credentialResponse.credential, true);
-            
+
+            // RF-AUTH-9: la cuenta tiene segundo factor, falta el código del correo.
+            if (data.twoFactorRequired && data.challengeId) {
+              twoFactorChallenge.start({ challengeId: data.challengeId, email: data.email ?? googleEmail ?? '' });
+              navigate('/verify-2fa');
+              return;
+            }
+
             if (!data.accessToken) {
               onError('El servidor no devolvió un token de acceso válido.');
               return;

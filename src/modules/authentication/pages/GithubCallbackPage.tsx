@@ -4,6 +4,7 @@ import axios from 'axios';
 import AuthLayout from '../Components/ui/AuthLayout';
 import { authService } from '../services/authService';
 import { authStore } from '../services/authStore';
+import { twoFactorChallenge } from '../services/twoFactorChallenge';
 import { consumeOauthState } from '../services/oauthState';
 
 /**
@@ -54,6 +55,13 @@ export default function GithubCallbackPage() {
         const acceptedTerms = sessionStorage.getItem('githubOauthTermsAccepted') === 'true';
         sessionStorage.removeItem('githubOauthTermsAccepted');
         const data = await authService.githubLogin(code, acceptedTerms);
+
+        // RF-AUTH-9: la cuenta tiene segundo factor, falta el código del correo.
+        if (data.twoFactorRequired && data.challengeId) {
+          twoFactorChallenge.start({ challengeId: data.challengeId, email: data.email ?? '' });
+          navigate('/verify-2fa', { replace: true });
+          return;
+        }
 
         if (!data.accessToken) {
           setAsyncError('El servidor no devolvió un token de acceso válido.');

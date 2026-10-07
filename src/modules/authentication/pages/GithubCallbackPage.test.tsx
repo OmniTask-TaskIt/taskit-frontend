@@ -134,4 +134,17 @@ describe('GithubCallbackPage', () => {
       expect(sessionStorage.getItem('githubOauthState')).toBeNull();
     });
   });
+
+  it('con 2FA activo: guarda el reto y va a /verify-2fa sin guardar tokens (RF-AUTH-9)', async () => {
+    vi.mocked(authService.githubLogin).mockResolvedValue({ twoFactorRequired: true, challengeId: 'ch-1', email: 'gh@taskit.com' });
+
+    renderCallback('?code=abc123');
+
+    await waitFor(() => expect(screen.getByTestId('location')).toHaveTextContent('/verify-2fa'));
+    expect(JSON.parse(sessionStorage.getItem('twoFactorChallenge') ?? 'null')).toEqual({
+      challengeId: 'ch-1',
+      email: 'gh@taskit.com',
+    });
+    expect(authStore.getAccessToken()).toBeNull();
+  });
 });
