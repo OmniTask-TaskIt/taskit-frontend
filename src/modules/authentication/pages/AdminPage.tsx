@@ -31,13 +31,13 @@ export default function AdminPage() {
           Usuarios, verificación de identidad y reportes de la comunidad de TaskIt.
         </p>
 
-        <div className="mt-6 flex gap-2 border-b border-white/10 pb-px">
+        <div className="mt-6 flex gap-1 overflow-x-auto border-b border-white/10 pb-px">
           {TABS.map(({ key, label, icon: Icon }) => (
             <button
               key={key}
               onClick={() => setTab(key)}
               aria-current={tab === key}
-              className={`flex items-center gap-1.5 rounded-t-lg px-4 py-2.5 text-sm font-medium transition-colors ${
+              className={`flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-t-lg px-3 py-2.5 sm:px-4 text-sm font-medium transition-colors ${
                 tab === key ? 'bg-white/5 text-white border-b-2 border-[#263BAA]' : 'text-white/50 hover:text-white'
               }`}
             >

@@ -24,8 +24,33 @@ export default function UserProfileCard() {
 
   const photoInputRef = useRef<HTMLInputElement>(null);
   const docInputRef = useRef<HTMLInputElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
+  const editFormRef = useRef<HTMLFormElement>(null);
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
+  // Cada vez que cambia, el efecto de abajo lleva al usuario hasta el formulario de edición.
+  const [focusTick, setFocusTick] = useState(0);
 
   const userEmail: string = localStorage.getItem('userEmail') ?? '';
+
+  // El formulario aparece al final de la tarjeta, fuera de la vista (sobre todo en celular).
+  // Se desplaza hasta él, lo resalta con un pulso y pone el cursor en el primer campo.
+  useEffect(() => {
+    if (focusTick === 0) return;
+    const form = editFormRef.current;
+    if (!form) return;
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+    form.scrollIntoView?.({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    descriptionRef.current?.focus({ preventScroll: true });
+    if (!reduceMotion) {
+      form.animate?.(
+        [
+          { boxShadow: '0 0 0 0 rgba(38, 59, 170, 0.45)' },
+          { boxShadow: '0 0 0 14px rgba(38, 59, 170, 0)' },
+        ],
+        { duration: 1100, easing: 'ease-out' },
+      );
+    }
+  }, [focusTick]);
 
   useEffect(() => {
     const fetchMyProfile = async () => {
@@ -57,13 +82,17 @@ export default function UserProfileCard() {
 
   const openEditor = () => {
     if (!profile) return;
-    setDraft({
-      description: profile.description || '',
-      locationCoverage: profile.locationCoverage || '',
-      categories: profile.categories?.join(', ') || ''
-    });
-    setSaveError('');
-    setIsEditing(true);
+    // Si el formulario ya está abierto no se reinicia el borrador: solo se vuelve a enfocar.
+    if (!isEditing) {
+      setDraft({
+        description: profile.description || '',
+        locationCoverage: profile.locationCoverage || '',
+        categories: profile.categories?.join(', ') || ''
+      });
+      setSaveError('');
+      setIsEditing(true);
+    }
+    setFocusTick((tick) => tick + 1);
   };
 
   const saveProfile = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -82,6 +111,9 @@ export default function UserProfileCard() {
       const updatedProfile = await profileService.updateProfile(profile.userId, payloadData);
       setProfile({ ...profile, ...updatedProfile });
       setIsEditing(false);
+      setNotice({ type: 'success', text: 'Perfil actualizado correctamente.' });
+      // El formulario estaba al final de la tarjeta: se vuelve arriba para ver el resultado y el aviso.
+      headerRef.current?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
     } catch {
       setSaveError('No se pudo guardar el perfil. Inténtalo de nuevo.');
     } finally {
@@ -174,8 +206,8 @@ export default function UserProfileCard() {
         animate={{ opacity: 1, y: 0 }}
         className="flex w-full flex-col overflow-hidden rounded-2xl border border-[#e4e8f3] bg-white/95 shadow-[0_18px_45px_rgba(47,61,110,0.12)]"
       >
-        <header className="flex flex-col items-start justify-between gap-6 border-b border-[#e4e8f3] p-6 sm:flex-row sm:items-center md:p-8">
-          <div className="flex items-center gap-5">
+        <header ref={headerRef} className="flex scroll-mt-20 flex-col items-start justify-between gap-6 border-b border-[#e4e8f3] p-6 sm:flex-row sm:items-center md:scroll-mt-4 md:p-8">
+          <div className="flex w-full min-w-0 flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-5">
             <div 
               onClick={() => photoInputRef.current?.click()}
               className="relative group flex h-20 w-20 flex-shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#FFF4D6] text-[#0B132B] shadow-inner"
@@ -205,10 +237,10 @@ export default function UserProfileCard() {
             </div>
             <input type="file" ref={photoInputRef} onChange={handlePhotoChange} accept="image/*" className="hidden" />
 
-            <div>
+            <div className="min-w-0 max-w-full">
               <div className="flex flex-wrap items-center gap-3">
                 {/* 🌟 Aquí se muestra el nombre dinámico correcto */}
-                <h1 className="text-2xl font-bold tracking-tight text-[#17213f]">{displayName}</h1>
+                <h1 className="break-words text-xl font-bold tracking-tight text-[#17213f] sm:text-2xl">{displayName}</h1>
                 
                 {isVerified ? (
                   <span className="flex items-center gap-1.5 rounded-md bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-800 border border-emerald-300">
@@ -226,7 +258,7 @@ export default function UserProfileCard() {
                   </span>
                 )}
               </div>
-              <p className="mt-1 text-sm text-[#17213f]/70 truncate max-w-[280px] sm:max-w-xs">{userEmail}</p>
+              <p className="mt-1 text-sm text-[#17213f]/70 break-all sm:max-w-xs sm:truncate">{userEmail}</p>
               <div className="mt-2">
                 {profile.totalReviews && profile.totalReviews > 0 ? (
                   <span className="flex items-center gap-1 text-sm font-medium text-[#17213f]">
@@ -241,7 +273,7 @@ export default function UserProfileCard() {
             </div>
           </div>
 
-          <button type="button" onClick={openEditor} className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#1f2f8f] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#162270] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#263BAA] sm:w-auto shadow-md">
+          <button type="button" onClick={openEditor} aria-expanded={isEditing} aria-controls="editar-perfil" className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#1f2f8f] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#162270] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#263BAA] sm:w-auto shadow-md">
             <Pencil {...iconProps} className="text-white" />
             <span className="text-white">Editar perfil</span>
           </button>
@@ -328,11 +360,11 @@ export default function UserProfileCard() {
           </section>
 
           {isEditing && (
-            <form id="editar-perfil" onSubmit={saveProfile} className="flex flex-col gap-4 border-t border-[#e4e8f3] pt-8">
+            <form id="editar-perfil" ref={editFormRef} onSubmit={saveProfile} className="flex scroll-mt-24 flex-col gap-4 rounded-xl border-2 border-[#c9d2f7] bg-[#f5f7ff] p-4 md:scroll-mt-6 md:p-6">
               <h2 className="text-lg font-semibold text-[#17213f]">Editar perfil</h2>
               <label className="flex flex-col gap-2 text-sm text-[#4a5578]">
                 Descripción
-                <textarea value={draft.description} onChange={(event) => setDraft({ ...draft, description: event.target.value })} rows={3} className="rounded-lg border border-[#e4e8f3] bg-white p-3 text-[#17213f] outline-none focus:border-[#263BAA]" />
+                <textarea ref={descriptionRef} value={draft.description} onChange={(event) => setDraft({ ...draft, description: event.target.value })} rows={3} className="rounded-lg border border-[#e4e8f3] bg-white p-3 text-[#17213f] outline-none focus:border-[#263BAA]" />
               </label>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <label className="flex flex-col gap-2 text-sm text-[#4a5578]">
