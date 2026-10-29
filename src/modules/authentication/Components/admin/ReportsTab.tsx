@@ -82,7 +82,7 @@ export default function ReportsTab() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {STATUS_FILTERS.map((f) => (
           <button
             key={f.value}
@@ -125,7 +125,7 @@ export default function ReportsTab() {
               )}
 
               {report.status === 'OPEN' && (
-                <div className="mt-3 flex gap-2">
+                <div className="mt-3 flex flex-wrap gap-2">
                   <button
                     onClick={() => setPendingAction({ report, nextStatus: 'RESOLVED' })}
                     className="flex items-center gap-1 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-400 hover:bg-emerald-500/20 transition-colors"

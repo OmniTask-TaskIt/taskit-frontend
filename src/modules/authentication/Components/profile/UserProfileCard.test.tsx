@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import UserProfileCard from './UserProfileCard';
@@ -115,6 +115,60 @@ describe('UserProfileCard (mi perfil)', () => {
 
     expect(screen.queryByRole('button', { name: /guardar cambios/i })).not.toBeInTheDocument();
     expect(profileService.updateProfile).not.toHaveBeenCalled();
+  });
+
+  describe('aviso al pulsar "Editar perfil"', () => {
+    // jsdom no implementa scrollIntoView: se simula para comprobar que la tarjeta lo usa.
+    const scrollIntoView = vi.fn();
+    const original = HTMLElement.prototype.scrollIntoView;
+    beforeEach(() => { HTMLElement.prototype.scrollIntoView = scrollIntoView; });
+    afterEach(() => { HTMLElement.prototype.scrollIntoView = original; });
+
+    it('se desplaza hasta el formulario y pone el cursor en la descripción', async () => {
+      localStorage.setItem('userEmail', 'ana@gmail.com');
+      vi.mocked(profileService.searchProfiles).mockResolvedValue([profile()]);
+      const user = userEvent.setup();
+      render(<UserProfileCard />);
+      await screen.findByText('Ana Pérez');
+      expect(scrollIntoView).not.toHaveBeenCalled();
+
+      await user.click(screen.getByRole('button', { name: /editar perfil/i }));
+
+      expect(scrollIntoView).toHaveBeenCalledWith(expect.objectContaining({ block: 'start' }));
+      expect(screen.getByLabelText('Descripción')).toHaveFocus();
+      expect(screen.getByRole('button', { name: /editar perfil/i })).toHaveAttribute('aria-expanded', 'true');
+    });
+
+    it('si el editor ya estaba abierto, volver a pulsar no borra lo escrito pero vuelve a llevar al formulario', async () => {
+      localStorage.setItem('userEmail', 'ana@gmail.com');
+      vi.mocked(profileService.searchProfiles).mockResolvedValue([profile()]);
+      const user = userEvent.setup();
+      render(<UserProfileCard />);
+      await screen.findByText('Ana Pérez');
+
+      await user.click(screen.getByRole('button', { name: /editar perfil/i }));
+      fireEvent.change(screen.getByLabelText('Descripción'), { target: { value: 'Texto a medias' } });
+      await user.click(screen.getByRole('button', { name: /editar perfil/i }));
+
+      expect(screen.getByLabelText('Descripción')).toHaveValue('Texto a medias');
+      expect(scrollIntoView).toHaveBeenCalledTimes(2);
+    });
+
+    it('al guardar confirma el cambio y vuelve arriba para que se vea', async () => {
+      localStorage.setItem('userEmail', 'ana@gmail.com');
+      vi.mocked(profileService.searchProfiles).mockResolvedValue([profile()]);
+      vi.mocked(profileService.updateProfile).mockResolvedValue(profile({ description: 'Otra descripción' }));
+      const user = userEvent.setup();
+      render(<UserProfileCard />);
+      await screen.findByText('Ana Pérez');
+
+      await user.click(screen.getByRole('button', { name: /editar perfil/i }));
+      scrollIntoView.mockClear();
+      await user.click(screen.getByRole('button', { name: /guardar cambios/i }));
+
+      expect(await screen.findByText(/perfil actualizado correctamente/i)).toBeInTheDocument();
+      expect(scrollIntoView).toHaveBeenCalledWith(expect.objectContaining({ block: 'start' }));
+    });
   });
 
   it('subir documento de identidad lo envía y el panel pasa a "en revisión" (según el estado del backend)', async () => {

@@ -114,9 +114,9 @@ export default function ActiveSessionsSection() {
               key={session.id}
               className="flex flex-col gap-3 rounded-xl border border-[#e8ebf5] bg-white p-4 sm:flex-row sm:items-center sm:justify-between"
             >
-              <div className="flex items-start gap-3">
+              <div className="flex min-w-0 items-start gap-3">
                 <Laptop size={22} className="mt-0.5 flex-shrink-0 text-[#263BAA]" aria-hidden="true" />
-                <div className="flex flex-col gap-0.5 text-sm text-[#17213f]">
+                <div className="flex min-w-0 flex-col gap-0.5 break-words text-sm text-[#17213f]">
                   <p className="flex flex-wrap items-center gap-2 font-semibold">
                     {session.deviceInfo}
                     {session.current && (
@@ -125,7 +125,7 @@ export default function ActiveSessionsSection() {
                       </span>
                     )}
                   </p>
-                  <p className="text-[#66718e]">IP {session.ipAddress}</p>
+                  <p className="break-all text-[#66718e]">IP {session.ipAddress}</p>
                   <p className="text-[#66718e]">Último uso: {formatDate(session.lastActiveAt)}</p>
                   <p className="text-[#66718e]">Inició: {formatDate(session.createdAt)}</p>
                 </div>

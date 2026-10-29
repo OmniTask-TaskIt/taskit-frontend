@@ -47,7 +47,7 @@ export default function AccessibilityWidget() {
         aria-expanded={open}
         whileHover={{ scale: 1.06 }}
         whileTap={{ scale: 0.94 }}
-        className="fixed bottom-4 right-4 z-[100] flex h-12 w-12 items-center justify-center rounded-full bg-[#263BAA] text-white shadow-[0_10px_25px_rgba(38,59,170,0.45)] outline-none focus-visible:ring-4 focus-visible:ring-[#263BAA]/40 sm:bottom-6 sm:right-6"
+        className="fixed bottom-20 right-4 z-[100] flex h-12 w-12 items-center justify-center rounded-full bg-[#263BAA] text-white shadow-[0_10px_25px_rgba(38,59,170,0.45)] outline-none focus-visible:ring-4 focus-visible:ring-[#263BAA]/40 md:bottom-6 sm:right-6"
       >
         {open ? <X size={22} /> : <PersonStanding size={24} />}
       </motion.button>
@@ -61,7 +61,7 @@ export default function AccessibilityWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.96 }}
             transition={{ duration: 0.18 }}
-            className="fixed bottom-20 right-4 z-[100] w-[calc(100vw-2rem)] max-w-[320px] rounded-2xl border border-[#e2e5f5] bg-white/97 p-4 text-[#17213f] shadow-[0_24px_60px_rgba(23,33,63,0.25)] backdrop-blur-xl sm:bottom-24 sm:right-6"
+            className="fixed bottom-36 right-4 z-[100] w-[calc(100vw-2rem)] max-w-[320px] rounded-2xl border border-[#e2e5f5] bg-white/97 p-4 text-[#17213f] shadow-[0_24px_60px_rgba(23,33,63,0.25)] backdrop-blur-xl md:bottom-24 sm:right-6"
           >
             <div className="mb-3 flex items-center justify-between">
               <h3 className="text-sm font-bold">Accesibilidad</h3>
