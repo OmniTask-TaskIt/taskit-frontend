@@ -15,11 +15,13 @@ const unwrap = (data: unknown): Task[] => {
 };
 
 const request = <T>(promise: Promise<{ data: T }>) => promise.then(({ data }) => data);
-type CategoryOption = { value: string; label: string };
+type CategoryOption = string;
 const unwrapCategories = (data: unknown): CategoryOption[] => {
-  if (Array.isArray(data)) return data as CategoryOption[];
+  if (Array.isArray(data)) return data.filter((category): category is string => typeof category === 'string');
   if (data && typeof data === 'object' && Array.isArray((data as { categories?: unknown }).categories)) {
-    return (data as { categories: CategoryOption[] }).categories;
+    return (data as { categories: unknown[] }).categories.filter(
+      (category): category is string => typeof category === 'string'
+    );
   }
   return [];
 };
