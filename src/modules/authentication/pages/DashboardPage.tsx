@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import TaskModule from '../../tasks/TaskModule';
+import TaskModule from '../../tasks/pages/TaskModule';
 import ProfileSearchSection from '../Components/profile/ProfileSearchSection';
 import UserProfileCard from '../Components/profile/UserProfileCard';
 import ActiveSessionsSection from '../Components/security/ActiveSessionsSection';
