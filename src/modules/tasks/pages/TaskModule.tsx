@@ -36,7 +36,7 @@ export default function TaskModule() {
       <TaskTabs tab={tab} setTab={setTab} sort={filters.sort} setSort={(sort) => setFilters({ ...filters, sort })} />
       {tab === 'explore' && <TaskFilters filters={filters} setFilters={setFilters} />}
       {actions.notice && <div className="mb-4 flex items-center gap-2 rounded-xl border border-[#bde5cd] bg-[#edfbf2] px-4 py-3 text-sm font-semibold text-[#177245]" role="status"><CheckCircle2 size={17} />{actions.notice}<button type="button" className="ml-auto" onClick={() => actions.setNotice('')} aria-label="Cerrar mensaje"><X size={16} /></button></div>}
-      {(error || actions.error) && <TaskErrorState message={error || actions.error} onClose={() => { setError(''); actions.setError(''); }} />}
+      {(error || actions.error) && <TaskErrorState message={error || actions.error} onRetry={error ? () => { void load(); } : undefined} onClose={() => { setError(''); actions.setError(''); }} />}
       <TaskList tasks={visibleTasks} loading={loading} hasTasks={tasks.length > 0} onSelect={setSelected} onAccept={(task) => { setSelected(task); setDialog('accept'); }} />
     </div>
     {selected && !dialog && <TaskModal title="Detalle de la tarea" onClose={close}><TaskDetail task={selected} onClose={close} onAccept={() => setDialog('accept')} /></TaskModal>}
