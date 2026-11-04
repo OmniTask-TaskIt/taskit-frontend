@@ -55,6 +55,12 @@ export const authStore = {
    * refresh token. Se lee del refresh token primero (no expira con el access
    * token) y se cae a `userEmail` de localStorage si no se puede decodificar.
    */
+  getUserId(): string | null {
+    const payload = readPayload(this.getAccessToken()) ?? readPayload(this.getRefreshToken());
+    const value = payload?.userId ?? payload?.id ?? payload?.sub;
+    return typeof value === 'string' && value.length > 0 ? value : null;
+  },
+
   getEmail(): string | null {
     const fromToken = [this.getRefreshToken(), this.getAccessToken()]
       .map((token) => readPayload(token)?.sub)
