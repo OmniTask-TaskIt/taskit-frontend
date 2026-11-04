@@ -1,8 +1,15 @@
 import { env } from '../../authentication/Config/env';
 import type { TaskCategory, TaskSort, TaskStatus, TaskTab } from '../types/task.types';
 
-const configuredBase = env.apiUrl.replace(/\/+$/, '');
-export const TASKS_API_BASE = `${configuredBase.endsWith('/api') ? configuredBase : `${configuredBase}/api`}/tasks`;
+export const TASKS_API_CONFIG_ERROR = 'VITE_TASKS_API_URL no está configurada. Define la URL del microservicio de tareas para cargar y gestionar tareas.';
+const configuredTasksBase = env.tasksApiUrl.trim().replace(/\/+$/, '');
+export const TASKS_API_BASE = configuredTasksBase
+  ? `${configuredTasksBase}/api/tasks`
+  : '';
+
+if (!configuredTasksBase && import.meta.env.DEV) {
+  console.error(`[TaskIt] ${TASKS_API_CONFIG_ERROR}`);
+}
 
 export const TASK_CATEGORIES: { value: TaskCategory | 'ALL'; label: string }[] = [
   { value: 'ALL', label: 'Todas las categorías' },
