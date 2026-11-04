@@ -1,41 +1,28 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { taskService } from '../services/taskService';
 
-type CategoryOption = string;
+export type TaskCategoryOption = { value: string; label: string };
 
 export const useTaskCategories = () => {
-  const [categories, setCategories] = useState<
-    { value: string; label: string }[]
-  >([
-    { value: 'ALL', label: 'Todas las categorías' }
-  ]);
-
+  const [categories, setCategories] = useState<TaskCategoryOption[]>([]);
   const [loading, setLoading] = useState(true);
+  const startedRef = useRef(false);
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await taskService.getCategories();
+    if (startedRef.current) return;
+    startedRef.current = true;
 
-        console.log('[useTaskCategories] Categorías:', response);
+    let active = true;
+    void taskService.getCategories()
+      .then((values) => {
+        if (!active) return;
+        setCategories(values.map((value) => ({ value, label: value })));
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
 
-        const formattedCategories = response.map((category: CategoryOption) => ({
-          value: category,
-          label: category,
-        }));
-
-        setCategories([
-          { value: 'ALL', label: 'Todas las categorías' },
-          ...formattedCategories,
-        ]);
-      } catch (error) {
-        console.error('Error cargando categorías:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCategories();
+    return () => { active = false; };
   }, []);
 
   return { categories, loading };

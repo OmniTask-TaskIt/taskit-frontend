@@ -11,7 +11,6 @@ if (!configuredTasksBase && import.meta.env.DEV) {
 }
 
 
-export const TASK_CATEGORIES = ['ARREGLOS', 'EDUCACION', 'TECNOLOGIA', 'LIMPIEZA', 'TRANSPORTE'].map((value) => ({ value, label: value }));
 
 export const TASK_STATUSES: TaskStatus[] = ['ACTIVE', 'ASSIGNED', 'COMPLETED', 'REPORTED', 'DISPUTED', 'CANCELLED'];
 export const STATUS_LABELS: Record<TaskStatus, string> = { ACTIVE: 'Disponible', ASSIGNED: 'Asignada', COMPLETED: 'Completada', REPORTED: 'Reportada', DISPUTED: 'Disputada', CANCELLED: 'Cancelada' };
