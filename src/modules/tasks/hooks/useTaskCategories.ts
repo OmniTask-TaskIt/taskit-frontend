@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { taskService } from '../services/taskService';
 
+type CategoryOption = { value: string; label: string };
+
 export const useTaskCategories = () => {
   const [categories, setCategories] = useState<
     { value: string; label: string }[]
@@ -17,7 +19,7 @@ export const useTaskCategories = () => {
 
         console.log('[useTaskCategories] Categorías:', response);
 
-        const formattedCategories = response.map((category: any) => ({
+        const formattedCategories = response.map((category: CategoryOption) => ({
           value: category.value,
           label: category.label,
         }));

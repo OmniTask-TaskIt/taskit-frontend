@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { CheckCircle2, X } from 'lucide-react';
 import { authStore } from '../../authentication/services/authStore';
 import { useTasks } from '../hooks/useTasks';
+import { useTaskCategories } from '../hooks/useTaskCategories';
 import { useTaskFilters } from '../hooks/useTaskFilters';
 import { useTaskActions } from '../hooks/useTaskActions';
 import type { Task, TaskDialog, TaskFormValues } from '../types/task.types';
@@ -20,7 +21,9 @@ const initialForm: TaskFormValues = { title: '', description: '', price: '', cat
 
 export default function TaskModule() {
   const currentUser = authStore.getUserId() ?? authStore.getEmail() ?? '';
-  const { tasks, loading, error, setError, load } = useTasks(currentUser);
+  const { categories, loading: categoriesLoading } = useTaskCategories();
+  const categoryValues = categories.filter((category) => category.value !== 'ALL').map((category) => category.value);
+  const { tasks, loading, error, setError, load } = useTasks(currentUser, categoryValues, categoriesLoading);
   const { filters, setFilters, tab, setTab, visibleTasks, owned, assigned, completed } = useTaskFilters(tasks, currentUser);
   const actions = useTaskActions(load, currentUser);
   const [selected, setSelected] = useState<Task | null>(null);

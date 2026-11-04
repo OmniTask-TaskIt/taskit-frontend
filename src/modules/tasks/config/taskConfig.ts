@@ -1,7 +1,5 @@
 import { env } from '../../authentication/Config/env';
-import type { TaskCategory, TaskSort, TaskStatus, TaskTab } from '../types/task.types';
-import { useTaskCategories } from '../hooks/useTaskCategories';
-
+import type { TaskSort, TaskStatus, TaskTab } from '../types/task.types';
 export const TASKS_API_CONFIG_ERROR = 'VITE_TASKS_API_URL no está configurada. Define la URL del microservicio de tareas para cargar y gestionar tareas.';
 const configuredTasksBase = env.tasksApiUrl.trim().replace(/\/+$/, '');
 export const TASKS_API_BASE = configuredTasksBase
@@ -12,8 +10,8 @@ if (!configuredTasksBase && import.meta.env.DEV) {
   console.error(`[TaskIt] ${TASKS_API_CONFIG_ERROR}`);
 }
 
-export const { categories, loading } = useTaskCategories();
 
+export const TASK_CATEGORIES = ['ARREGLOS', 'EDUCACION', 'TECNOLOGIA', 'LIMPIEZA', 'TRANSPORTE'].map((value) => ({ value, label: value }));
 
 export const TASK_STATUSES: TaskStatus[] = ['ACTIVE', 'ASSIGNED', 'COMPLETED', 'REPORTED', 'DISPUTED', 'CANCELLED'];
 export const STATUS_LABELS: Record<TaskStatus, string> = { ACTIVE: 'Disponible', ASSIGNED: 'Asignada', COMPLETED: 'Completada', REPORTED: 'Reportada', DISPUTED: 'Disputada', CANCELLED: 'Cancelada' };

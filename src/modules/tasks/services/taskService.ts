@@ -15,6 +15,15 @@ const unwrap = (data: unknown): Task[] => {
 };
 
 const request = <T>(promise: Promise<{ data: T }>) => promise.then(({ data }) => data);
+type CategoryOption = { value: string; label: string };
+const unwrapCategories = (data: unknown): CategoryOption[] => {
+  if (Array.isArray(data)) return data as CategoryOption[];
+  if (data && typeof data === 'object' && Array.isArray((data as { categories?: unknown }).categories)) {
+    return (data as { categories: CategoryOption[] }).categories;
+  }
+  return [];
+};
+
 export const taskService = {
   async createTask(input: CreateTaskInput) {
     console.log('[createTask] Enviando:', input);
@@ -105,17 +114,16 @@ export const taskService = {
     return unwrap(response.data);
   },
 
-  async getTaskFeed(categories?: string[]) {
-    console.log('[getTaskFeed] Categorías enviadas:', categories);
+  async getTaskFeed(categories: string[]) {
+    if (categories.length === 0) {
+      throw new Error('La llamada al feed requiere al menos una categoría.');
+    }
+
+    const query = new URLSearchParams();
+    categories.forEach((category) => query.append('categories', category));
 
     const response = await axiosInstance.get(
-      `${TASKS_API_BASE}/feed`,
-      {
-        params: categories?.map((category) => [
-          'categories',
-          category
-        ])
-      }
+      `${TASKS_API_BASE}/feed?${query.toString()}`
     );
 
     console.log('[getTaskFeed] Recibido:', response.data);
@@ -166,7 +174,7 @@ export const taskService = {
     return response;
   },
 
-  async getCategories() {
+  async getCategories(): Promise<CategoryOption[]> {
     console.log(
       '[getCategories] Consultando:',
       `${TASKS_API_BASE}/categories`
@@ -178,6 +186,6 @@ export const taskService = {
   
     console.log('[getCategories] Recibido:', response.data);
   
-    return unwrap(response.data);
+    return unwrapCategories(response.data);
   },
 };
