@@ -6,24 +6,32 @@ export type TaskCategoryOption = { value: string; label: string };
 export const useTaskCategories = () => {
   const [categories, setCategories] = useState<TaskCategoryOption[]>([]);
   const [loading, setLoading] = useState(true);
-  const startedRef = useRef(false);
+  const [error, setError] = useState('');
+  const requestRef = useRef<Promise<string[]> | null>(null);
 
   useEffect(() => {
-    if (startedRef.current) return;
-    startedRef.current = true;
-
     let active = true;
-    void taskService.getCategories()
+    const request = requestRef.current ?? taskService.getCategories();
+    requestRef.current = request;
+
+    request
       .then((values) => {
         if (!active) return;
         setCategories(values.map((value) => ({ value, label: value })));
+        setError('');
+      })
+      .catch(() => {
+        if (active) setError('Ocurrió un problema al cargar las categorías. Intenta nuevamente.');
       })
       .finally(() => {
+        if (requestRef.current === request) requestRef.current = null;
         if (active) setLoading(false);
       });
 
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
   }, []);
 
-  return { categories, loading };
+  return { categories, loading, error };
 };

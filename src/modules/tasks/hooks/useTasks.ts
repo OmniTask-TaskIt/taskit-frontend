@@ -53,7 +53,9 @@ export function useTasks(userId: string, categories: string[], categoriesLoading
 
   useEffect(() => {
     if (categoriesLoading) return;
-    const timer = window.setTimeout(() => { void load(); }, 0);
+    const timer = window.setTimeout(() => {
+      void load();
+    }, 0);
     return () => window.clearTimeout(timer);
   }, [categoriesLoading, load]);
 
