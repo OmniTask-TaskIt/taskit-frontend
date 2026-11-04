@@ -121,6 +121,7 @@ export default function DashboardPage() {
           {/* Opciones de Navegación con Texto Visible y Contraste Alto */}
           <nav className="p-3 flex flex-col gap-2.5 mt-3">
             <button
+              type="button"
               onClick={() => setActiveSection('profile')}
               className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer border truncate ${
                 activeSection === 'profile' 
@@ -133,6 +134,7 @@ export default function DashboardPage() {
             </button>
 
             <button
+              type="button"
               onClick={() => setActiveSection('search')}
               className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer border truncate ${
                 activeSection === 'search' 
@@ -145,6 +147,7 @@ export default function DashboardPage() {
             </button>
 
             <button
+              type="button"
               onClick={() => setActiveSection('tasks')}
               className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer border truncate ${
                 activeSection === 'tasks' 
@@ -156,6 +159,7 @@ export default function DashboardPage() {
               <span className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap transition-opacity truncate">Gestión de tareas</span>
             </button>
             <button
+              type="button"
               onClick={() => setActiveSection('security')}
               className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer border truncate ${
                 activeSection === 'security' 
@@ -181,6 +185,7 @@ export default function DashboardPage() {
             </Link>
           )}
           <button 
+            type="button"
             onClick={handleLogout}
             className="w-full cursor-pointer overflow-hidden rounded-xl border border-transparent px-4 py-3 text-left text-sm font-medium text-[#c15a6b] transition-all hover:border-[#f0ccd3] hover:bg-[#fff2f4] hover:text-[#a73e51] flex items-center gap-4"
           >

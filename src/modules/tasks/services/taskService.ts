@@ -1,5 +1,32 @@
 import { axiosInstance } from '../../authentication/Config/axios';
-import type { Task, TaskApiResponse, TaskFormValues } from '../types/task.types';
-const unwrap = (data: unknown): Task[] => { if (Array.isArray(data)) return data as Task[]; if (data && typeof data === 'object') { const value=data as TaskApiResponse; if(Array.isArray(value.content)) return value.content; if(Array.isArray(value.tasks)) return value.tasks; if(Array.isArray(value.data)) return value.data; } return []; };
-const request = (method:'post'|'put'|'delete', url:string, data?:unknown) => axiosInstance.request({method,url,data});
-export const taskService = { async search(params?:Record<string,string|number>){ return unwrap((await axiosInstance.get('/tasks',{params})).data); }, async getFeed(){ return this.search(); }, async getCreated(){ return this.search({scope:'created'}); }, async getAssigned(){ return this.search({scope:'assigned'}); }, async getCompleted(){ return this.search({scope:'completed'}); }, async create(values:TaskFormValues){ return request('post','/tasks',{title:values.title,description:values.description,price:Number(values.price),category:values.category}); }, async update(id:string, values:TaskFormValues){ return request('put',`/tasks/${id}`,{title:values.title,description:values.description,price:Number(values.price),category:values.category}); }, async remove(id:string){ return request('delete',`/tasks/${id}`); }, async accept(id:string){ return request('post',`/tasks/${id}/accept`); }, async report(id:string,reason:string){ return request('post',`/tasks/${id}/report`,{reason}); }, async dispute(id:string,reason:string){ return request('post',`/tasks/${id}/dispute`,{reason}); }, async approveCompletion(id:string){ return request('post',`/tasks/${id}/approve`); } };
+import { TASKS_API_BASE } from '../config/taskConfig';
+import type { AcceptTaskInput, CompleteTaskInput, CreateTaskInput, EditTaskInput, ReasonInput, Task, TaskApiResponse } from '../types/task.types';
+
+const normalize = (value: Task): Task => ({ ...value, id: value.taskId, title: value.taskName, description: value.taskDescription, status: value.taskStatus, createdAt: value.creationDate, ownerId: value.taskOwner, assigneeId: value.taskAssignee });
+const unwrap = (data: unknown): Task[] => {
+  if (Array.isArray(data)) return (data as Task[]).map(normalize);
+  if (data && typeof data === 'object') {
+    const response = data as TaskApiResponse;
+    if (Array.isArray(response.content)) return response.content.map(normalize);
+    if (Array.isArray(response.tasks)) return response.tasks.map(normalize);
+    if (Array.isArray(response.data)) return response.data.map(normalize);
+  }
+  return [];
+};
+
+const request = <T>(promise: Promise<{ data: T }>) => promise.then(({ data }) => data);
+export const taskService = {
+  async createTask(input: CreateTaskInput) { return request(axiosInstance.post(`${TASKS_API_BASE}/create`, input)); },
+  async editTask(taskId: string, input: EditTaskInput) { return request(axiosInstance.put(`${TASKS_API_BASE}/${taskId}`, input)); },
+  async deleteTask(taskId: string) { return request(axiosInstance.delete(`${TASKS_API_BASE}/${taskId}`)); },
+  async acceptTask(taskId: string, input: AcceptTaskInput) { return request(axiosInstance.patch(`${TASKS_API_BASE}/${taskId}/accept`, input)); },
+  async reportTask(taskId: string, input: ReasonInput) { return request(axiosInstance.patch(`${TASKS_API_BASE}/${taskId}/report`, input)); },
+  async disputeTask(taskId: string, input: ReasonInput) { return request(axiosInstance.patch(`${TASKS_API_BASE}/${taskId}/dispute`, input)); },
+  async completeTask(taskId: string, input: CompleteTaskInput) { return request(axiosInstance.patch(`${TASKS_API_BASE}/${taskId}/complete`, input)); },
+  async searchTasks(params?: Record<string, string | number>) { return unwrap((await axiosInstance.get(`${TASKS_API_BASE}/search`, { params })).data); },
+  async getTaskFeed(categories?: string[]) { return unwrap((await axiosInstance.get(`${TASKS_API_BASE}/feed`, { params: categories?.map((category) => ['categories', category]) })).data); },
+  async getCreatedTasks(userId: string) { return unwrap((await axiosInstance.get(`${TASKS_API_BASE}/history/created/${encodeURIComponent(userId)}`)).data); },
+  async getAssignedTasks(userId: string) { return unwrap((await axiosInstance.get(`${TASKS_API_BASE}/history/assigned/${encodeURIComponent(userId)}`)).data); },
+  async getCompletedTasks(userId: string) { return unwrap((await axiosInstance.get(`${TASKS_API_BASE}/history/completed/${encodeURIComponent(userId)}`)).data); },
+  async healthCheck() { return request(axiosInstance.get(`${TASKS_API_BASE}/health`)); },
+};
