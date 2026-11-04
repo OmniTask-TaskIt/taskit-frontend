@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import TaskSectionPlaceholder from '../Components/ui/TaskSectionPlaceholder';
+import TaskModule from '../../tasks/TaskModule';
 import ProfileSearchSection from '../Components/profile/ProfileSearchSection';
 import UserProfileCard from '../Components/profile/UserProfileCard';
 import ActiveSessionsSection from '../Components/security/ActiveSessionsSection';
@@ -209,7 +209,7 @@ export default function DashboardPage() {
 
             {activeSection === 'tasks' && (
               <motion.div key="tasks" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.2 }}>
-                <TaskSectionPlaceholder />
+                <TaskModule />
               </motion.div>
             )}
 
