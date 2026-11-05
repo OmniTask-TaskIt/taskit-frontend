@@ -36,10 +36,10 @@ export default function TaskModule() {
   const submit = async () => { if (!currentUser) { setError('No encontramos tu usuario autenticado. Inicia sesión nuevamente.'); return; } if (!form.title.trim() || !form.description.trim() || !form.price || Number(form.price) <= 0) { setError('Completa todos los campos con un precio válido.'); return; } if (await actions.create(form)) { setForm(initialForm); close(); } };
   const accept = async (task: Task) => { if (await actions.accept(task.taskId)) close(); };
   return <section className="mx-auto w-full max-w-[1400px] pb-4">
-    <TaskHeader onCreate={() => setDialog('create')} />
+    <TaskHeader onCreate={() => setDialog('create')} onRefresh={() => { void load(); }} loading={loading} />
     <TaskSummary owned={owned} assigned={assigned} completed={completed} available={tasks.filter((task) => task.taskStatus === 'ACTIVE').length} />
     <div className={`${taskSurface} p-3 sm:p-5`}>
-      <TaskTabs tab={tab} setTab={setTab} sort={filters.sort} setSort={(sort) => setFilters({ ...filters, sort })} />
+      <TaskTabs tab={tab} setTab={(nextTab) => { if (nextTab !== tab) { setTab(nextTab); void load(); } }} sort={filters.sort} setSort={(sort) => setFilters({ ...filters, sort })} />
       {tab === 'explore' && <TaskFilters filters={filters} setFilters={setFilters} categories={categories} />}
       {actions.notice && <div className="mb-4 flex items-center gap-2 rounded-xl border border-[#bde5cd] bg-[#edfbf2] px-4 py-3 text-sm font-semibold text-[#177245]" role="status"><CheckCircle2 size={17} />{actions.notice}<button type="button" className="ml-auto" onClick={() => actions.setNotice('')} aria-label="Cerrar mensaje"><X size={16} /></button></div>}
       {(error || actions.error) && <TaskErrorState message={error || actions.error} onRetry={error ? () => { void load(); } : undefined} retryDisabled={loading} onClose={() => { setError(''); actions.setError(''); }} />}
