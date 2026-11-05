@@ -25,6 +25,9 @@ export const env = {
   /** Base independiente del microservicio de tareas. No tiene valor por defecto. */
   tasksApiUrl: readEnv('VITE_TASKS_API_URL'),
 
+  /** Base independiente del microservicio MS-Task-Chat. No tiene valor por defecto. */
+  chatApiUrl: readEnv('VITE_CHAT_API_URL'),
+
   googleClientId: readEnv('VITE_GOOGLE_CLIENT_ID', 'VIT_GOOGLE_CLIENT_ID'),
 
   githubClientId: readEnv('VIT_GITHUB_CLIENT_ID', 'VITE_GITHUB_CLIENT_ID'),
@@ -45,4 +48,5 @@ if (import.meta.env.DEV) {
   if (!env.googleClientId) console.warn('[TaskIt] Falta VITE_GOOGLE_CLIENT_ID: el botón de Google no funcionará.');
   if (!env.githubClientId) console.warn('[TaskIt] Falta VIT_GITHUB_CLIENT_ID: el botón de GitHub no funcionará.');
   if (!env.tasksApiUrl) console.error('[TaskIt] Falta VITE_TASKS_API_URL: configura la URL del microservicio de tareas para habilitar el módulo de tareas.');
+  if (!env.chatApiUrl) console.error('[TaskIt] Falta VITE_CHAT_API_URL: configura la URL del microservicio de chat para habilitar Chats.');
 }
