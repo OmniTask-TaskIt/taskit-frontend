@@ -1,7 +1,7 @@
 export type TaskStatus = 'ACTIVE' | 'ASSIGNED' | 'COMPLETED' | 'CANCELLED' | 'REPORTED' | 'DISPUTED';
 export type TaskCategory = 'ARREGLOS' | 'EDUCACION';
 export type TaskTab = 'explore' | 'created' | 'assigned' | 'completed';
-export type TaskDialog = 'create' | 'delete' | 'accept' | 'report' | 'dispute' | 'approve' | null;
+export type TaskDialog = 'create' | 'edit' | 'delete' | 'accept' | 'report' | 'dispute' | 'approve' | null;
 export type TaskSort = 'recent' | 'price';
 
 export interface Task {

@@ -1,7 +1,7 @@
 import { ClipboardList, Loader2, Plus, RefreshCw } from 'lucide-react';
 
 type TaskHeaderProps = {
-  onCreate: () => void;
+  onCreate?: () => void;
   onRefresh: () => void;
   loading: boolean;
 };
@@ -13,7 +13,7 @@ export default function TaskHeader({ onCreate, onRefresh, loading }: TaskHeaderP
       <button type="button" onClick={onRefresh} disabled={loading} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[#dfe4f2] bg-white px-4 text-sm font-bold text-[#263BAA] transition hover:bg-[#f4f6ff] disabled:cursor-not-allowed disabled:opacity-60" aria-busy={loading}>
         {loading ? <Loader2 size={17} className="animate-spin" /> : <RefreshCw size={17} />} {loading ? 'Actualizando…' : 'Actualizar tareas'}
       </button>
-      <button type="button" onClick={onCreate} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#263BAA] px-5 text-sm font-bold text-white shadow-[0_8px_18px_rgba(38,59,170,0.25)]"><Plus size={18} /> Publicar tarea</button>
+      {onCreate && <button type="button" onClick={onCreate} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#263BAA] px-5 text-sm font-bold text-white shadow-[0_8px_18px_rgba(38,59,170,0.25)]"><Plus size={18} /> Publicar tarea</button>}
     </div>
   </header>;
 }
