@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { authStore } from '../../authentication/services/authStore';
 import { CHAT_WS_URL } from '../config/chatConfig';
 import { chatService } from '../services/chatService';
 import type { ChatMessage, ChatServerEvent } from '../types/chat.types';
@@ -61,11 +62,16 @@ export function useChatSession(taskId: string | null, userId: string | null) {
 
     const connect = () => {
       if (!active || socketRef.current || !CHAT_WS_URL) return;
-      // El WebSocket nativo del navegador no permite headers arbitrarios; el gateway debe derivar el usuario del contexto autenticado.
-      const socket = new WebSocket(CHAT_WS_URL, ['taskit-chat', userId]);
+      const accessToken = authStore.getAccessToken();
+      if (!accessToken) {
+        setError('No se encontró la sesión para conectar con el chat.');
+        return;
+      }
+      const socket = new WebSocket(CHAT_WS_URL);
       socketRef.current = socket;
       socket.onopen = () => {
         reconnectRef.current = 0;
+        socket.send(JSON.stringify({ type: 'chat:authenticate', token: accessToken }));
         socket.send(JSON.stringify({ type: 'chat:EnterRoom', chatId: taskId }));
       };
       socket.onmessage = (event) => {

@@ -19,4 +19,5 @@ export interface ChatMessage {
 export type ChatServerEvent =
   | { type: 'chat:history'; messages?: ChatMessage[]; data?: ChatMessage[] }
   | { type: 'chat:newMessage'; message?: ChatMessage; data?: ChatMessage }
+  | { type: 'chat:authenticated' }
   | { type: 'error'; message?: string; error?: string };
