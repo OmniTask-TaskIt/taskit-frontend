@@ -116,6 +116,7 @@ export function useChatSession(taskId: string | null, userId: string | null) {
       };
       socket.onclose = () => {
         console.warn('[chat][WS] closed', { taskId, readyState: socket.readyState, reconnectAttempt: reconnectRef.current });
+        if (socketRef.current !== socket) return;
         roomReadyRef.current = false;
         socketRef.current = null;
         if (active && reconnectRef.current < MAX_RECONNECT_ATTEMPTS) {
