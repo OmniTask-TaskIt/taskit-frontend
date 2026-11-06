@@ -1,0 +1,53 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { chatService } from '../services/chatService';
+import type { ChatSummary } from '../types/chat.types';
+
+export function useChats(userId: string | null) {
+  const [chats, setChats] = useState<ChatSummary[]>([]);
+  const [loading, setLoading] = useState(Boolean(userId));
+  const [error, setError] = useState<string | null>(null);
+  const requestRef = useRef<Promise<void> | null>(null);
+
+  const load = useCallback(async () => {
+    if (!userId) {
+      setChats([]);
+      setError('No se encontró una identidad de usuario para cargar los chats.');
+      setLoading(false);
+      return;
+    }
+    if (requestRef.current) return requestRef.current;
+    const request = (async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const loadedChats = await chatService.listChats(userId);
+        console.info('[chat][useChats] chats loaded', {
+          userId,
+          count: loadedChats.length,
+          chats: loadedChats.map((chat) => ({
+            chatId: chat.chatId,
+            taskId: chat.taskId,
+            sellerId: chat.sellerId,
+            buyerId: chat.buyerId,
+            status: chat.status,
+          })),
+        });
+        setChats(loadedChats);
+      } catch {
+        setError('Ocurrió un problema al cargar los chats. Intenta nuevamente.');
+      } finally {
+        setLoading(false);
+        requestRef.current = null;
+      }
+    })();
+    requestRef.current = request;
+    return request;
+  }, [userId]);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => void load(), 0);
+    return () => window.clearTimeout(timer);
+  }, [load]);
+
+  return { chats, loading, error, reload: load };
+}

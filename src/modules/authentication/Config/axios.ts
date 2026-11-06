@@ -46,8 +46,11 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     const isLoginRequest = originalRequest?.url?.includes('/auth/login');
+    // Task requests must surface auth/API failures inside the dashboard module.
+    // Other modules keep the existing refresh-and-redirect behavior.
+    const isTaskRequest = originalRequest?.url?.includes('/tasks');
 
-    if (error.response?.status === 401 && !isLoginRequest && !originalRequest._retry) {
+    if (error.response?.status === 401 && !isLoginRequest && !isTaskRequest && !originalRequest._retry) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });

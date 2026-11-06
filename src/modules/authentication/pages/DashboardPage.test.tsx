@@ -12,7 +12,7 @@ vi.mock('../Components/profile/UserProfileCard', () => ({ default: () => <div>SE
 vi.mock('../Components/profile/ProfileSearchSection', () => ({ default: () => <div>SECCION-BUSCAR</div> }));
 vi.mock('../Components/security/TwoFactorSection', () => ({ default: () => <div>SECCION-2FA</div> }));
 vi.mock('../Components/security/ActiveSessionsSection', () => ({ default: () => <div>SECCION-SEGURIDAD</div> }));
-vi.mock('../Components/ui/TaskSectionPlaceholder', () => ({ default: () => <div>SECCION-TAREAS</div> }));
+vi.mock('../../tasks/pages/TaskModule', () => ({ default: () => <div>SECCION-TAREAS</div> }));
 vi.mock('../../../utils/navigation', () => ({ redirectToLogin: vi.fn() }));
 vi.mock('../services/authService', () => ({ authService: { logout: vi.fn() } }));
 

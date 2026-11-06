@@ -1,0 +1,25 @@
+export type ChatRole = 'SEEKER' | 'PROVIDER';
+
+export interface ChatSummary {
+  chatId: string;
+  taskId: string;
+  sellerId?: string;
+  buyerId?: string | null;
+  status?: string;
+  taskName?: string;
+  title?: string;
+}
+
+export interface ChatMessage {
+  messageId?: string;
+  chatId?: string;
+  senderId: string;
+  content: string;
+  createdAt?: string;
+}
+
+export type ChatServerEvent =
+  | { type: 'chat:history'; messages?: ChatMessage[]; data?: ChatMessage[] }
+  | { type: 'chat:newMessage'; message?: ChatMessage; data?: ChatMessage }
+  | { type: 'chat:authenticated' }
+  | { type: 'error'; message?: string; error?: string };

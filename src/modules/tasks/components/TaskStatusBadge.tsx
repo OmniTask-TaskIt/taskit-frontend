@@ -1,0 +1,1 @@
+import { STATUS_COLORS, STATUS_LABELS } from '../config/taskConfig'; import type { TaskStatus } from '../types/task.types'; export default function TaskStatusBadge({status}:{status:TaskStatus}){return <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${STATUS_COLORS[status]}`}>{STATUS_LABELS[status]}</span>;}
