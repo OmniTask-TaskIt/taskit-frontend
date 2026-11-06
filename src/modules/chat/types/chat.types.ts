@@ -3,9 +3,11 @@ export type ChatRole = 'SEEKER' | 'PROVIDER';
 export interface ChatSummary {
   chatId: string;
   taskId: string;
-  sellerId: string;
-  buyerId: string;
-  status: string;
+  sellerId?: string;
+  buyerId?: string | null;
+  status?: string;
+  taskName?: string;
+  title?: string;
 }
 
 export interface ChatMessage {
