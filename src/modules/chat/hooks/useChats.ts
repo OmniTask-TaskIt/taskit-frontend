@@ -20,7 +20,19 @@ export function useChats(userId: string | null) {
       setLoading(true);
       setError(null);
       try {
-        setChats(await chatService.listChats(userId));
+        const loadedChats = await chatService.listChats(userId);
+        console.info('[chat][useChats] chats loaded', {
+          userId,
+          count: loadedChats.length,
+          chats: loadedChats.map((chat) => ({
+            chatId: chat.chatId,
+            taskId: chat.taskId,
+            sellerId: chat.sellerId,
+            buyerId: chat.buyerId,
+            status: chat.status,
+          })),
+        });
+        setChats(loadedChats);
       } catch {
         setError('Ocurrió un problema al cargar los chats. Intenta nuevamente.');
       } finally {

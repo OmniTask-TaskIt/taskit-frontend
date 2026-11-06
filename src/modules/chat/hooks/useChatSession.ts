@@ -52,8 +52,10 @@ export function useChatSession(taskId: string | null, userId: string | null) {
     const historyRequest = (async () => {
       try {
         const history = await chatService.getHistory(taskId);
+        console.info('[chat][HTTP][getHistory] normalized messages', { taskId, count: history.length, messages: history });
         if (active) setMessages(history);
-      } catch {
+      } catch (error) {
+        console.error('[chat][HTTP][getHistory] failed', { taskId, error });
         if (active) setError('Ocurrió un problema al cargar el historial. Intenta nuevamente.');
       } finally {
         if (active) setLoading(false);
@@ -71,18 +73,23 @@ export function useChatSession(taskId: string | null, userId: string | null) {
       }
       const socket = new WebSocket(CHAT_WS_URL);
       socketRef.current = socket;
+      console.info('[chat][WS] connecting', { url: CHAT_WS_URL, taskId, userId });
       socket.onopen = () => {
         reconnectRef.current = 0;
+        console.info('[chat][WS] open; sending authenticate', { taskId, userId, tokenPresent: true });
         socket.send(JSON.stringify({ type: 'chat:authenticate', token: accessToken }));
       };
       socket.onmessage = (event) => {
         try {
           const payload = JSON.parse(event.data) as ChatServerEvent;
+          console.info('[chat][WS] received', { taskId, payload });
           if (payload.type === 'chat:authenticated') {
+            console.info('[chat][WS] authenticated; sending EnterRoom', { taskId });
             socket.send(JSON.stringify({ type: 'chat:EnterRoom', chatId: taskId }));
           }
           if (payload.type === 'chat:history') {
             roomReadyRef.current = true;
+            console.info('[chat][WS] room ready', { taskId, count: (payload.messages ?? payload.data ?? []).length });
             setMessages(payload.messages ?? payload.data ?? []);
           }
           if (payload.type === 'chat:newMessage') {
@@ -90,12 +97,17 @@ export function useChatSession(taskId: string | null, userId: string | null) {
             if (message) setMessages((current) => [...current, message]);
           }
           if (payload.type === 'error') setError(payload.message ?? payload.error ?? 'El chat devolvió un error.');
-        } catch {
+        } catch (error) {
+          console.error('[chat][WS] invalid message', { taskId, data: event.data, error });
           setError('El chat devolvió una respuesta inválida.');
         }
       };
-      socket.onerror = () => setError('No fue posible conectar con el chat.');
+      socket.onerror = (event) => {
+        console.error('[chat][WS] error', { taskId, event, readyState: socket.readyState });
+        setError('No fue posible conectar con el chat.');
+      };
       socket.onclose = () => {
+        console.warn('[chat][WS] closed', { taskId, readyState: socket.readyState, reconnectAttempt: reconnectRef.current });
         roomReadyRef.current = false;
         socketRef.current = null;
         if (active && reconnectRef.current < MAX_RECONNECT_ATTEMPTS) {
@@ -120,8 +132,10 @@ export function useChatSession(taskId: string | null, userId: string | null) {
       }
       return false;
     }
+    const message = { type: 'chat:sendMessage', chatId: taskId, messageId: crypto.randomUUID(), content: clean };
+    console.info('[chat][WS] sending message', { taskId, message: message.content, messageId: message.messageId, readyState: socketRef.current.readyState });
     setSending(true);
-    socketRef.current.send(JSON.stringify({ type: 'chat:sendMessage', chatId: taskId, messageId: crypto.randomUUID(), content: clean }));
+    socketRef.current.send(JSON.stringify(message));
     window.setTimeout(() => { if (mountedRef.current) setSending(false); }, 0);
     return true;
   }, [taskId]);

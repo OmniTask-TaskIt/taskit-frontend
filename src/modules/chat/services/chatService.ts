@@ -17,13 +17,24 @@ function requireArray<T>(data: unknown, message: string): T[] {
 export const chatService = {
   async listChats(userId: string): Promise<ChatSummary[]> {
     assertChatConfigured();
-    const response = await axios.get(`${CHAT_API_BASE}/chats`, { params: { userId } });
-    return requireArray<ChatSummary>(response.data, 'La API de chats no devolvió una lista válida.');
+    const url = `${CHAT_API_BASE}/chats`;
+    console.info('[chat][HTTP][listChats] GET', url, { userId });
+    try {
+      const response = await axios.get(url, { params: { userId } });
+      console.info('[chat][HTTP][listChats] response', response.status, response.data);
+      return requireArray<ChatSummary>(response.data, 'La API de chats no devolvió una lista válida.');
+    } catch (error) {
+      console.error('[chat][HTTP][listChats] failed', error);
+      throw error;
+    }
   },
 
   async getHistory(taskId: string): Promise<ChatMessage[]> {
     assertChatConfigured();
-    const response = await axios.get(`${CHAT_API_BASE}/chats/messages`, { params: { taskId } });
+    const url = `${CHAT_API_BASE}/chats/messages`;
+    console.info('[chat][HTTP][getHistory] GET', url, { taskId });
+    const response = await axios.get(url, { params: { taskId } });
+    console.info('[chat][HTTP][getHistory] response', response.status, response.data);
     const body = unwrap<ChatMessage[] | { messages?: ChatMessage[] }>(response.data);
     return Array.isArray(body) ? body : body?.messages ?? [];
   },

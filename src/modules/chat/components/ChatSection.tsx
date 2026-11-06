@@ -9,6 +9,7 @@ function ChatConversation({ chat, userId }: { chat: ChatSummary; userId: string 
   const [draft, setDraft] = useState('');
   const { messages, loading, sending, error, sendMessage } = useChatSession(chat.taskId, userId);
   const submit = () => {
+    console.info('[chat][UI] submit message', { taskId: chat.taskId, content: draft });
     if (sendMessage(draft)) setDraft('');
   };
   return (
@@ -35,6 +36,12 @@ export default function ChatSection() {
   const { chats: allChats, loading, error, reload } = useChats(userId);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const chats = useMemo(() => (Array.isArray(allChats) ? allChats : []), [allChats]);
+  console.info('[chat][UI] render chats', {
+    role,
+    userId,
+    count: chats.length,
+    chats: chats.map((chat) => ({ chatId: chat.chatId, taskId: chat.taskId, sellerId: chat.sellerId, buyerId: chat.buyerId })),
+  });
   const selected = chats.find((chat) => chat.taskId === selectedId) ?? chats[0] ?? null;
 
   if (!userId) return <div role="alert" className="rounded-3xl bg-white p-8 text-sm text-[#b64055]">No se encontró una identidad de usuario para cargar los chats.</div>;
