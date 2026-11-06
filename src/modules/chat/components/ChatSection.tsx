@@ -34,7 +34,10 @@ export default function ChatSection() {
   const userId = authStore.getUserId() ?? authStore.getEmail();
   const { chats: allChats, loading, error, reload } = useChats(userId);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const chats = useMemo(() => allChats.filter((chat) => role === 'PROVIDER' ? chat.sellerId === userId : chat.buyerId === userId), [allChats, role, userId]);
+  const chats = useMemo(
+    () => (Array.isArray(allChats) ? allChats : []).filter((chat) => role === 'PROVIDER' ? chat.sellerId === userId : chat.buyerId === userId),
+    [allChats, role, userId]
+  );
   const selected = chats.find((chat) => chat.taskId === selectedId) ?? chats[0] ?? null;
 
   if (!userId) return <div role="alert" className="rounded-3xl bg-white p-8 text-sm text-[#b64055]">No se encontró una identidad de usuario para cargar los chats.</div>;

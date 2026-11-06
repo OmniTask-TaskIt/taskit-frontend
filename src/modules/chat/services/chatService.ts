@@ -8,11 +8,17 @@ function unwrap<T>(data: unknown): T {
   return data as T;
 }
 
+function requireArray<T>(data: unknown, message: string): T[] {
+  const body = unwrap<unknown>(data);
+  if (!Array.isArray(body)) throw new Error(message);
+  return body as T[];
+}
+
 export const chatService = {
   async listChats(userId: string): Promise<ChatSummary[]> {
     assertChatConfigured();
     const response = await axios.get(`${CHAT_API_BASE}/chats`, { params: { userId } });
-    return unwrap<ChatSummary[]>(response.data) ?? [];
+    return requireArray<ChatSummary>(response.data, 'La API de chats no devolvió una lista válida.');
   },
 
   async getHistory(taskId: string): Promise<ChatMessage[]> {

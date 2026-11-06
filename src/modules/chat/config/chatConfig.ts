@@ -2,7 +2,7 @@ import { env } from '../../authentication/Config/env';
 
 const normalizedBase = env.chatApiUrl.trim().replace(/\/+$/, '');
 
-export const CHAT_API_BASE = normalizedBase ? `${normalizedBase}/api` : '';
+export const CHAT_API_BASE = normalizedBase ? `${normalizedBase}/api/v1` : '';
 export const CHAT_WS_URL = normalizedBase
   ? `${normalizedBase.replace(/^https:\/\//, 'wss://').replace(/^http:\/\//, 'ws://')}/ws/chat`
   : '';
