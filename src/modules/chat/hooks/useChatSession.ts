@@ -18,6 +18,7 @@ export function useChatSession(taskId: string | null, userId: string | null) {
   const historyRequestRef = useRef<Promise<void> | null>(null);
   const mountedRef = useRef(true);
   const roomReadyRef = useRef(false);
+  const pendingMessagesRef = useRef<string[]>([]);
 
   const closeSocket = useCallback(() => {
     if (reconnectTimerRef.current !== null) window.clearTimeout(reconnectTimerRef.current);
@@ -38,6 +39,7 @@ export function useChatSession(taskId: string | null, userId: string | null) {
     closeSocket();
     reconnectRef.current = 0;
     roomReadyRef.current = false;
+    pendingMessagesRef.current = [];
     historyRequestRef.current = null;
     const resetTimer = window.setTimeout(() => {
       setMessages([]);
@@ -91,6 +93,12 @@ export function useChatSession(taskId: string | null, userId: string | null) {
             roomReadyRef.current = true;
             console.info('[chat][WS] room ready', { taskId, count: (payload.messages ?? payload.data ?? []).length });
             setMessages(payload.messages ?? payload.data ?? []);
+            const pendingMessages = pendingMessagesRef.current.splice(0);
+            for (const content of pendingMessages) {
+              const message = { type: 'chat:sendMessage', chatId: taskId, content };
+              console.info('[chat][WS] sending queued message', { taskId, message: content, readyState: socket.readyState });
+              socket.send(JSON.stringify(message));
+            }
           }
           if (payload.type === 'chat:newMessage') {
             const message = payload.message ?? payload.data;
@@ -126,16 +134,25 @@ export function useChatSession(taskId: string | null, userId: string | null) {
 
   const sendMessage = useCallback((content: string) => {
     const clean = content.trim();
-    if (!clean || !taskId || !roomReadyRef.current || !socketRef.current || socketRef.current.readyState !== WebSocket.OPEN) {
-      if (clean && socketRef.current?.readyState === WebSocket.OPEN) {
-        setError('El chat todavía está conectando. Intenta nuevamente en un momento.');
-      }
+    if (!clean || !taskId) {
       return false;
     }
-    const message = { type: 'chat:sendMessage', chatId: taskId, messageId: crypto.randomUUID(), content: clean };
-    console.info('[chat][WS] sending message', { taskId, message: message.content, messageId: message.messageId, readyState: socketRef.current.readyState });
+    const socket = socketRef.current;
+    if (!roomReadyRef.current || !socket || socket.readyState !== WebSocket.OPEN) {
+      pendingMessagesRef.current.push(clean);
+      console.info('[chat][WS] queued message until room is ready', {
+        taskId,
+        message: clean,
+        roomReady: roomReadyRef.current,
+        readyState: socket?.readyState ?? WebSocket.CLOSED,
+      });
+      setError('El chat todavía está conectando; el mensaje se enviará automáticamente.');
+      return true;
+    }
+    const message = { type: 'chat:sendMessage', chatId: taskId, content: clean };
+    console.info('[chat][WS] sending message', { taskId, message: message.content, readyState: socket.readyState });
     setSending(true);
-    socketRef.current.send(JSON.stringify(message));
+    socket.send(JSON.stringify(message));
     window.setTimeout(() => { if (mountedRef.current) setSending(false); }, 0);
     return true;
   }, [taskId]);
