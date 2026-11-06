@@ -47,6 +47,9 @@ export const env = {
 if (import.meta.env.DEV) {
   if (!env.googleClientId) console.warn('[TaskIt] Falta VITE_GOOGLE_CLIENT_ID: el botón de Google no funcionará.');
   if (!env.githubClientId) console.warn('[TaskIt] Falta VIT_GITHUB_CLIENT_ID: el botón de GitHub no funcionará.');
+<<<<<<< HEAD
   if (!env.tasksApiUrl) console.error('[TaskIt] Falta VITE_TASKS_API_URL: configura la URL del microservicio de tareas para habilitar el módulo de tareas.');
   if (!env.chatApiUrl) console.error('[TaskIt] Falta VITE_CHAT_API_URL: configura la URL del microservicio de chat para habilitar Chats.');
+=======
+>>>>>>> main
 }
