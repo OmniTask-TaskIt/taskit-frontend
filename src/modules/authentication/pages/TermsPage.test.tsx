@@ -13,6 +13,9 @@ describe('TermsPage', () => {
 
     expect(screen.getByRole('heading', { name: /términos y condiciones de uso/i })).toBeInTheDocument();
     expect(screen.getByText(/política de cero tenencia/i)).toBeInTheDocument();
+    expect(screen.getByText(/uso de inteligencia artificial con aita/i)).toBeInTheDocument();
+    expect(screen.getByText(/^análisis automatizado de comunicaciones\.$/i)).toBeInTheDocument();
+    expect(screen.getByText(/^matchmaking algorítmico\.$/i)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /volver al registro/i })).toHaveAttribute('href', '/register');
   });
 });
