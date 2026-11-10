@@ -36,7 +36,7 @@ export default function TermsPage() {
             <div>
               <h1 className="text-xl font-bold text-[#17213f] sm:text-2xl">Términos y Condiciones de Uso</h1>
               <p className="text-xs text-[#6b7696]">
-                y Política de Privacidad · TaskIt Platform · OmniTask Solutions S.A. · Versión 1.0 · Septiembre de 2026
+                y Política de Privacidad · TaskIt Platform · OmniTask Solutions S.A. · Versión 1.1 · Noviembre de 2026
               </p>
             </div>
           </div>
@@ -121,7 +121,7 @@ export default function TermsPage() {
 
           <Section title="6. Control de versiones de los términos">
             <p className="text-sm leading-relaxed text-[#34405f]">
-              Estos términos corresponden a la <strong>Versión 1.0</strong>. OmniTask Solutions S.A. se reserva el
+              Estos términos corresponden a la <strong>Versión 1.1</strong>. OmniTask Solutions S.A. se reserva el
               derecho de modificar o actualizar este documento en cualquier momento. Los cambios sustanciales serán
               notificados a los usuarios, exigiendo una nueva aceptación digital para continuar operando en la
               plataforma.
@@ -144,6 +144,10 @@ export default function TermsPage() {
                   estados de cobro gestionados a través de la pasarela externa.
                 </>,
                 <>
+                  <strong>Contenido generado por el usuario:</strong> mensajes del chat interno, descripciones de
+                  tareas, reseñas y datos de perfil como ubicación, biografía, habilidades y categorías.
+                </>,
+                <>
                   <strong>Metadatos técnicos y de seguridad:</strong> direcciones IP de acceso, registros de
                   auditoría de intentos de inicio de sesión fallidos y metadatos legales de aceptación de términos.
                 </>,
@@ -158,6 +162,8 @@ export default function TermsPage() {
                 'Validar la autenticidad de las cuentas mediante códigos OTP y el proceso de verificación de documentos.',
                 'Garantizar la seguridad de la comunidad, previniendo fraudes, mitigando ataques de fuerza bruta por IP y aplicando revisiones de moderación mediante el servicio HITL.',
                 'Procesar de forma segura las transacciones financieras y cumplir con las obligaciones normativas y legales aplicables.',
+                'Analizar de forma automatizada los mensajes del chat interno para detectar intentos de fraude y de evasión de comisiones, según se describe en la Sección 11.',
+                'Generar recomendaciones de prestadores mediante matchmaking algorítmico y ofrecer las demás funciones de inteligencia artificial descritas en la Sección 11.',
               ]}
             />
           </Section>
@@ -176,8 +182,64 @@ export default function TermsPage() {
               items={[
                 'Acceder, rectificar o actualizar su información personal desde los ajustes de su perfil.',
                 'Solicitar la eliminación de su cuenta y de sus datos asociados, condicionado a la inexistencia de disputas activas u obligaciones financieras pendientes de resolución en la plataforma.',
+                'Conocer, rectificar y solicitar la supresión de sus datos, así como revocar su autorización, conforme a la Ley 1581 de 2012. Revocar la autorización para el análisis de comunicaciones o para el matchmaking puede impedir el uso de la plataforma o de las funciones que dependen de ellos.',
               ]}
             />
+          </Section>
+
+          <Section title="11. Uso de inteligencia artificial con AITA">
+            <p className="mb-3 text-sm leading-relaxed text-[#34405f]">
+              TaskIt cuenta con AITA, un servicio de inteligencia artificial que apoya el funcionamiento de la
+              plataforma y la seguridad de sus usuarios. Al aceptar estos Términos y Condiciones, el Usuario declara
+              conocer que sus datos y contenidos serán procesados por AITA para las finalidades descritas en esta
+              sección.
+            </p>
+
+            <div className="mb-3 rounded-xl bg-[#eef2ff] p-3 text-xs leading-relaxed text-[#34405f]">
+              <strong>Análisis automatizado de comunicaciones.</strong> El Usuario autoriza de manera previa, expresa
+              e informada que los mensajes enviados a través del chat interno de TaskIt sean analizados mediante
+              algoritmos de inteligencia artificial, con la única finalidad de garantizar la seguridad de la
+              plataforma y prevenir el fraude. El análisis busca detectar intentos de evadir el pago de las
+              comisiones de la plataforma, como proponer pagos por fuera de TaskIt o compartir medios de contacto o
+              de pago externos, por ejemplo números de WhatsApp o cuentas de Nequi. Este análisis se realiza en
+              segundo plano y no retrasa la entrega de los mensajes. Cuando se detecta una posible intención de
+              fraude, el sistema genera una alerta con el nivel de riesgo y el fragmento del mensaje que la originó,
+              y la envía al módulo de auditoría. Una alerta no constituye por sí sola una sanción ni una conclusión
+              definitiva sobre la conducta del Usuario.
+            </div>
+
+            <div className="mb-3 rounded-xl bg-[#eef2ff] p-3 text-xs leading-relaxed text-[#34405f]">
+              <strong>Matchmaking algorítmico.</strong> El Usuario autoriza que su información de perfil y de tareas,
+              incluidas su ubicación, biografía, habilidades, categorías y la descripción de las tareas que publica,
+              sea convertida en representaciones numéricas llamadas vectores. Estas representaciones se utilizan para
+              comparar tareas con prestadores y recomendar los perfiles más compatibles. Los datos se actualizan de
+              forma automática cada vez que se crea una tarea o un Prestador modifica su perfil. El resultado es una
+              recomendación y no una garantía de contratación ni de calidad del servicio.
+            </div>
+
+            <p className="mb-2 text-sm text-[#34405f]">TaskIt también utiliza inteligencia artificial para:</p>
+            <List
+              items={[
+                'Ayudar al Demandante a redactar el título y la descripción de una tarea a partir de una idea breve.',
+                'Sugerir un rango de precio para una tarea según su descripción, categoría y ubicación. Esta estimación es solo orientativa y no vinculante, y las partes acuerdan libremente el precio final.',
+                'Clasificar el sentimiento de las reseñas como positivo, neutro o negativo, asignarles una puntuación y extraer palabras clave, con el fin de construir perfiles de reputación más completos.',
+                'Ofrecer a los Prestadores sugerencias para mejorar su perfil, incluidas palabras clave y una propuesta de biografía.',
+              ]}
+            />
+
+            <p className="mt-3 text-sm leading-relaxed text-[#34405f]">
+              <strong>Proveedores tecnológicos.</strong> Para prestar estas funciones, TaskIt puede usar modelos de
+              inteligencia artificial propios o de proveedores externos. En este último caso, los textos necesarios
+              para la función solicitada podrán ser procesados por dichos proveedores, que podrían encontrarse fuera
+              de Colombia, con medidas de seguridad adecuadas.
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-[#34405f]">
+              <strong>Limitaciones.</strong> Los resultados de la inteligencia artificial pueden contener errores o
+              imprecisiones. El Usuario conserva la decisión final sobre el uso de cualquier sugerencia, texto,
+              precio o recomendación generada. Si el servicio de inteligencia artificial no está disponible, la
+              plataforma seguirá funcionando con normalidad y las funciones afectadas podrán no estar disponibles de
+              forma temporal.
+            </p>
           </Section>
 
           <div className="mt-6 rounded-xl border border-[#e2e5f5] bg-[#f6f4fa] p-4 text-xs leading-relaxed text-[#6b7696]">
