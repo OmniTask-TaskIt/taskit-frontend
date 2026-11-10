@@ -3,6 +3,7 @@ import { LoaderCircle, MessageCircle, RefreshCw, Send, Wifi, WifiOff } from 'luc
 import { authStore } from '../../authentication/services/authStore';
 import { useChats } from '../hooks/useChats';
 import { useChatSession } from '../hooks/useChatSession';
+import TaskCompletionButton from '../../tasks/components/TaskCompletionButton';
 import type { ChatSummary } from '../types/chat.types';
 
 function ChatConversation({ chat, userId }: { chat: ChatSummary; userId: string }) {
@@ -16,7 +17,7 @@ function ChatConversation({ chat, userId }: { chat: ChatSummary; userId: string 
     <section className="flex min-h-[520px] flex-1 flex-col rounded-3xl border border-white/80 bg-white/85 p-5 shadow-[0_18px_50px_rgba(47,61,110,0.12)]">
       <div className="flex items-center justify-between border-b border-[#e8ebf5] pb-4">
         <div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7883a3]">Tarea</p><h2 className="text-xl font-bold text-[#17213f]">{chat.taskName ?? chat.title ?? chat.taskId}</h2><p className="text-xs text-[#7883a3]">{chat.taskId}</p></div>
-        {chat.status && <span className="rounded-full bg-[#e8f7ef] px-3 py-1 text-xs font-semibold text-[#177245]">{chat.status}</span>}
+        <div className="flex items-start gap-2"><TaskCompletionButton taskId={chat.taskId} currentUserId={userId} compact />{chat.status && <span className="rounded-full bg-[#e8f7ef] px-3 py-1 text-xs font-semibold text-[#177245]">{chat.status}</span>}</div>
       </div>
       <div className="flex items-center gap-3 py-3 text-xs text-[#5b6685]"><span>Proveedor: {chat.sellerId ?? 'No disponible'}</span><span>Solicitante: {chat.buyerId ?? 'No disponible'}</span></div>
       <div className="flex flex-1 flex-col gap-3 overflow-y-auto py-4" aria-live="polite">

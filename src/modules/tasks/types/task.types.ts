@@ -33,6 +33,7 @@ export interface EditTaskInput { taskName: string; taskDescription: string; pric
 export interface AcceptTaskInput { taskAssignee: string; }
 export interface ReasonInput { reason: string; }
 export interface CompleteTaskInput { userId: string; }
+export interface TaskCompletionStatus { taskId: string; status: TaskStatus | 'SEMI_COMPLETED' | string; ownerApproved: boolean; assigneeApproved: boolean; ownerId: string; assigneeId: string; }
 export interface TaskFormValues { title: string; description: string; price: string; category: TaskCategory; }
 export interface TaskFilters { query: string; category: TaskCategory | 'ALL'; minPrice: string; maxPrice: string; sort: TaskSort; }
 export interface TaskApiResponse { content?: Task[]; tasks?: Task[]; data?: Task[]; }

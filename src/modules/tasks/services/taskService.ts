@@ -93,6 +93,13 @@ export const taskService = {
     return response;
   },
 
+  async getCompletionStatus(taskId: string) {
+    const response = await request(
+      axiosInstance.get(`${TASKS_API_BASE}/${taskId}/status`)
+    );
+    return response as import('../types/task.types').TaskCompletionStatus;
+  },
+
   async completeTask(taskId: string, input: CompleteTaskInput) {
     console.log('[completeTask] Enviando:', { taskId, input });
 
