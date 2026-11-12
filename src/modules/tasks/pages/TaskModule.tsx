@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { CheckCircle2, X } from 'lucide-react';
 import AitaProviderSearch from '../../aita/components/AitaProviderSearch';
 import { authStore } from '../../authentication/services/authStore';
@@ -63,26 +63,31 @@ export default function TaskModule({ focusTaskId = null }: { focusTaskId?: strin
   const initialTab: TaskTab = isSeeker ? 'created' : 'explore';
   const { filters, setFilters, tab, setTab, visibleTasks, owned, assigned, completed } = useTaskFilters(tasks, currentUser, initialTab);
   const actions = useTaskActions(load, currentUser);
-  const [selected, setSelected] = useState<Task | null>(null);
+  
+  const [userSelected, setUserSelected] = useState<Task | null>(null);
   const [dialog, setDialog] = useState<TaskDialog>(null);
   const [form, setForm] = useState(initialForm);
   const [publishedTask, setPublishedTask] = useState<Task | null>(null);
+
+  // Derivación limpia de la tarea seleccionada (reemplaza al useEffect problemático)
+  const selected = useMemo(() => {
+    if (userSelected) return userSelected;
+    if (focusTaskId) {
+      return tasks.find((task) => task.taskId === focusTaskId) || null;
+    }
+    return null;
+  }, [userSelected, focusTaskId, tasks]);
+
   const allowedTabs: TaskTab[] = isProvider ? ['explore', 'assigned', 'completed'] : ['created', 'assigned', 'completed'];
-  const close = () => { setDialog(null); setSelected(null); };
+  const close = () => { setDialog(null); setUserSelected(null); };
   const canManage = (task: Task) => task.ownerId === currentUser;
 
-  useEffect(() => {
-    if (!focusTaskId) return;
-    const match = tasks.find((task) => task.taskId === focusTaskId);
-    if (match) setSelected(match);
-  }, [focusTaskId, tasks]);
-
   const openEdit = (task: Task) => {
-    setSelected(task);
+    setUserSelected(task);
     setForm({ title: task.taskName, description: task.taskDescription, price: String(task.price), category: task.category });
     setDialog('edit');
   };
-  const openDelete = (task: Task) => { setSelected(task); setDialog('delete'); };
+  const openDelete = (task: Task) => { setUserSelected(task); setDialog('delete'); };
 
   const submit = async () => {
     if (!form.title.trim() || !form.description.trim() || !form.price || Number(form.price) <= 0) {
@@ -99,7 +104,7 @@ export default function TaskModule({ focusTaskId = null }: { focusTaskId?: strin
     setPublishedTask(asPublishedTask(created, form, currentUser));
     setForm(initialForm);
     setDialog(null);
-    setSelected(null);
+    setUserSelected(null);
   };
 
   const accept = async (task: Task) => {
@@ -126,7 +131,7 @@ export default function TaskModule({ focusTaskId = null }: { focusTaskId?: strin
           </div>
         )}
         {(error || actions.error) && <TaskErrorState message={error || actions.error} onRetry={error ? () => { void load(); } : undefined} retryDisabled={loading} onClose={() => { setError(''); actions.setError(''); }} />}
-        <TaskList tasks={visibleTasks} loading={loading} hasTasks={tasks.length > 0} onSelect={setSelected} onAccept={accept} canAccept={(task) => isProvider && task.ownerId !== currentUser} onEdit={isSeeker ? openEdit : undefined} onDelete={isSeeker ? openDelete : undefined} canComplete={(task) => tab === 'assigned' && task.assigneeId === currentUser} currentUserId={currentUser} />
+        <TaskList tasks={visibleTasks} loading={loading} hasTasks={tasks.length > 0} onSelect={setUserSelected} onAccept={accept} canAccept={(task) => isProvider && task.ownerId !== currentUser} onEdit={isSeeker ? openEdit : undefined} onDelete={isSeeker ? openDelete : undefined} canComplete={(task) => tab === 'assigned' && task.assigneeId === currentUser} currentUserId={currentUser} />
       </div>
       {selected && !dialog && (
         <TaskModal title="Detalle de la tarea" onClose={close}>
