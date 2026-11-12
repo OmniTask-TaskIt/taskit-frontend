@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../../services/authService';
@@ -28,12 +29,47 @@ function parseJwt(token: string) {
   }
 }
 
+// Google solo acepta anchos entre 200 y 400 px para su botón.
+const GOOGLE_BUTTON_MIN_WIDTH = 200;
+const GOOGLE_BUTTON_MAX_WIDTH = 400;
+
+/**
+ * El botón de Google se dibuja en un iframe con un ancho fijo en píxeles, así que no
+ * se adapta solo al contenedor. Se mide el ancho disponible y se le pasa a Google
+ * (dentro del rango permitido) para que en pantallas de celular no se salga de la tarjeta.
+ */
+function useGoogleButtonWidth() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(GOOGLE_BUTTON_MAX_WIDTH);
+
+  useEffect(() => {
+    const element = containerRef.current;
+    if (!element) return;
+
+    const update = () => {
+      const available = Math.floor(element.getBoundingClientRect().width);
+      if (available <= 0) return;
+      setWidth(Math.min(GOOGLE_BUTTON_MAX_WIDTH, Math.max(GOOGLE_BUTTON_MIN_WIDTH, available)));
+    };
+
+    update();
+    if (typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(update);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  return { containerRef, width };
+}
+
 export default function GoogleLoginButton({ onError, disabled, onBlockedClick }: GoogleLoginButtonProps) {
   const navigate = useNavigate();
+  const { containerRef, width } = useGoogleButtonWidth();
 
   return (
     <div
-      className="relative w-full flex justify-center mt-3"
+      ref={containerRef}
+      className="relative mt-3 flex w-full min-w-0 justify-center overflow-hidden"
       onClickCapture={(e) => {
         if (disabled) {
           e.preventDefault();
@@ -114,7 +150,7 @@ export default function GoogleLoginButton({ onError, disabled, onBlockedClick }:
         theme="filled_black"
         shape="pill"
         size="large"
-        width="380"
+        width={width}
         />
       </div>
     </div>

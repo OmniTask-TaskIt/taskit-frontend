@@ -9,8 +9,17 @@ import { makeAxiosError, makeJwt } from '../../../../test/helpers';
 
 // El botón real de Google vive en un iframe; se reemplaza por uno que dispara los callbacks.
 vi.mock('@react-oauth/google', () => ({
-  GoogleLogin: ({ onSuccess, onError }: { onSuccess: (r: { credential?: string }) => void; onError: () => void }) => (
+  GoogleLogin: ({
+    onSuccess,
+    onError,
+    width,
+  }: {
+    onSuccess: (r: { credential?: string }) => void;
+    onError: () => void;
+    width?: string | number;
+  }) => (
     <>
+      <span data-testid="google-width">{width}</span>
       <button onClick={() => onSuccess({ credential: window.__GOOGLE_CREDENTIAL__ })}>google-ok</button>
       <button onClick={onError}>google-error</button>
     </>
@@ -42,6 +51,7 @@ const renderButton = (props: Partial<React.ComponentProps<typeof GoogleLoginButt
 
 describe('GoogleLoginButton', () => {
   afterEach(() => {
+    vi.restoreAllMocks();
     vi.clearAllMocks();
     localStorage.clear();
     window.__GOOGLE_CREDENTIAL__ = undefined;
@@ -123,5 +133,16 @@ describe('GoogleLoginButton', () => {
     });
     expect(authStore.getAccessToken()).toBeNull();
     sessionStorage.clear();
+  });
+
+  it.each([
+    { disponible: 330, esperado: '330', caso: 'se adapta a una tarjeta angosta de celular' },
+    { disponible: 150, esperado: '200', caso: 'no baja del mínimo que acepta Google' },
+    { disponible: 900, esperado: '400', caso: 'no pasa del máximo que acepta Google' },
+  ])('ancho del botón: $caso', async ({ disponible, esperado }) => {
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({ width: disponible } as DOMRect);
+    renderButton();
+
+    await waitFor(() => expect(screen.getByTestId('google-width')).toHaveTextContent(esperado));
   });
 });
