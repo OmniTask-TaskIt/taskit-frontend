@@ -13,6 +13,9 @@ vi.mock('../Components/profile/ProfileSearchSection', () => ({ default: () => <d
 vi.mock('../Components/security/TwoFactorSection', () => ({ default: () => <div>SECCION-2FA</div> }));
 vi.mock('../Components/security/ActiveSessionsSection', () => ({ default: () => <div>SECCION-SEGURIDAD</div> }));
 vi.mock('../../tasks/pages/TaskModule', () => ({ default: () => <div>SECCION-TAREAS</div> }));
+vi.mock('../../aita/components/AitaRecommendedTasks', () => ({
+  default: () => <section>Tareas recomendadas para ti</section>,
+}));
 vi.mock('../../../utils/navigation', () => ({ redirectToLogin: vi.fn() }));
 vi.mock('../services/authService', () => ({ authService: { logout: vi.fn() } }));
 
@@ -46,6 +49,18 @@ describe('DashboardPage', () => {
 
     await user.click(screen.getAllByRole('button', { name: /mi perfil/i })[0]);
     expect(await screen.findByText('SECCION-PERFIL')).toBeInTheDocument();
+  });
+
+  it('un prestador ve las tareas recomendadas en el inicio y un demandante no', () => {
+    authStore.setTokens(makeJwt({ role: 'PROVIDER' }), 'refresh');
+    const { unmount } = renderPage();
+    expect(screen.getByText(/tareas recomendadas para ti/i)).toBeInTheDocument();
+    unmount();
+
+    localStorage.clear();
+    authStore.setTokens(makeJwt({ role: 'SEEKER' }), 'refresh');
+    renderPage();
+    expect(screen.queryByText(/tareas recomendadas para ti/i)).not.toBeInTheDocument();
   });
 
   it('un usuario normal no ve el acceso al panel de administración', () => {
