@@ -8,16 +8,12 @@ import { aitaService } from '../services/aita.service';
 import { isAbortError, toAitaRequestError } from '../services/aitaError';
 import AitaAlert from './AitaAlert';
 import AitaThinking from './AitaThinking';
-import { Sparkles, MapPin, Briefcase } from 'lucide-react';
+import { Sparkles, Briefcase } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 type Suggestion = { task: Task; score: number; rationale?: string };
 
 const MAX_CANDIDATES = 4;
-
-function percent(score: number) {
-  return `${Math.round(Math.max(0, score) * 100)}%`;
-}
 
 // Función para transformar el 'rationale' matemático en un texto amigable
 function formatRationale(rationale: string | undefined): string | null {
