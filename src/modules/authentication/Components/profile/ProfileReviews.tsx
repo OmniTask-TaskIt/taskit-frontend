@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Star } from 'lucide-react';
+import AitaSentimentBadge from '../../../aita/components/AitaSentimentBadge';
 import { reviewService } from '../../services/reviewService';
 import type { Review } from '../../types/profile.types';
 
@@ -86,7 +87,10 @@ export default function ProfileReviews({ userId }: { userId: string }) {
                 />
               ))}
             </div>
-            <span className="text-[11px] text-white/40">{formatDate(review.createdAt)}</span>
+            <span className="flex items-center gap-2">
+              <AitaSentimentBadge review={review} />
+              <span className="text-[11px] text-white/40">{formatDate(review.createdAt)}</span>
+            </span>
           </div>
           {review.comment && <p className="mt-2 text-sm leading-relaxed text-white/80">{review.comment}</p>}
         </div>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import AitaRecommendedTasks from '../../aita/components/AitaRecommendedTasks';
 import TaskModule from '../../tasks/pages/TaskModule';
 import ChatSection from '../../chat/components/ChatSection';
 import ProfileSearchSection from '../Components/profile/ProfileSearchSection';
@@ -40,8 +41,10 @@ async function handleLogout() {
 
 export default function DashboardPage() {
   const [activeSection, setActiveSection] = useState<SectionType>('profile');
+  const [focusTaskId, setFocusTaskId] = useState<string | null>(null);
   // Permite abrir el sidebar también con el teclado (Tab), no solo con hover.
   const [sidebarFocused, setSidebarFocused] = useState(false);
+  const isProvider = (authStore.getRole() ?? '').toUpperCase() === 'PROVIDER';
 
   return (
     <div 
@@ -50,9 +53,7 @@ export default function DashboardPage() {
     >
       <div className="pointer-events-none absolute inset-0 bg-[#f5f7ff]/75 backdrop-blur-[3px]" />
 
-      {/* 🌟 BARRA SUPERIOR MÓVIL (< md): logo + cerrar sesión. El sidebar con
-          hover no funciona en pantallas táctiles, así que en móvil se
-          reemplaza por esta barra + la barra de tabs inferior. */}
+      {/* 🌟 BARRA SUPERIOR MÓVIL (< md) */}
       <header className="fixed inset-x-0 top-0 z-30 flex items-center justify-between border-b border-white/70 bg-white/90 px-4 py-3 backdrop-blur-xl md:hidden">
         <div className="flex items-center gap-2.5">
           <img src={logoImage} alt="TaskIt" className="h-8 w-8 rounded-lg object-cover" />
@@ -209,14 +210,33 @@ export default function DashboardPage() {
         </div>
       </motion.aside>
 
-      {/* 🌟 CONTENEDOR PRINCIPAL — padding extra arriba/abajo en móvil para no
-          quedar tapado por la barra superior y la barra de tabs fijas. */}
+      {/* 🌟 CONTENEDOR PRINCIPAL */}
       <main className="z-10 flex h-screen flex-1 flex-col overflow-y-auto p-5 pt-20 pb-24 custom-scrollbar sm:p-8 md:pt-8 md:pb-8">
         <div className="w-full flex-1">
           <AnimatePresence mode="wait">
             {activeSection === 'profile' && (
-              <motion.div key="profile" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.2 }}>
+              <motion.div 
+                key="profile" 
+                initial={{ opacity: 0, scale: 0.98 }} 
+                animate={{ opacity: 1, scale: 1 }} 
+                exit={{ opacity: 0, scale: 0.98 }} 
+                transition={{ duration: 0.2 }}
+                className="flex flex-col gap-8"
+              >
+                {/* 1. PERFIL PRIMERO (ARRIBA) */}
                 <UserProfileCard />
+
+                {/* 2. TAREAS RECOMENDADAS DESPUÉS (ABAJO) */}
+                {isProvider && (
+                  <div className="w-full">
+                    <AitaRecommendedTasks
+                      onOpen={(task) => {
+                        setFocusTaskId(task.taskId);
+                        setActiveSection('tasks');
+                      }}
+                    />
+                  </div>
+                )}
               </motion.div>
             )}
 
@@ -228,7 +248,7 @@ export default function DashboardPage() {
 
             {activeSection === 'tasks' && (
               <motion.div key="tasks" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.2 }}>
-                <TaskModule />
+                <TaskModule focusTaskId={focusTaskId} />
               </motion.div>
             )}
 

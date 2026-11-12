@@ -8,6 +8,18 @@ vi.mock('../../services/reviewService', () => ({
   reviewService: { getUserReviews: vi.fn() },
 }));
 
+vi.mock('../../../aita/services/aita.service', () => ({
+  aitaService: {
+    analyzeSentiment: vi.fn().mockResolvedValue({
+      review_id: '1',
+      sentiment: 'POSITIVE',
+      score: 0.9,
+      keywords: ['puntual'],
+      summary: 'Tono positivo',
+    }),
+  },
+}));
+
 describe('ProfileReviews', () => {
   afterEach(() => vi.clearAllMocks());
 

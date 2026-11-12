@@ -1,3 +1,4 @@
+import OptimizeProfileButton from '../../../aita/components/OptimizeProfileButton';
 import ProfileActivity from './ProfileActivity';
 import React, { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
@@ -295,9 +296,28 @@ export default function UserProfileCard() {
 
         <div className="flex flex-col gap-8 p-6 md:p-8">
           <section>
-            <div className="mb-2 flex items-center gap-2 text-[#17213f]/80">
-              <FileText {...iconProps} className="text-[#17213f]/70" />
-              <h2 className="text-sm font-medium">Descripción</h2>
+            <div className="mb-2 flex flex-wrap items-start justify-between gap-3 text-[#17213f]/80">
+              <div className="flex items-center gap-2">
+                <FileText {...iconProps} className="text-[#17213f]/70" />
+                <h2 className="text-sm font-medium">Descripción</h2>
+              </div>
+              <OptimizeProfileButton
+                userId={profile.userId}
+                displayName={displayName}
+                bio={isEditing ? draft.description : profile.description || ''}
+                location={isEditing ? draft.locationCoverage : profile.locationCoverage || ''}
+                categories={(isEditing ? draft.categories.split(',') : profile.categories || []).map((category) => category.trim()).filter(Boolean)}
+                onApply={(bio) => {
+                  setDraft({
+                    description: bio,
+                    locationCoverage: isEditing ? draft.locationCoverage : profile.locationCoverage || '',
+                    categories: isEditing ? draft.categories : profile.categories?.join(', ') || '',
+                  });
+                  setSaveError('');
+                  setIsEditing(true);
+                  setFocusTick((tick) => tick + 1);
+                }}
+              />
             </div>
             {profile.description && profile.description.trim() !== '' ? (
               <p className="text-sm leading-relaxed text-[#17213f]/90">{profile.description}</p>
