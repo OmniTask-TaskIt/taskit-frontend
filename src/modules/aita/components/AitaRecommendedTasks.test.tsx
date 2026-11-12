@@ -70,7 +70,7 @@ describe('AitaRecommendedTasks', () => {
     const user = userEvent.setup();
     render(<AitaRecommendedTasks onOpen={onOpen} />);
 
-    expect(await screen.findByRole('heading', { name: /tareas recomendadas para ti/i })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: /tareas recomendadas$/i })).toBeInTheDocument();
     expect(await screen.findByText('Pintar una sala')).toBeInTheDocument();
     expect(screen.queryByText('Mi propia tarea')).not.toBeInTheDocument();
 
