@@ -32,8 +32,12 @@ export default function ChatReportDialog({ taskId, users, onClose, onCreated }: 
       for (const file of files) await reportService.uploadEvidence(file, taskId);
       await reportService.createReport(taskId, reason.trim(), users);
       onCreated();
-    } catch {
-      setError('No se pudo crear el reporte. Revisa tu conexión e inténtalo de nuevo.');
+    } catch (error: unknown) {
+      if (error instanceof Error && error.message.includes('VITE_REPORT_API_URL')) {
+        setError(error.message);
+      } else {
+        setError('No se pudo crear el reporte. Revisa tu conexión e inténtalo de nuevo.');
+      }
     } finally {
       setSubmitting(false);
     }
