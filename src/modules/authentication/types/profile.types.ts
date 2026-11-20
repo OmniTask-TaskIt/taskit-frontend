@@ -60,3 +60,12 @@ export interface AdminReport extends Report {
   revieweeName?: string | null;
   revieweeEmail?: string | null;
 }
+
+/** Respuesta del endpoint GET /api/v1/reports para reportes creados desde un chat. */
+export interface TaskReport {
+  id?: string;
+  taskId: string;
+  reason: string;
+  users?: string[];
+  createdAt?: string;
+}

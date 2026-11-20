@@ -4,13 +4,15 @@ import { ArrowLeft, Flag, ShieldCheck, Users } from 'lucide-react';
 import UsersTab from '../Components/admin/UsersTab';
 import VerificationsTab from '../Components/admin/VerificationsTab';
 import ReportsTab from '../Components/admin/ReportsTab';
+import TaskReportsTab from '../Components/admin/TaskReportsTab';
 
-type Tab = 'users' | 'verifications' | 'reports';
+type Tab = 'users' | 'verifications' | 'profileReports' | 'taskReports';
 
 const TABS: { key: Tab; label: string; icon: typeof Users }[] = [
   { key: 'users', label: 'Usuarios', icon: Users },
   { key: 'verifications', label: 'Verificaciones', icon: ShieldCheck },
-  { key: 'reports', label: 'Reportes', icon: Flag },
+  { key: 'profileReports', label: 'Reportes de perfil', icon: Flag },
+  { key: 'taskReports', label: 'Reportes de tarea', icon: Flag },
 ];
 
 export default function AdminPage() {
@@ -49,7 +51,8 @@ export default function AdminPage() {
         <div className="mt-6">
           {tab === 'users' && <UsersTab />}
           {tab === 'verifications' && <VerificationsTab />}
-          {tab === 'reports' && <ReportsTab />}
+          {tab === 'profileReports' && <ReportsTab />}
+          {tab === 'taskReports' && <TaskReportsTab />}
         </div>
       </div>
     </div>

@@ -6,10 +6,11 @@ import AdminPage from './AdminPage';
 
 vi.mock('../Components/admin/UsersTab', () => ({ default: () => <div>TAB-USUARIOS</div> }));
 vi.mock('../Components/admin/VerificationsTab', () => ({ default: () => <div>TAB-VERIFICACIONES</div> }));
-vi.mock('../Components/admin/ReportsTab', () => ({ default: () => <div>TAB-REPORTES</div> }));
+vi.mock('../Components/admin/ReportsTab', () => ({ default: () => <div>TAB-REPORTES-PERFIL</div> }));
+vi.mock('../Components/admin/TaskReportsTab', () => ({ default: () => <div>TAB-REPORTES-TAREA</div> }));
 
 describe('AdminPage', () => {
-  it('abre en Usuarios y navega entre las tres pestañas', async () => {
+  it('abre en Usuarios y navega entre las pestañas de administración', async () => {
     const user = userEvent.setup();
     render(
       <MemoryRouter>
@@ -21,8 +22,11 @@ describe('AdminPage', () => {
     await user.click(screen.getByRole('button', { name: /verificaciones/i }));
     expect(screen.getByText('TAB-VERIFICACIONES')).toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: /reportes/i }));
-    expect(screen.getByText('TAB-REPORTES')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /reportes de perfil/i }));
+    expect(screen.getByText('TAB-REPORTES-PERFIL')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: /reportes de tarea/i }));
+    expect(screen.getByText('TAB-REPORTES-TAREA')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: /usuarios/i }));
     expect(screen.getByText('TAB-USUARIOS')).toBeInTheDocument();

@@ -1,5 +1,5 @@
 import { axiosInstance } from '../Config/axios';
-import type { AdminReport, PageResponse, Profile, Report, VerificationStatus } from '../types/profile.types';
+import type { AdminReport, PageResponse, Profile, Report, TaskReport, VerificationStatus } from '../types/profile.types';
 import type { AccountStatus, AdminUser, DocumentAccess, VerificationDecision } from '../types/admin.types';
 
 export const adminService = {
@@ -39,6 +39,16 @@ export const adminService = {
 
   async resolveReport(reportId: string, status: 'RESOLVED' | 'DISMISSED', note: string) {
     const response = await axiosInstance.patch<Report>(`/admin/reports/${reportId}/status`, { status, note });
+    return response.data;
+  },
+
+  async listTaskReports() {
+    const response = await axiosInstance.get<TaskReport[]>('/reports');
+    return response.data;
+  },
+
+  async listTaskReportsByUser(userId: string) {
+    const response = await axiosInstance.get<TaskReport[]>(`/reports/user/${encodeURIComponent(userId)}`);
     return response.data;
   },
 };

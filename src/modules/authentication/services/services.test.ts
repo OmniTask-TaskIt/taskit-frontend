@@ -169,5 +169,13 @@ describe('servicios HTTP de AuthAndProfiles', () => {
       await adminService.resolveReport('r1', 'DISMISSED', 'Sin evidencia');
       expect(http.patch).toHaveBeenCalledWith('/admin/reports/r1/status', { status: 'DISMISSED', note: 'Sin evidencia' });
     });
+
+    it('reportes de tarea: lista todos y filtra por ID de usuario', async () => {
+      await adminService.listTaskReports();
+      expect(http.get).toHaveBeenCalledWith('/reports');
+
+      await adminService.listTaskReportsByUser('user id/1');
+      expect(http.get).toHaveBeenLastCalledWith('/reports/user/user%20id%2F1');
+    });
   });
 });
