@@ -64,8 +64,31 @@ export interface AdminReport extends Report {
 /** Respuesta del endpoint GET /api/v1/reports para reportes creados desde un chat. */
 export interface TaskReport {
   id?: string;
+  reportID?: string;
+  reportId?: string;
   taskId: string;
+  taskName?: string | null;
   reason: string;
   users?: string[];
   createdAt?: string;
+  timestamp?: string;
+  createdBy?: string;
+  status?: 'OPEN' | 'RESOLVED' | 'DISMISSED' | string;
+}
+
+export interface ReportMessage {
+  messageId: string;
+  chatId: string;
+  senderId: string;
+  content: string;
+  timestamp: string;
+}
+
+export interface ReportFile {
+  taskId: string;
+  fileName: string;
+  key: string;
+  url: string;
+  size: number;
+  lastModified: string;
 }

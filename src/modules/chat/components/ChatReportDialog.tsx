@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { AlertTriangle, Paperclip, X } from 'lucide-react';
 import { reportService } from '../services/reportService';
+import { authStore } from '../../authentication/services/authStore';
 
 type ChatReportDialogProps = {
   taskId: string;
@@ -18,6 +19,11 @@ export default function ChatReportDialog({ taskId, users, onClose, onCreated }: 
 
   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const normalizedTaskId = taskId.trim();
+    if (!normalizedTaskId) {
+      setError('No fue posible identificar la tarea de este reporte.');
+      return;
+    }
     if (!reason.trim()) {
       setError('Describe la razón del reporte para continuar.');
       return;
@@ -29,8 +35,17 @@ export default function ChatReportDialog({ taskId, users, onClose, onCreated }: 
     setSubmitting(true);
     setError('');
     try {
-      for (const file of files) await reportService.uploadEvidence(file, taskId);
-      await reportService.createReport(taskId, reason.trim(), users);
+      const createdBy = authStore.getUserId() ?? authStore.getEmail();
+      if (!createdBy) throw new Error('No fue posible identificar al usuario que crea el reporte.');
+      const createdReport = await reportService.createReport(
+        normalizedTaskId,
+        reason.trim(),
+        users,
+        createdBy
+      );
+      const reportId = createdReport.id ?? createdReport.reportID;
+      if (!reportId) throw new Error('El servidor no devolvió el reportId del reporte creado.');
+      for (const file of files) await reportService.uploadEvidence(file, reportId);
       onCreated();
     } catch (error: unknown) {
       if (error instanceof Error && error.message.includes('VITE_REPORT_API_URL')) {
