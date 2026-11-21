@@ -173,7 +173,7 @@ export default function AitaRecommendedTasks({ onOpen }: { onOpen: (task: Task) 
                     {friendlyRationale && (
                       <div className="mb-4 flex items-start gap-2 rounded-lg bg-violet-50/50 px-3 py-2 text-[13px] font-medium text-violet-800">
                         <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-                        <p>{friendlyRationale}</p>
+                        <p className="line-clamp-2">{friendlyRationale}</p>
                       </div>
                     )}
                   </div>

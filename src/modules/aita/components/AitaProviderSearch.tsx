@@ -6,6 +6,7 @@ import { useAitaMatchmaking } from '../hooks/useAitaMatchmaking';
 import { isAitaCategory } from '../mappers/aita.mappers';
 import type { MatchResult } from '../types/aita.types';
 import AitaAlert from './AitaAlert';
+import AitaFitText from './AitaFitText';
 import AitaThinking from './AitaThinking';
 
 function percent(score: number) {
@@ -36,7 +37,7 @@ function ProviderSuggestion({ match }: { match: MatchResult }) {
         <span className="font-semibold text-[#0B132B]">{name}</span>
         <span className="rounded-full bg-violet-50 px-2 py-0.5 text-[11px] font-semibold text-violet-800">{percent(match.score)}</span>
       </div>
-      {match.rationale && <p className="mt-1 text-xs leading-relaxed text-[#5b6685]">{match.rationale}</p>}
+      {match.rationale && <AitaFitText text={match.rationale} className="mt-1 text-xs text-[#5b6685]" />}
       <Link
         to={`/profile/${encodeURIComponent(match.provider_id)}`}
         className="mt-2 inline-flex rounded-lg bg-[#263BAA] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#1a297a]"
@@ -87,7 +88,7 @@ export default function AitaProviderSearch({ task }: { task: Task }) {
         <p className="mt-3 text-xs text-[#5b6685]">Todavía no hay profesionales indexados compatibles. Puedes seguir publicando la tarea y contactarlos desde el directorio.</p>
       )}
       {search.data && search.data.length > 0 && (
-        <ul className="mt-3 space-y-2">
+        <ul className="mt-3 max-h-64 space-y-2 overflow-y-auto pr-1">
           {search.data.map((match) => <ProviderSuggestion key={match.provider_id} match={match} />)}
         </ul>
       )}

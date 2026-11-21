@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import AitaAlert from '../../aita/components/AitaAlert';
+import AitaFitText from '../../aita/components/AitaFitText';
 import AitaGeneratedMark from '../../aita/components/AitaGeneratedMark';
 import AitaMagicButton from '../../aita/components/AitaMagicButton';
 import AitaThinking from '../../aita/components/AitaThinking';
@@ -166,9 +167,10 @@ export default function TaskForm({ value, onChange, onCancel, onSubmit, submitLa
           </div>
           {price.isLoading && <div className="mt-2"><AitaThinking label="AITA está estimando el precio..." /></div>}
           {price.data && (
-            <div className="mt-2 rounded-xl border border-violet-200 bg-gradient-to-r from-violet-50 to-sky-50 p-3 text-xs font-medium leading-relaxed text-[#2f3b63]">
+            <div className="mt-2 rounded-xl border border-violet-200 bg-violet-50/80 p-3 text-xs font-medium text-[#2f3b63]">
               <p>Rango sugerido: {money(price.data.min_price, price.data.currency)} – {money(price.data.max_price, price.data.currency)}</p>
-              <p className="mt-1 text-[#5b6685]">Confianza {Math.round(price.data.confidence * 100)}%. {price.data.rationale}</p>
+              <p className="mt-1 text-[#5b6685]">Confianza {Math.round(price.data.confidence * 100)}%.</p>
+              <AitaFitText text={price.data.rationale} className="mt-1 text-[#5b6685]" />
               <p className="mt-1">Se usó el punto medio. Puedes cambiarlo.</p>
             </div>
           )}
@@ -187,7 +189,7 @@ export default function TaskForm({ value, onChange, onCancel, onSubmit, submitLa
         </label>
       </div>
 
-      <div className="flex justify-end gap-3 pt-2">
+      <div className="sticky bottom-0 z-10 -mx-6 flex justify-end gap-3 border-t border-[#f0f2f8] bg-white px-6 py-3">
         <button type="button" onClick={onCancel} className="rounded-xl px-4 py-2.5 text-sm font-semibold text-[#657399]">Cancelar</button>
         <button type="submit" className="rounded-xl bg-[#263BAA] px-4 py-2.5 text-sm font-bold text-white">{submitLabel}</button>
       </div>

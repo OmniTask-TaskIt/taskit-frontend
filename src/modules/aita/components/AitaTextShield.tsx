@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useAitaShield } from '../hooks/useAitaShield';
 import type { FraudRiskLevel, TextAnalysisSource } from '../types/aita.types';
 import AitaAlert from './AitaAlert';
+import AitaFitText from './AitaFitText';
 import AitaMagicButton from './AitaMagicButton';
 import AitaThinking from './AitaThinking';
 
@@ -64,7 +65,7 @@ export default function AitaTextShield({ text, source, sourceId, taskId, chatId,
       {data && (
         <div className={`rounded-xl border px-3 py-2 text-xs leading-relaxed ${RISK_STYLES[data.risk_level]}`}>
           <p className="font-semibold">{data.is_anomaly ? RISK_LABELS[data.risk_level] : 'Sin señales de riesgo'}</p>
-          <p className="mt-1">{data.explanation}</p>
+          <AitaFitText text={data.explanation} className="mt-1" />
           <p className="mt-1 opacity-80">Puedes seguir</p>
         </div>
       )}

@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import InvoiceList from '../../../components/payments/InvoiceList';
+import { usePayments } from '../../../hooks/usePayments';
 import AitaRecommendedTasks from '../../aita/components/AitaRecommendedTasks';
 import TaskModule from '../../tasks/pages/TaskModule';
 import ChatSection from '../../chat/components/ChatSection';
@@ -12,21 +14,26 @@ import TwoFactorSection from '../Components/security/TwoFactorSection';
 import { authService } from '../services/authService';
 import { authStore } from '../services/authStore';
 import { redirectToLogin } from '../../../utils/navigation';
-import { ClipboardList, Flag, Lock, LogOut, MessageCircle, Search, ShieldCheck, UserRound } from 'lucide-react';
+import { ClipboardList, Flag, Lock, LogOut, MessageCircle, Receipt, Search, ShieldCheck, UserRound } from 'lucide-react';
 
 import fondoImage from '../../../assets/FondoP.jpeg';
 import logoImage from '../../../assets/Logo.jpeg';
 
-type SectionType = 'profile' | 'search' | 'tasks' | 'chats' | 'reports' | 'security';
+type SectionType = 'profile' | 'search' | 'tasks' | 'invoices' | 'chats' | 'reports' | 'security';
 
 const NAV_ITEMS: { key: SectionType; label: string; icon: typeof UserRound }[] = [
   { key: 'profile', label: 'Mi perfil', icon: UserRound },
   { key: 'search', label: 'Buscar profesionales', icon: Search },
   { key: 'tasks', label: 'Gestión de tareas', icon: ClipboardList },
+  { key: 'invoices', label: 'Facturas', icon: Receipt },
   { key: 'chats', label: 'Chats', icon: MessageCircle },
   { key: 'reports', label: 'Reportes', icon: Flag },
   { key: 'security', label: 'Seguridad', icon: Lock },
 ];
+
+function readSection(value: string | null): SectionType {
+  return NAV_ITEMS.some((item) => item.key === value) ? (value as SectionType) : 'profile';
+}
 
 async function handleLogout() {
   try {
@@ -42,12 +49,23 @@ async function handleLogout() {
 }
 
 export default function DashboardPage() {
-  const [activeSection, setActiveSection] = useState<SectionType>('profile');
-  const [focusTaskId, setFocusTaskId] = useState<string | null>(null);
+  const [params, setParams] = useSearchParams();
+  const activeSection = readSection(params.get('section'));
+  const focusTaskId = params.get('taskId');
+  const openSection = (key: SectionType, taskId?: string) => {
+    const next = new URLSearchParams(params);
+    if (key === 'profile') next.delete('section');
+    else next.set('section', key);
+    if (key === 'tasks' && taskId) next.set('taskId', taskId);
+    else next.delete('taskId');
+    setParams(next, { replace: true });
+  };
+  const setActiveSection = (key: SectionType) => openSection(key);
   // Permite abrir el sidebar también con el teclado (Tab), no solo con hover.
   const [sidebarFocused, setSidebarFocused] = useState(false);
   const isProvider = (authStore.getRole() ?? '').toUpperCase() === 'PROVIDER';
-  const activeUserId = authStore.getUserId() ?? authStore.getEmail();
+  const activeUserId = authStore.getUserId() ?? localStorage.getItem('userId') ?? authStore.getEmail() ?? '';
+  usePayments(activeUserId || null);
 
   return (
     <div 
@@ -166,6 +184,18 @@ export default function DashboardPage() {
             </button>
             <button
               type="button"
+              onClick={() => setActiveSection('invoices')}
+              className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer border truncate ${
+                activeSection === 'invoices'
+                  ? 'bg-[#263BAA] border-[#263BAA] text-white shadow-[0_8px_18px_rgba(38,59,170,0.22)] font-semibold'
+                  : 'bg-transparent border-transparent text-[#2f3b63] hover:bg-[#eef2ff] hover:text-[#263BAA]'
+              }`}
+            >
+              <Receipt size={20} strokeWidth={activeSection === 'invoices' ? 2.5 : 2} className="flex-shrink-0" />
+              <span className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap transition-opacity truncate">Facturas</span>
+            </button>
+            <button
+              type="button"
               onClick={() => setActiveSection('chats')}
               className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer border truncate ${
                 activeSection === 'chats' 
@@ -245,10 +275,7 @@ export default function DashboardPage() {
                 {isProvider && (
                   <div className="w-full">
                     <AitaRecommendedTasks
-                      onOpen={(task) => {
-                        setFocusTaskId(task.taskId);
-                        setActiveSection('tasks');
-                      }}
+                      onOpen={(task) => openSection('tasks', task.taskId)}
                     />
                   </div>
                 )}
@@ -264,6 +291,12 @@ export default function DashboardPage() {
             {activeSection === 'tasks' && (
               <motion.div key="tasks" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.2 }}>
                 <TaskModule focusTaskId={focusTaskId} />
+              </motion.div>
+            )}
+
+            {activeSection === 'invoices' && (
+              <motion.div key="invoices" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.2 }}>
+                <InvoiceList userId={activeUserId} onExploreTasks={() => openSection('tasks')} />
               </motion.div>
             )}
 

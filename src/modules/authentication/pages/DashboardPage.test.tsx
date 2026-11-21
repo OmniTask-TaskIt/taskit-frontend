@@ -19,6 +19,10 @@ vi.mock('../../aita/components/AitaRecommendedTasks', () => ({
 }));
 vi.mock('../../../utils/navigation', () => ({ redirectToLogin: vi.fn() }));
 vi.mock('../services/authService', () => ({ authService: { logout: vi.fn() } }));
+vi.mock('../../../services/paymentService', () => ({
+  paymentService: { getHistory: vi.fn().mockResolvedValue([]) },
+  paymentErrorMessage: () => 'No pudimos completar esta acción de pago.',
+}));
 
 const renderPage = () =>
   render(

@@ -31,6 +31,15 @@ export const env = {
   /** Base independiente del microservicio de reportes y evidencias. */
   reportApiUrl: readEnv('VITE_REPORT_API_URL'),
 
+  /** Base del microservicio de pagos escrow, sin barra final. */
+  paymentApiUrl: (readEnv('VITE_PAYMENT_API_URL', 'VIT_PAYMENT_API_URL') || 'http://18.218.166.184:8080').replace(/\/+$/, ''),
+
+  /**
+   * Collector de Mercado Pago del prestador. Mientras el perfil no lo exponga,
+   * se usa el valor de pruebas configurado en el entorno.
+   */
+  payeeCollectorId: readEnv('VITE_PAYEE_COLLECTOR_ID', 'VIT_PAYEE_COLLECTOR_ID') || '3494430459',
+
   /** Base del microservicio AITA (AI Task Assistant), sin barra final. */
   aitaApiUrl: readEnv('VITE_AITA_API_URL', 'VIT_AITA_API_URL'),
 
