@@ -59,8 +59,16 @@ export default function ChatReportDialog({ taskId, users, onClose, onCreated }: 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#111a37]/55 p-4 backdrop-blur-sm" onMouseDown={(event) => { if (event.target === event.currentTarget && !submitting) onClose(); }}>
-      <section role="dialog" aria-modal="true" aria-labelledby="chat-report-title" className="w-full max-w-lg rounded-3xl border border-white/80 bg-white p-6 text-[#17213f] shadow-[0_24px_80px_rgba(23,33,63,0.28)] sm:p-7">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#111a37]/55 p-4 backdrop-blur-sm">
+      <button
+        type="button"
+        tabIndex={-1}
+        aria-label="Cerrar diálogo"
+        disabled={submitting}
+        onClick={onClose}
+        className="fixed inset-0 h-full w-full cursor-default border-0 bg-transparent"
+      />
+      <section role="dialog" aria-modal="true" aria-labelledby="chat-report-title" className="relative z-10 w-full max-w-lg rounded-3xl border border-white/80 bg-white p-6 text-[#17213f] shadow-[0_24px_80px_rgba(23,33,63,0.28)] sm:p-7">
         <header className="mb-5 flex items-start justify-between gap-4">
           <div className="flex items-start gap-3">
             <span className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-[#fff0f2] text-[#c9364f]"><AlertTriangle size={19} /></span>

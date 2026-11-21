@@ -136,9 +136,9 @@ export default function TaskReportsTab({ fixedUserId }: TaskReportsTabProps = {}
     setUploadNotice('');
     setUploadError('');
     try {
-      const userId = fixedUserId?.trim();
-      if (!userId) throw new Error('El usuario de la sesión no fue identificado.');
-      await adminService.deleteTaskReport(reportId, userId);
+      const sessionUserId = fixedUserId?.trim();
+      if (!sessionUserId) throw new Error('El usuario de la sesión no fue identificado.');
+      await adminService.deleteTaskReport(reportId, sessionUserId);
       setReports((current) => current.filter((report) => getReportId(report) !== reportId));
       setUploadNotice('Reporte eliminado correctamente.');
       if (selectedReport && getReportId(selectedReport) === reportId) closeDetail();
@@ -231,7 +231,7 @@ export default function TaskReportsTab({ fixedUserId }: TaskReportsTabProps = {}
       setUploadNotice(
         `${selectedFiles.length === 1 ? 'Archivo agregado' : `${selectedFiles.length} archivos agregados`} al reporte.`
       );
-      if (detailView === 'files' && selectedReport?.id === reportId) {
+      if (detailView === 'files' && selectedReport && getReportId(selectedReport) === reportId) {
         setFiles(await adminService.getTaskReportFiles(report.taskId));
       }
     } catch {
@@ -497,16 +497,18 @@ export default function TaskReportsTab({ fixedUserId }: TaskReportsTabProps = {}
       )}
 
       {detailView && selectedReport && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-[#050914]/70 p-4 backdrop-blur-sm"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) closeDetail();
-          }}
-        >
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#050914]/70 p-4 backdrop-blur-sm">
+          <button
+            type="button"
+            tabIndex={-1}
+            aria-label="Cerrar detalle del reporte"
+            onClick={closeDetail}
+            className="fixed inset-0 h-full w-full cursor-default border-0 bg-transparent"
+          />
           <section
             role="dialog"
             aria-modal="true"
-            className="max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-[#e4e8f3] bg-white p-5 text-[#17213f] shadow-2xl sm:p-6"
+            className="relative z-10 max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-[#e4e8f3] bg-white p-5 text-[#17213f] shadow-2xl sm:p-6"
           >
             <header className="flex items-start justify-between gap-4 border-b border-[#e4e8f3] pb-4">
               <div>
@@ -569,13 +571,16 @@ export default function TaskReportsTab({ fixedUserId }: TaskReportsTabProps = {}
         </div>
       )}
       {deleteTarget && (
-        <div
-          className="fixed inset-0 z-[60] flex items-center justify-center bg-[#050914]/70 p-4 backdrop-blur-sm"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget && !deletingReportId) setDeleteTarget(null);
-          }}
-        >
-          <section role="dialog" aria-modal="true" aria-labelledby="delete-report-title" className="w-full max-w-md rounded-2xl border border-[#e4e8f3] bg-white p-6 text-[#17213f] shadow-2xl">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[#050914]/70 p-4 backdrop-blur-sm">
+          <button
+            type="button"
+            tabIndex={-1}
+            aria-label="Cerrar confirmación de eliminación"
+            disabled={Boolean(deletingReportId)}
+            onClick={() => setDeleteTarget(null)}
+            className="fixed inset-0 h-full w-full cursor-default border-0 bg-transparent"
+          />
+          <section role="dialog" aria-modal="true" aria-labelledby="delete-report-title" className="relative z-10 w-full max-w-md rounded-2xl border border-[#e4e8f3] bg-white p-6 text-[#17213f] shadow-2xl">
             <div className="flex items-start gap-3">
               <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-rose-50 text-rose-600">
                 <Trash2 size={19} />
@@ -595,13 +600,16 @@ export default function TaskReportsTab({ fixedUserId }: TaskReportsTabProps = {}
         </div>
       )}
       {resolveTarget && (
-        <div
-          className="fixed inset-0 z-[60] flex items-center justify-center bg-[#050914]/70 p-4 backdrop-blur-sm"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget && !resolvingReportId) setResolveTarget(null);
-          }}
-        >
-          <section role="dialog" aria-modal="true" aria-labelledby="resolve-report-title" className="w-full max-w-md rounded-2xl border border-[#e4e8f3] bg-white p-6 text-[#17213f] shadow-2xl">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[#050914]/70 p-4 backdrop-blur-sm">
+          <button
+            type="button"
+            tabIndex={-1}
+            aria-label="Cerrar confirmación de resolución"
+            disabled={Boolean(resolvingReportId)}
+            onClick={() => setResolveTarget(null)}
+            className="fixed inset-0 h-full w-full cursor-default border-0 bg-transparent"
+          />
+          <section role="dialog" aria-modal="true" aria-labelledby="resolve-report-title" className="relative z-10 w-full max-w-md rounded-2xl border border-[#e4e8f3] bg-white p-6 text-[#17213f] shadow-2xl">
             <h2 id="resolve-report-title" className="text-lg font-bold">¿Resolver este reporte de tarea?</h2>
             <p className="mt-2 text-sm leading-relaxed text-[#7883a3]">
               El reporte quedará marcado como RESOLVED.

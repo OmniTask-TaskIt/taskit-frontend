@@ -18,9 +18,17 @@ function readEnv(...keys: string[]): string {
   return '';
 }
 
+export function stripTrailingSlashes(value: string): string {
+  let end = value.length;
+  while (end > 0 && value.charCodeAt(end - 1) === 47) {
+    end -= 1;
+  }
+  return value.slice(0, end);
+}
+
 export const env = {
   /** Base de la API del microservicio de seguridad/AuthAndProfiles. */
-  apiUrl: readEnv('VITE_API_URL', 'VIT_API_URL') || 'http://localhost:8080',
+  apiUrl: readEnv('VITE_API_URL', 'VIT_API_URL'),
 
   /** Base independiente del microservicio de tareas. No tiene valor por defecto. */
   tasksApiUrl: readEnv('VITE_TASKS_API_URL'),
@@ -32,7 +40,9 @@ export const env = {
   reportApiUrl: readEnv('VITE_REPORT_API_URL'),
 
   /** Base del microservicio de pagos escrow, sin barra final. */
-  paymentApiUrl: (readEnv('VITE_PAYMENT_API_URL', 'VIT_PAYMENT_API_URL') || 'http://18.218.166.184:8080').replace(/\/+$/, ''),
+  paymentApiUrl: stripTrailingSlashes(
+    readEnv('VITE_PAYMENT_API_URL', 'VIT_PAYMENT_API_URL')
+  ),
 
   /**
    * Collector de Mercado Pago del prestador. Mientras el perfil no lo exponga,
@@ -43,12 +53,9 @@ export const env = {
   /** Base del microservicio AITA (AI Task Assistant), sin barra final. */
   aitaApiUrl: readEnv('VITE_AITA_API_URL', 'VIT_AITA_API_URL'),
 
-  /** Clave opcional. El despliegue actual no la exige; si existe, se envía como Bearer. */
-  aitaApiKey: readEnv('VITE_AITA_API_KEY', 'VIT_AITA_API_KEY'),
-
   googleClientId: readEnv('VITE_GOOGLE_CLIENT_ID', 'VIT_GOOGLE_CLIENT_ID'),
 
-  githubClientId: readEnv('VIT_GITHUB_CLIENT_ID', 'VITE_GITHUB_CLIENT_ID'),
+  githubClientId: readEnv('VITE_GITHUB_CLIENT_ID', 'VIT_GITHUB_CLIENT_ID'),
 
   /**
    * Debe ser EXACTAMENTE igual a una de las "Authorization callback URLs"
