@@ -26,27 +26,40 @@ export default function EscrowActionCard({ task, currentUserId, onChanged }: Pro
   const isPayee = Boolean(currentUserId) && currentUserId === assigneeId;
   const { items, refresh } = usePayments(isPayer || isPayee ? currentUserId : null);
   const movement = latestForTask(items, task.taskId);
-  const [workflow, setWorkflow] = useState<string>(task.taskStatus);
+  const [fetchedWorkflow, setFetchedWorkflow] = useState<{
+    taskId: string;
+    baseStatus: string;
+    status: string;
+  } | null>(null);
   const [connecting, setConnecting] = useState(false);
   const [releasing, setReleasing] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    setWorkflow(task.taskStatus);
-  }, [task.taskStatus, task.taskId]);
-
-  useEffect(() => {
     if (!isPayer && !isPayee) return undefined;
     let active = true;
     taskService.getCompletionStatus(task.taskId).then((status) => {
-      if (active && status?.status) setWorkflow(String(status.status));
+      if (active && status?.status) {
+        setFetchedWorkflow({
+          taskId: task.taskId,
+          baseStatus: task.taskStatus,
+          status: String(status.status),
+        });
+      }
     }).catch(() => undefined);
     return () => {
       active = false;
     };
-  }, [isPayee, isPayer, task.taskId]);
+  }, [isPayee, isPayer, task.taskId, task.taskStatus]);
 
   if (!isPayer && !isPayee) return null;
+
+  const workflow =
+    fetchedWorkflow &&
+    fetchedWorkflow.taskId === task.taskId &&
+    fetchedWorkflow.baseStatus === task.taskStatus
+      ? fetchedWorkflow.status
+      : task.taskStatus;
 
   const paymentStatus: TaskPaymentStatus = movement?.status ?? task.paymentStatus ?? 'UNPAID';
   const amountLabel = formatPaymentAmount(movement?.amount ?? task.price, movement?.currency ?? 'COP');

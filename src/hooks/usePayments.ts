@@ -120,12 +120,7 @@ export function usePayments(userId: string | null) {
   }, [validId]);
 
   useEffect(() => {
-    if (!validId) {
-      setItems([]);
-      setError(null);
-      setLoading(false);
-      return undefined;
-    }
+    if (!validId) return undefined;
     const sync = () => {
       setItems(cache);
       setError(lastError);
@@ -139,5 +134,10 @@ export function usePayments(userId: string | null) {
     };
   }, [validId]);
 
-  return { items, loading, error, refresh };
+  return {
+    items: validId ? items : [],
+    loading: validId ? loading : false,
+    error: validId ? error : null,
+    refresh,
+  };
 }
