@@ -28,7 +28,7 @@ export function stripTrailingSlashes(value: string): string {
 
 export const env = {
   /** Base de la API del microservicio de seguridad/AuthAndProfiles. */
-  apiUrl: readEnv('VITE_API_URL', 'VIT_API_URL'),
+  apiUrl: readEnv('VITE_API_URL', 'VIT_API_URL') || 'http://localhost:8080',
 
   /** Base independiente del microservicio de tareas. No tiene valor por defecto. */
   tasksApiUrl: readEnv('VITE_TASKS_API_URL'),
@@ -52,6 +52,9 @@ export const env = {
 
   /** Base del microservicio AITA (AI Task Assistant), sin barra final. */
   aitaApiUrl: readEnv('VITE_AITA_API_URL', 'VIT_AITA_API_URL'),
+
+  /** Clave opcional. El despliegue actual no la exige; si existe, se envía como Bearer. */
+  aitaApiKey: readEnv('VITE_AITA_API_KEY', 'VIT_AITA_API_KEY'),
 
   googleClientId: readEnv('VITE_GOOGLE_CLIENT_ID', 'VIT_GOOGLE_CLIENT_ID'),
 
