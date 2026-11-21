@@ -132,7 +132,7 @@ export default function ProfileSearchSection() {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="w-full max-w-[600px] max-h-[90vh] overflow-y-auto rounded-2xl border border-[rgba(255,255,255,0.15)] bg-[#171A34] p-6 sm:p-8 shadow-2xl text-[#17213f] relative"
+              className="w-full max-w-[600px] max-h-[90vh] overflow-y-auto rounded-2xl border border-[#e4e8f3] bg-white p-6 sm:p-8 shadow-2xl text-[#17213f] relative"
             >
               <button
                 onClick={() => setSelectedProfile(null)}

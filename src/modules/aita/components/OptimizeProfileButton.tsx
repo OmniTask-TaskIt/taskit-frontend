@@ -55,8 +55,8 @@ export default function OptimizeProfileButton({ userId, displayName, bio, locati
       {data && (
         <div className="rounded-xl border border-violet-200 bg-gradient-to-r from-violet-50 to-sky-50 p-3 text-sm text-[#2f3b63]">
           <p className="text-xs font-semibold text-violet-800">Sugerencias de AITA</p>
-          <ul className="mt-2 list-disc space-y-1 pl-4 text-xs leading-relaxed">
-            {data.suggestions.map((suggestion) => <li key={suggestion}>{suggestion}</li>)}
+          <ul className="mt-2 max-h-28 list-disc space-y-1 overflow-y-auto pl-4 text-xs leading-relaxed">
+            {data.suggestions.map((suggestion) => <li key={suggestion} className="line-clamp-2">{suggestion}</li>)}
           </ul>
           {data.keywords && data.keywords.length > 0 && (
             <div className="mt-2 flex flex-wrap gap-1.5">

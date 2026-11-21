@@ -1,9 +1,12 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import InvoiceList from '../../../components/payments/InvoiceList';
+import { usePayments } from '../../../hooks/usePayments';
 import AitaRecommendedTasks from '../../aita/components/AitaRecommendedTasks';
 import TaskModule from '../../tasks/pages/TaskModule';
 import ChatSection from '../../chat/components/ChatSection';
+import TaskReportsTab from '../Components/admin/TaskReportsTab';
 import ProfileSearchSection from '../Components/profile/ProfileSearchSection';
 import UserProfileCard from '../Components/profile/UserProfileCard';
 import ActiveSessionsSection from '../Components/security/ActiveSessionsSection';
@@ -11,20 +14,26 @@ import TwoFactorSection from '../Components/security/TwoFactorSection';
 import { authService } from '../services/authService';
 import { authStore } from '../services/authStore';
 import { redirectToLogin } from '../../../utils/navigation';
-import { ClipboardList, Lock, LogOut, MessageCircle, Search, ShieldCheck, UserRound } from 'lucide-react';
+import { ClipboardList, Flag, Lock, LogOut, MessageCircle, Receipt, Search, ShieldCheck, UserRound } from 'lucide-react';
 
 import fondoImage from '../../../assets/FondoP.jpeg';
 import logoImage from '../../../assets/Logo.jpeg';
 
-type SectionType = 'profile' | 'search' | 'tasks' | 'chats' | 'security';
+type SectionType = 'profile' | 'search' | 'tasks' | 'invoices' | 'chats' | 'reports' | 'security';
 
 const NAV_ITEMS: { key: SectionType; label: string; icon: typeof UserRound }[] = [
   { key: 'profile', label: 'Mi perfil', icon: UserRound },
   { key: 'search', label: 'Buscar profesionales', icon: Search },
   { key: 'tasks', label: 'Gestión de tareas', icon: ClipboardList },
+  { key: 'invoices', label: 'Facturas', icon: Receipt },
   { key: 'chats', label: 'Chats', icon: MessageCircle },
+  { key: 'reports', label: 'Reportes', icon: Flag },
   { key: 'security', label: 'Seguridad', icon: Lock },
 ];
+
+function readSection(value: string | null): SectionType {
+  return NAV_ITEMS.some((item) => item.key === value) ? (value as SectionType) : 'profile';
+}
 
 async function handleLogout() {
   try {
@@ -40,11 +49,23 @@ async function handleLogout() {
 }
 
 export default function DashboardPage() {
-  const [activeSection, setActiveSection] = useState<SectionType>('profile');
-  const [focusTaskId, setFocusTaskId] = useState<string | null>(null);
+  const [params, setParams] = useSearchParams();
+  const activeSection = readSection(params.get('section'));
+  const focusTaskId = params.get('taskId');
+  const openSection = (key: SectionType, taskId?: string) => {
+    const next = new URLSearchParams(params);
+    if (key === 'profile') next.delete('section');
+    else next.set('section', key);
+    if (key === 'tasks' && taskId) next.set('taskId', taskId);
+    else next.delete('taskId');
+    setParams(next, { replace: true });
+  };
+  const setActiveSection = (key: SectionType) => openSection(key);
   // Permite abrir el sidebar también con el teclado (Tab), no solo con hover.
   const [sidebarFocused, setSidebarFocused] = useState(false);
   const isProvider = (authStore.getRole() ?? '').toUpperCase() === 'PROVIDER';
+  const activeUserId = authStore.getUserId() ?? localStorage.getItem('userId') ?? authStore.getEmail() ?? '';
+  usePayments(activeUserId || null);
 
   return (
     <div 
@@ -163,6 +184,18 @@ export default function DashboardPage() {
             </button>
             <button
               type="button"
+              onClick={() => setActiveSection('invoices')}
+              className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer border truncate ${
+                activeSection === 'invoices'
+                  ? 'bg-[#263BAA] border-[#263BAA] text-white shadow-[0_8px_18px_rgba(38,59,170,0.22)] font-semibold'
+                  : 'bg-transparent border-transparent text-[#2f3b63] hover:bg-[#eef2ff] hover:text-[#263BAA]'
+              }`}
+            >
+              <Receipt size={20} strokeWidth={activeSection === 'invoices' ? 2.5 : 2} className="flex-shrink-0" />
+              <span className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap transition-opacity truncate">Facturas</span>
+            </button>
+            <button
+              type="button"
               onClick={() => setActiveSection('chats')}
               className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer border truncate ${
                 activeSection === 'chats' 
@@ -172,6 +205,18 @@ export default function DashboardPage() {
             >
               <MessageCircle size={20} strokeWidth={activeSection === 'chats' ? 2.5 : 2} className="flex-shrink-0" />
               <span className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap transition-opacity truncate">Chats</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveSection('reports')}
+              className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer border truncate ${
+                activeSection === 'reports'
+                  ? 'bg-[#263BAA] border-[#263BAA] text-white shadow-[0_8px_18px_rgba(38,59,170,0.22)] font-semibold'
+                  : 'bg-transparent border-transparent text-[#2f3b63] hover:bg-[#eef2ff] hover:text-[#263BAA]'
+              }`}
+            >
+              <Flag size={20} strokeWidth={activeSection === 'reports' ? 2.5 : 2} className="flex-shrink-0" />
+              <span className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap transition-opacity truncate">Reportes</span>
             </button>
             <button
               type="button"
@@ -230,10 +275,7 @@ export default function DashboardPage() {
                 {isProvider && (
                   <div className="w-full">
                     <AitaRecommendedTasks
-                      onOpen={(task) => {
-                        setFocusTaskId(task.taskId);
-                        setActiveSection('tasks');
-                      }}
+                      onOpen={(task) => openSection('tasks', task.taskId)}
                     />
                   </div>
                 )}
@@ -252,9 +294,27 @@ export default function DashboardPage() {
               </motion.div>
             )}
 
+            {activeSection === 'invoices' && (
+              <motion.div key="invoices" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.2 }}>
+                <InvoiceList userId={activeUserId} onExploreTasks={() => openSection('tasks')} />
+              </motion.div>
+            )}
+
             {activeSection === 'chats' && (
               <motion.div key="chats" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.2 }}>
                 <ChatSection />
+              </motion.div>
+            )}
+
+            {activeSection === 'reports' && (
+              <motion.div key="reports" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.2 }}>
+                <div className="mx-auto w-full max-w-4xl rounded-3xl border border-[#e4e8f3] bg-white p-5 shadow-[0_18px_45px_rgba(47,61,110,0.12)] sm:p-7">
+                  <header className="mb-5">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#263BAA]">Actividad de cuenta</p>
+                    <h1 className="mt-1 text-2xl font-bold text-[#17213f]">Mis reportes</h1>
+                  </header>
+                  <TaskReportsTab fixedUserId={activeUserId} />
+                </div>
               </motion.div>
             )}
 

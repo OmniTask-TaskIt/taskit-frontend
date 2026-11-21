@@ -1,4 +1,6 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useParams } from 'react-router-dom';
+import PaymentCallbackPage from './pages/PaymentCallbackPage';
+import PaymentPushToast from './components/payments/PaymentPushToast';
 import {
   LoginPage,
   RegisterPage,
@@ -16,9 +18,16 @@ import {
   AdminRoute,
 } from './modules/authentication';
 
+function TaskShortcut() {
+  const { taskId } = useParams();
+  const target = taskId ? `/dashboard?section=tasks&taskId=${encodeURIComponent(taskId)}` : '/dashboard?section=tasks';
+  return <Navigate to={target} replace />;
+}
+
 function App() {
   return (
     <main className="min-h-screen w-full bg-[#0B132B]">
+      <PaymentPushToast />
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<LoginPage />} />
@@ -34,6 +43,8 @@ function App() {
           <Route path="/select-role" element={<SelectRolePage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/profile/:userId" element={<PublicProfilePage />} />
+          <Route path="/payments/callback" element={<PaymentCallbackPage />} />
+          <Route path="/tasks/:taskId" element={<TaskShortcut />} />
         </Route>
 
         <Route element={<AdminRoute />}>

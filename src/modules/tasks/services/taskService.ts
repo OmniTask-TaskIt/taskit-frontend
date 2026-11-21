@@ -2,7 +2,26 @@ import { axiosInstance } from '../../authentication/Config/axios';
 import { TASKS_API_BASE } from '../config/taskConfig';
 import type { AcceptTaskInput, CompleteTaskInput, CreateTaskInput, EditTaskInput, ReasonInput, Task, TaskApiResponse } from '../types/task.types';
 
-const normalize = (value: Task): Task => ({ ...value, id: value.taskId, title: value.taskName, description: value.taskDescription, status: value.taskStatus, createdAt: value.creationDate, ownerId: value.taskOwner, assigneeId: value.taskAssignee });
+const PAYMENT_STATUSES = ['UNPAID', 'PENDING', 'RETAINED', 'RELEASED', 'REFUNDED', 'REJECTED'] as const;
+
+function readPaymentStatus(value: Task): Task['paymentStatus'] {
+  const raw = value.paymentStatus ?? (value as Task & { 'payment-status'?: string })['payment-status'];
+  if (typeof raw !== 'string') return value.paymentStatus ?? null;
+  const status = raw.toUpperCase();
+  return PAYMENT_STATUSES.find((item) => item === status) ?? null;
+}
+
+const normalize = (value: Task): Task => ({
+  ...value,
+  id: value.taskId,
+  title: value.taskName,
+  description: value.taskDescription,
+  status: value.taskStatus,
+  createdAt: value.creationDate,
+  ownerId: value.taskOwner,
+  assigneeId: value.taskAssignee,
+  paymentStatus: readPaymentStatus(value),
+});
 const unwrap = (data: unknown): Task[] => {
   if (Array.isArray(data)) return (data as Task[]).map(normalize);
   if (data && typeof data === 'object') {

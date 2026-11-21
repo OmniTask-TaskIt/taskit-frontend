@@ -18,6 +18,14 @@ function readEnv(...keys: string[]): string {
   return '';
 }
 
+export function stripTrailingSlashes(value: string): string {
+  let end = value.length;
+  while (end > 0 && value.charCodeAt(end - 1) === 47) {
+    end -= 1;
+  }
+  return value.slice(0, end);
+}
+
 export const env = {
   /** Base de la API del microservicio de seguridad/AuthAndProfiles. */
   apiUrl: readEnv('VITE_API_URL', 'VIT_API_URL') || 'http://localhost:8080',
@@ -28,6 +36,20 @@ export const env = {
   /** Base independiente del microservicio MS-Task-Chat. No tiene valor por defecto. */
   chatApiUrl: readEnv('VITE_CHAT_API_URL'),
 
+  /** Base independiente del microservicio de reportes y evidencias. */
+  reportApiUrl: readEnv('VITE_REPORT_API_URL'),
+
+  /** Base del microservicio de pagos escrow, sin barra final. */
+  paymentApiUrl: stripTrailingSlashes(
+    readEnv('VITE_PAYMENT_API_URL', 'VIT_PAYMENT_API_URL')
+  ),
+
+  /**
+   * Collector de Mercado Pago del prestador. Mientras el perfil no lo exponga,
+   * se usa el valor de pruebas configurado en el entorno.
+   */
+  payeeCollectorId: readEnv('VITE_PAYEE_COLLECTOR_ID', 'VIT_PAYEE_COLLECTOR_ID') || '3494430459',
+
   /** Base del microservicio AITA (AI Task Assistant), sin barra final. */
   aitaApiUrl: readEnv('VITE_AITA_API_URL', 'VIT_AITA_API_URL'),
 
@@ -36,7 +58,7 @@ export const env = {
 
   googleClientId: readEnv('VITE_GOOGLE_CLIENT_ID', 'VIT_GOOGLE_CLIENT_ID'),
 
-  githubClientId: readEnv('VIT_GITHUB_CLIENT_ID', 'VITE_GITHUB_CLIENT_ID'),
+  githubClientId: readEnv('VITE_GITHUB_CLIENT_ID', 'VIT_GITHUB_CLIENT_ID'),
 
   /**
    * Debe ser EXACTAMENTE igual a una de las "Authorization callback URLs"
@@ -55,5 +77,6 @@ if (import.meta.env.DEV) {
   if (!env.githubClientId) console.warn('[TaskIt] Falta VIT_GITHUB_CLIENT_ID: el botón de GitHub no funcionará.');
   if (!env.tasksApiUrl) console.error('[TaskIt] Falta VITE_TASKS_API_URL: configura la URL del microservicio de tareas para habilitar el módulo de tareas.');
   if (!env.chatApiUrl) console.error('[TaskIt] Falta VITE_CHAT_API_URL: configura la URL del microservicio de chat para habilitar Chats.');
+  if (!env.reportApiUrl) console.error('[TaskIt] Falta VITE_REPORT_API_URL: configura la URL del microservicio de reportes.');
   if (!env.aitaApiUrl) console.error('[TaskIt] Falta VITE_AITA_API_URL: configura la URL de AITA para habilitar la asistencia de IA.');
 }

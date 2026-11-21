@@ -49,8 +49,12 @@ axiosInstance.interceptors.response.use(
     // Task requests must surface auth/API failures inside the dashboard module.
     // Other modules keep the existing refresh-and-redirect behavior.
     const isTaskRequest = originalRequest?.url?.includes('/tasks');
+    // Report and file requests belong to REPORT-SERVICE. They must surface
+    // their own errors and must not clear the current authentication session.
+    const isReportRequest = originalRequest?.url?.includes('/reports')
+      || originalRequest?.url?.includes('/files');
 
-    if (error.response?.status === 401 && !isLoginRequest && !isTaskRequest && !originalRequest._retry) {
+    if (error.response?.status === 401 && !isLoginRequest && !isTaskRequest && !isReportRequest && !originalRequest._retry) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { LoaderCircle, MessageCircle, RefreshCw, Send, Wifi, WifiOff } from 'lucide-react';
+import { AlertTriangle, LoaderCircle, MessageCircle, RefreshCw, Send, Wifi, WifiOff } from 'lucide-react';
+import ChatReportDialog from './ChatReportDialog';
 import { authStore } from '../../authentication/services/authStore';
 import { useChats } from '../hooks/useChats';
 import { useChatSession } from '../hooks/useChatSession';
@@ -8,7 +9,10 @@ import type { ChatSummary } from '../types/chat.types';
 
 function ChatConversation({ chat, userId }: { chat: ChatSummary; userId: string }) {
   const [draft, setDraft] = useState('');
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportCreated, setReportCreated] = useState(false);
   const { messages, loading, sending, error, sendMessage } = useChatSession(chat.taskId, userId);
+  const reportUsers = [...new Set([chat.sellerId, chat.buyerId].filter((id): id is string => Boolean(id)))];
   const submit = () => {
     console.info('[chat][UI] submit message', { taskId: chat.taskId, content: draft });
     if (sendMessage(draft)) setDraft('');
@@ -17,8 +21,9 @@ function ChatConversation({ chat, userId }: { chat: ChatSummary; userId: string 
     <section className="flex min-h-[520px] flex-1 flex-col rounded-3xl border border-white/80 bg-white/85 p-5 shadow-[0_18px_50px_rgba(47,61,110,0.12)]">
       <div className="flex items-center justify-between border-b border-[#e8ebf5] pb-4">
         <div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7883a3]">Tarea</p><h2 className="text-xl font-bold text-[#17213f]">{chat.taskName ?? chat.title ?? chat.taskId}</h2><p className="text-xs text-[#7883a3]">{chat.taskId}</p></div>
-        <div className="flex items-start gap-2"><TaskCompletionButton taskId={chat.taskId} currentUserId={userId} compact />{chat.status && <span className="rounded-full bg-[#e8f7ef] px-3 py-1 text-xs font-semibold text-[#177245]">{chat.status}</span>}</div>
+        <div className="flex flex-wrap items-center justify-end gap-2"><TaskCompletionButton taskId={chat.taskId} currentUserId={userId} compact />{chat.status && <span className="rounded-full bg-[#e8f7ef] px-3 py-1 text-xs font-semibold text-[#177245]">{chat.status}</span>}<button type="button" onClick={() => { setReportCreated(false); setReportOpen(true); }} className="flex items-center gap-2 rounded-xl bg-[#c9364f] px-3 py-2 text-sm font-semibold text-white transition hover:bg-[#ae2940] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9364f] focus-visible:ring-offset-2"><AlertTriangle size={15} /> Reportar</button></div>
       </div>
+      {reportCreated && <p role="status" className="mt-3 rounded-xl bg-[#e8f7ef] px-3 py-2 text-sm font-medium text-[#177245]">Reporte creado exitosamente.</p>}
       <div className="flex items-center gap-3 py-3 text-xs text-[#5b6685]"><span>Proveedor: {chat.sellerId ?? 'No disponible'}</span><span>Solicitante: {chat.buyerId ?? 'No disponible'}</span></div>
       <div className="flex flex-1 flex-col gap-3 overflow-y-auto py-4" aria-live="polite">
         {loading && <div className="flex items-center gap-2 text-sm text-[#5b6685]"><LoaderCircle className="animate-spin" size={16} /> Cargando historial...</div>}
@@ -27,6 +32,7 @@ function ChatConversation({ chat, userId }: { chat: ChatSummary; userId: string 
       </div>
       {error && <p role="alert" className="mb-3 rounded-xl bg-[#fff0f2] px-3 py-2 text-sm text-[#b64055]">{error}</p>}
       <div className="flex gap-2 border-t border-[#e8ebf5] pt-4"><input aria-label="Mensaje" value={draft} onChange={(event) => setDraft(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter' && !event.nativeEvent.isComposing && event.keyCode !== 229) submit(); }} placeholder="Escribe un mensaje..." className="min-w-0 flex-1 rounded-xl border border-[#d9deef] px-3 py-2 text-sm outline-none focus:border-[#263BAA]" /><button type="button" disabled={sending || !draft.trim()} onClick={submit} aria-label="Enviar mensaje" className="rounded-xl bg-[#263BAA] px-4 text-white disabled:cursor-not-allowed disabled:opacity-50"><Send size={17} /></button></div>
+      {reportOpen && <ChatReportDialog taskId={chat.taskId} users={reportUsers} onClose={() => setReportOpen(false)} onCreated={() => { setReportOpen(false); setReportCreated(true); }} />}
     </section>
   );
 }

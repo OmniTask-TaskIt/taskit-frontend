@@ -13,11 +13,16 @@ vi.mock('../Components/profile/ProfileSearchSection', () => ({ default: () => <d
 vi.mock('../Components/security/TwoFactorSection', () => ({ default: () => <div>SECCION-2FA</div> }));
 vi.mock('../Components/security/ActiveSessionsSection', () => ({ default: () => <div>SECCION-SEGURIDAD</div> }));
 vi.mock('../../tasks/pages/TaskModule', () => ({ default: () => <div>SECCION-TAREAS</div> }));
+vi.mock('../Components/admin/TaskReportsTab', () => ({ default: () => <div>SECCION-REPORTES</div> }));
 vi.mock('../../aita/components/AitaRecommendedTasks', () => ({
   default: () => <section>Tareas recomendadas para ti</section>,
 }));
 vi.mock('../../../utils/navigation', () => ({ redirectToLogin: vi.fn() }));
 vi.mock('../services/authService', () => ({ authService: { logout: vi.fn() } }));
+vi.mock('../../../services/paymentService', () => ({
+  paymentService: { getHistory: vi.fn().mockResolvedValue([]) },
+  paymentErrorMessage: () => 'No pudimos completar esta acción de pago.',
+}));
 
 const renderPage = () =>
   render(
@@ -42,6 +47,9 @@ describe('DashboardPage', () => {
 
     await user.click(screen.getAllByRole('button', { name: /gestión de tareas/i })[0]);
     expect(await screen.findByText('SECCION-TAREAS')).toBeInTheDocument();
+
+    await user.click(screen.getAllByRole('button', { name: /reportes/i })[0]);
+    expect(await screen.findByText('SECCION-REPORTES')).toBeInTheDocument();
 
     await user.click(screen.getAllByRole('button', { name: /seguridad/i })[0]);
     expect(await screen.findByText('SECCION-SEGURIDAD')).toBeInTheDocument();

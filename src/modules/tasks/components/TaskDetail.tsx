@@ -1,5 +1,6 @@
 import AitaProviderSearch from '../../aita/components/AitaProviderSearch';
 import AitaTextShield from '../../aita/components/AitaTextShield';
+import EscrowActionCard from '../../../components/payments/EscrowActionCard';
 import type { Task } from '../types/task.types';
 import TaskStatusBadge from './TaskStatusBadge';
 
@@ -14,6 +15,8 @@ export default function TaskDetail({
   onDelete,
   showSuggestions = false,
   showShield = false,
+  currentUserId = '',
+  onPaymentChanged,
 }: {
   task: Task;
   onClose: () => void;
@@ -23,6 +26,8 @@ export default function TaskDetail({
   onDelete?: () => void;
   showSuggestions?: boolean;
   showShield?: boolean;
+  currentUserId?: string;
+  onPaymentChanged?: () => void;
 }) {
   return (
     <div className="rounded-3xl border border-white bg-white p-6 shadow-2xl">
@@ -53,6 +58,7 @@ export default function TaskDetail({
           />
         </div>
       )}
+      <EscrowActionCard task={task} currentUserId={currentUserId} onChanged={onPaymentChanged} />
       <div className="mt-5 flex flex-wrap gap-2">
         {onEdit && <button onClick={onEdit} className="rounded-xl border border-[#dce2f7] px-4 py-2.5 text-sm font-bold text-[#263BAA]">Editar</button>}
         {onDelete && <button onClick={onDelete} className="rounded-xl border border-[#f3caca] px-4 py-2.5 text-sm font-bold text-[#b42318]">Eliminar</button>}

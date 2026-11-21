@@ -65,6 +65,26 @@ html {
   scroll-behavior: auto !important;
 }
 
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .payment-receipt,
+  .payment-receipt * {
+    visibility: visible;
+  }
+  .payment-receipt {
+    position: absolute;
+    inset: 0;
+    max-height: none;
+    overflow: visible;
+    box-shadow: none;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

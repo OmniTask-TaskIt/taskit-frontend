@@ -144,6 +144,8 @@ export default function TaskModule({ focusTaskId = null }: { focusTaskId?: strin
             onDelete={isSeeker && canManage(selected) ? () => openDelete(selected) : undefined}
             showSuggestions={seekerOwnsSelected}
             showShield={providerCanReview}
+            currentUserId={currentUser}
+            onPaymentChanged={() => { void load(); }}
           />
         </TaskModal>
       )}

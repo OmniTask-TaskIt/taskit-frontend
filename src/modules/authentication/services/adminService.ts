@@ -1,4 +1,5 @@
 import { axiosInstance } from '../Config/axios';
+import { reportService } from '../../chat/services/reportService';
 import type { AdminReport, PageResponse, Profile, Report, VerificationStatus } from '../types/profile.types';
 import type { AccountStatus, AdminUser, DocumentAccess, VerificationDecision } from '../types/admin.types';
 
@@ -40,5 +41,33 @@ export const adminService = {
   async resolveReport(reportId: string, status: 'RESOLVED' | 'DISMISSED', note: string) {
     const response = await axiosInstance.patch<Report>(`/admin/reports/${reportId}/status`, { status, note });
     return response.data;
+  },
+
+  async listTaskReports() {
+    return reportService.listReports();
+  },
+
+  async listTaskReportsByUser(userId: string) {
+    return reportService.listReportsByUser(userId);
+  },
+
+  async getTaskReportMessages(reportId: string) {
+    return reportService.getReportMessages(reportId);
+  },
+
+  async getTaskReportFiles(taskId: string) {
+    return reportService.getReportFiles(taskId);
+  },
+
+  async deleteTaskReport(reportId: string, userId: string) {
+    return reportService.deleteReport(reportId, userId);
+  },
+
+  async getTaskReportCreatedBy(reportId: string) {
+    return reportService.getReportCreatedBy(reportId);
+  },
+
+  async resolveTaskReport(reportId: string) {
+    return reportService.setReportStatus(reportId, 'RESOLVED');
   },
 };

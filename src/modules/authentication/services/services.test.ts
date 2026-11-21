@@ -5,6 +5,14 @@ import { authService } from './authService';
 import { profileService } from './profileService';
 import { reviewService } from './reviewService';
 import { adminService } from './adminService';
+import { reportService } from '../../chat/services/reportService';
+
+vi.mock('../../chat/services/reportService', () => ({
+  reportService: {
+    listReports: vi.fn(),
+    listReportsByUser: vi.fn(),
+  },
+}));
 
 // Estas pruebas fijan el CONTRATO HTTP con el backend AuthAndProfiles
 // (rutas, verbos y dónde viaja cada dato). Si alguien cambia un endpoint en
@@ -14,6 +22,7 @@ vi.mock('../Config/axios', () => ({
 }));
 
 const http = vi.mocked(axiosInstance);
+const reports = vi.mocked(reportService);
 
 describe('servicios HTTP de AuthAndProfiles', () => {
   beforeEach(() => {
@@ -168,6 +177,14 @@ describe('servicios HTTP de AuthAndProfiles', () => {
 
       await adminService.resolveReport('r1', 'DISMISSED', 'Sin evidencia');
       expect(http.patch).toHaveBeenCalledWith('/admin/reports/r1/status', { status: 'DISMISSED', note: 'Sin evidencia' });
+    });
+
+    it('reportes de tarea: lista todos y filtra por ID de usuario', async () => {
+      await adminService.listTaskReports();
+      expect(reports.listReports).toHaveBeenCalledOnce();
+
+      await adminService.listTaskReportsByUser('user id/1');
+      expect(reports.listReportsByUser).toHaveBeenCalledWith('user id/1');
     });
   });
 });

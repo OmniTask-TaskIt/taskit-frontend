@@ -18,6 +18,8 @@ export interface Task {
   disputeReason?: string | null;
   ownerApproval: boolean;
   assigneeApproval: boolean;
+  /** Estado de cobro cuando el microservicio de tareas ya lo conoce. */
+  paymentStatus?: 'UNPAID' | 'PENDING' | 'RETAINED' | 'RELEASED' | 'REFUNDED' | 'REJECTED' | null;
   /** Campos normalizados usados por la interfaz existente. */
   id?: string;
   title?: string;
