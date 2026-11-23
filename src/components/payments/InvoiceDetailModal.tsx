@@ -64,7 +64,7 @@ export default function InvoiceDetailModal({ invoice, onClose }: { invoice: Paym
                   {payer ? '−' : '+'}{formatPaymentAmount(invoice.amount, invoice.currency)}
                 </p>
               </div>
-              <button type="button" onClick={onClose} className="no-print text-sm font-semibold text-[#657399]">Cerrar</button>
+              <button type="button" onClick={onClose} className="no-print text-sm font-semibold text-[#5b6685]">Cerrar</button>
             </div>
 
             {invoice.preview && (
@@ -74,7 +74,7 @@ export default function InvoiceDetailModal({ invoice, onClose }: { invoice: Paym
             )}
 
             <p className="mt-4 text-sm text-[#2f3b63]">{invoice.title || `Tarea ${shortTransactionId(invoice.taskId)}`}</p>
-            <p className="mt-1 text-xs text-[#8290ae]">{formatPaymentDate(invoice.occurredAt)}</p>
+            <p className="mt-1 text-xs text-[#5b6685]">{formatPaymentDate(invoice.occurredAt)}</p>
 
             <div className="mt-4 flex items-center justify-between gap-2 rounded-2xl bg-[#f6f7fc] px-3 py-2">
               <span className="font-mono text-xs text-[#2f3b63]">{shortTransactionId(invoice.transactionId)}</span>
@@ -93,7 +93,7 @@ export default function InvoiceDetailModal({ invoice, onClose }: { invoice: Paym
               ].map(([label, state]) => (
                 <li key={label} className="flex items-center gap-2">
                   <span className={`h-2.5 w-2.5 rounded-full ${state === 'done' ? 'bg-[#263BAA]' : state === 'off' ? 'bg-rose-300' : 'bg-[#d5dbeb]'}`} />
-                  <span className={state === 'idle' ? 'text-[#8290ae]' : 'text-[#17213f]'}>{label}</span>
+                  <span className={state === 'idle' ? 'text-[#5b6685]' : 'text-[#17213f]'}>{label}</span>
                 </li>
               ))}
             </ol>

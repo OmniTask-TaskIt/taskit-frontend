@@ -92,7 +92,7 @@ export default function TwoFactorSection() {
         <h2 id="verificacion-dos-pasos" className="flex items-center gap-2 text-lg font-bold text-[#263BAA]">
           {enabled ? <ShieldCheck size={20} /> : <ShieldOff size={20} />} Verificación en dos pasos
         </h2>
-        <p className="text-sm text-[#66718e]">
+        <p className="text-sm text-[#5b6685]">
           Al iniciar sesión te pediremos, además de tu contraseña, un código que enviamos a tu correo. Aplica también al
           acceso con Google y GitHub.
         </p>
@@ -109,7 +109,7 @@ export default function TwoFactorSection() {
 
       {enabled === null ? (
         !error && (
-          <p role="status" className="flex items-center gap-2 text-sm text-[#66718e]">
+          <p role="status" className="flex items-center gap-2 text-sm text-[#5b6685]">
             <Loader2 size={16} className="animate-spin" /> Consultando estado…
           </p>
         )
@@ -117,7 +117,7 @@ export default function TwoFactorSection() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm font-semibold text-[#17213f]">
             Estado:{' '}
-            <span className={enabled ? 'text-emerald-700' : 'text-[#66718e]'}>{enabled ? 'Activada' : 'Desactivada'}</span>
+            <span className={enabled ? 'text-emerald-700' : 'text-[#5b6685]'}>{enabled ? 'Activada' : 'Desactivada'}</span>
           </p>
           <button
             type="button"
@@ -156,7 +156,7 @@ export default function TwoFactorSection() {
             {busy && <Loader2 size={15} className="animate-spin" />}
             {enabled ? 'Confirmar y desactivar' : 'Confirmar y activar'}
           </button>
-          <button type="button" onClick={cancel} disabled={busy} className="px-2 py-2 text-sm font-medium text-[#66718e] underline">
+          <button type="button" onClick={cancel} disabled={busy} className="px-2 py-2 text-sm font-medium text-[#5b6685] underline">
             Cancelar
           </button>
         </form>

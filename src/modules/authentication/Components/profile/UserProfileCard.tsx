@@ -259,15 +259,15 @@ export default function UserProfileCard() {
                   </span>
                 )}
               </div>
-              <p className="mt-1 text-sm text-[#17213f]/70 break-all sm:max-w-xs sm:truncate">{userEmail}</p>
+              <p className="mt-1 text-sm text-[#34405f] break-all sm:max-w-xs sm:truncate">{userEmail}</p>
               <div className="mt-2">
                 {profile.totalReviews && profile.totalReviews > 0 ? (
                   <span className="flex items-center gap-1 text-sm font-medium text-[#17213f]">
                     <Star {...iconProps} className="fill-amber-400 text-amber-400" />
-                    {profile.reputationScore} <span className="text-[#17213f]/70">({profile.totalReviews})</span>
+                    {profile.reputationScore} <span className="text-[#34405f]">({profile.totalReviews})</span>
                   </span>
                 ) : (
-                  <span className="text-sm text-[#17213f]/70">Sin reseñas todavía</span>
+                  <span className="text-sm text-[#34405f]">Sin reseñas todavía</span>
                 )}
               </div>
               <ProfileActivity tasksCompleted={profile.tasksCompleted} memberSince={profile.memberSince} />
@@ -296,9 +296,9 @@ export default function UserProfileCard() {
 
         <div className="flex flex-col gap-8 p-6 md:p-8">
           <section>
-            <div className="mb-2 flex flex-wrap items-start justify-between gap-3 text-[#17213f]/80">
+            <div className="mb-2 flex flex-wrap items-start justify-between gap-3 text-[#34405f]">
               <div className="flex items-center gap-2">
-                <FileText {...iconProps} className="text-[#17213f]/70" />
+                <FileText {...iconProps} className="text-[#34405f]" />
                 <h2 className="text-sm font-medium">Descripción</h2>
               </div>
               <OptimizeProfileButton
@@ -320,15 +320,15 @@ export default function UserProfileCard() {
               />
             </div>
             {profile.description && profile.description.trim() !== '' ? (
-              <p className="text-sm leading-relaxed text-[#17213f]/90">{profile.description}</p>
+              <p className="text-sm leading-relaxed text-[#34405f]">{profile.description}</p>
             ) : (
               <button type="button" onClick={openEditor} className="text-sm font-semibold text-[#1f2f8f] underline-offset-2 hover:text-[#162270] hover:underline transition-colors">+ Agregar descripción</button>
             )}
           </section>
 
           <section className="flex flex-col gap-2 border-t border-[#e4e8f3] pt-8">
-            <div className="flex items-center gap-2 text-[#17213f]/80">
-              <MapPin {...iconProps} className="text-[#17213f]/70" />
+            <div className="flex items-center gap-2 text-[#34405f]">
+              <MapPin {...iconProps} className="text-[#34405f]" />
               <h2 className="text-sm font-medium">Zona de cobertura</h2>
             </div>
             {profile.locationCoverage && profile.locationCoverage.trim() !== '' ? (
@@ -339,8 +339,8 @@ export default function UserProfileCard() {
           </section>
 
           <section className="flex flex-col gap-3 border-t border-[#e4e8f3] pt-8">
-            <div className="flex items-center gap-2 text-[#17213f]/80">
-              <Tag {...iconProps} className="text-[#17213f]/70" />
+            <div className="flex items-center gap-2 text-[#34405f]">
+              <Tag {...iconProps} className="text-[#34405f]" />
               <h2 className="text-sm font-medium">Categorías de servicio</h2>
             </div>
             {profile.categories && profile.categories.length > 0 ? (
@@ -358,8 +358,8 @@ export default function UserProfileCard() {
 
           <section className="flex flex-col gap-3 border-t border-[#e4e8f3] pt-8">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-[#17213f]/80">
-                <Upload {...iconProps} className="text-[#17213f]/70" />
+              <div className="flex items-center gap-2 text-[#34405f]">
+                <Upload {...iconProps} className="text-[#34405f]" />
                 <h2 className="text-sm font-medium">Documento de identidad (Verificación)</h2>
               </div>
               {canUploadDocument && (
@@ -374,7 +374,7 @@ export default function UserProfileCard() {
               )}
             </div>
             <input type="file" ref={docInputRef} onChange={handleDocumentChange} accept=".pdf,.png,.jpg,.jpeg" className="hidden" />
-            <p className="text-sm text-[#17213f]/80">
+            <p className="text-sm text-[#34405f]">
               {documentMessage[status]}
             </p>
           </section>
@@ -393,7 +393,7 @@ export default function UserProfileCard() {
                 </label>
                 <label className="flex flex-col gap-2 text-sm text-[#4a5578]">
                   Categorías
-                  <input value={draft.categories} onChange={(event) => setDraft({ ...draft, categories: event.target.value })} placeholder="Ej. Plomería, Electricidad" className="rounded-lg border border-[#e4e8f3] bg-white p-3 text-[#17213f] outline-none placeholder:text-[#17213f]/70 focus:border-[#263BAA]" />
+                  <input value={draft.categories} onChange={(event) => setDraft({ ...draft, categories: event.target.value })} placeholder="Ej. Plomería, Electricidad" className="rounded-lg border border-[#e4e8f3] bg-white p-3 text-[#17213f] outline-none placeholder:text-[#34405f] focus:border-[#263BAA]" />
                 </label>
               </div>
               {saveError && <p className="text-sm text-red-700">{saveError}</p>}

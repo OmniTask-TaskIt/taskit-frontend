@@ -63,14 +63,14 @@ export default function DeleteAccountSection() {
       <h2 id="zona-peligro" className="flex items-center gap-2 text-sm font-semibold text-rose-700">
         <AlertTriangle size={16} /> Zona de peligro
       </h2>
-      <p className="text-sm text-[#66718e]">
+      <p className="text-sm text-[#5b6685]">
         Eliminar tu cuenta borra de forma permanente tu perfil, tu documento de identidad y tu acceso a TaskIt. No se puede
         deshacer.
       </p>
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="flex w-full items-center justify-center gap-2 self-start rounded-lg border border-rose-300 bg-white px-5 py-2.5 text-sm font-medium text-rose-600 transition-colors hover:bg-rose-600 hover:text-white sm:w-auto"
+        className="flex w-full items-center justify-center gap-2 self-start rounded-lg border border-rose-300 bg-white px-5 py-2.5 text-sm font-medium text-rose-600 transition-colors hover:bg-rose-600 hover:text-[#17213f] sm:w-auto"
       >
         <Trash2 size={15} /> Eliminar mi cuenta
       </button>
@@ -83,13 +83,13 @@ export default function DeleteAccountSection() {
             aria-labelledby="eliminar-titulo"
             initial={{ opacity: 0, scale: 0.95, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            className="relative w-full max-w-[440px] rounded-2xl border border-white/15 bg-[#171A34] p-6 text-white shadow-2xl"
+            className="relative w-full max-w-[440px] rounded-2xl border border-[#d7d3e3] bg-white p-6 text-[#17213f] shadow-2xl"
           >
             <button
               type="button"
               onClick={close}
               aria-label="Cerrar"
-              className="absolute right-4 top-4 rounded-lg p-1.5 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+              className="absolute right-4 top-4 rounded-lg p-1.5 text-[#5b6685] transition-colors hover:bg-[#eef1ff] hover:text-[#17213f]"
             >
               <X size={18} />
             </button>
@@ -97,23 +97,23 @@ export default function DeleteAccountSection() {
             <h3 id="eliminar-titulo" className="pr-6 text-base font-semibold">
               ¿Eliminar tu cuenta definitivamente?
             </h3>
-            <p className="mt-2 text-sm text-white/60">
+            <p className="mt-2 text-sm text-[#5b6685]">
               Se borrarán tu perfil y tu documento de identidad, y se cerrará tu sesión. Esta acción es permanente.
             </p>
 
-            <label className="mt-4 flex flex-col gap-1.5 text-sm text-white/70">
-              Para confirmar, escribe tu correo: <span className="font-semibold text-white">{email}</span>
+            <label className="mt-4 flex flex-col gap-1.5 text-sm text-[#34405f]">
+              Para confirmar, escribe tu correo: <span className="font-semibold text-[#17213f]">{email}</span>
               <input
                 value={typed}
                 onChange={(e) => setTyped(e.target.value)}
                 autoComplete="off"
                 spellCheck={false}
-                className="rounded-lg border border-white/15 bg-white/5 p-2.5 text-sm text-white outline-none focus:border-rose-500"
+                className="rounded-lg border border-[#d7d3e3] bg-white p-2.5 text-sm text-[#17213f] outline-none focus:border-rose-500"
               />
             </label>
 
             {error && (
-              <p role="alert" className="mt-2 text-sm text-rose-400">
+              <p role="alert" className="mt-2 text-sm text-[#b64055]">
                 {error}
               </p>
             )}
@@ -123,7 +123,7 @@ export default function DeleteAccountSection() {
                 type="button"
                 onClick={close}
                 disabled={deleting}
-                className="rounded-xl border border-white/15 px-5 py-2.5 text-sm font-medium text-white/70 transition-colors hover:text-white disabled:opacity-60"
+                className="rounded-xl border border-[#d7d3e3] px-5 py-2.5 text-sm font-medium text-[#34405f] transition-colors hover:text-[#17213f] disabled:opacity-60"
               >
                 Cancelar
               </button>

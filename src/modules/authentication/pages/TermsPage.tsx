@@ -35,7 +35,7 @@ export default function TermsPage() {
             <img src={logoImage} alt="TaskIt" className="h-12 w-12 rounded-xl object-cover" />
             <div>
               <h1 className="text-xl font-bold text-[#17213f] sm:text-2xl">Términos y Condiciones de Uso</h1>
-              <p className="text-xs text-[#6b7696]">
+              <p className="text-xs text-[#5b6685]">
                 y Política de Privacidad · TaskIt Platform · OmniTask Solutions S.A. · Versión 1.1 · Noviembre de 2026
               </p>
             </div>
@@ -242,7 +242,7 @@ export default function TermsPage() {
             </p>
           </Section>
 
-          <div className="mt-6 rounded-xl border border-[#e2e5f5] bg-[#f6f4fa] p-4 text-xs leading-relaxed text-[#6b7696]">
+          <div className="mt-6 rounded-xl border border-[#e2e5f5] bg-[#f6f4fa] p-4 text-xs leading-relaxed text-[#5b6685]">
             <strong className="text-[#34405f]">Aceptación del Usuario.</strong> El uso continuado de TaskIt Platform
             implica la aceptación plena de los presentes Términos y Condiciones de Uso y de esta Política de
             Privacidad. Ante cualquier duda, el Usuario puede contactar al equipo de soporte de OmniTask Solutions

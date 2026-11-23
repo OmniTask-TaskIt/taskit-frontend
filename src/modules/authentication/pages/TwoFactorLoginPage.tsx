@@ -86,7 +86,7 @@ export default function TwoFactorLoginPage() {
           {loading ? 'Verificando...' : 'Verificar y entrar'}
         </button>
 
-        <p className="text-center text-xs text-[#17213f]/70">El código vence en 5 minutos. Si no lo ves, revisa tu carpeta de spam.</p>
+        <p className="text-center text-xs text-[#34405f]">El código vence en 5 minutos. Si no lo ves, revisa tu carpeta de spam.</p>
 
         <button type="button" onClick={backToLogin} className="cursor-pointer text-xs font-semibold text-[#263BAA] underline">
           Volver al inicio de sesión

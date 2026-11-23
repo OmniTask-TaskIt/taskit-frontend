@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import InvoiceList from '../../../components/payments/InvoiceList';
@@ -21,14 +21,15 @@ import logoImage from '../../../assets/Logo.jpeg';
 
 type SectionType = 'profile' | 'search' | 'tasks' | 'invoices' | 'chats' | 'reports' | 'security';
 
-const NAV_ITEMS: { key: SectionType; label: string; icon: typeof UserRound }[] = [
-  { key: 'profile', label: 'Mi perfil', icon: UserRound },
-  { key: 'search', label: 'Buscar profesionales', icon: Search },
-  { key: 'tasks', label: 'Gestión de tareas', icon: ClipboardList },
-  { key: 'invoices', label: 'Facturas', icon: Receipt },
-  { key: 'chats', label: 'Chats', icon: MessageCircle },
-  { key: 'reports', label: 'Reportes', icon: Flag },
-  { key: 'security', label: 'Seguridad', icon: Lock },
+// `shortLabel` es el texto compacto de la barra inferior móvil; `label` se usa en el sidebar y como nombre accesible.
+const NAV_ITEMS: { key: SectionType; label: string; shortLabel: string; icon: typeof UserRound }[] = [
+  { key: 'profile', label: 'Mi perfil', shortLabel: 'Perfil', icon: UserRound },
+  { key: 'search', label: 'Buscar profesionales', shortLabel: 'Buscar', icon: Search },
+  { key: 'tasks', label: 'Gestión de tareas', shortLabel: 'Tareas', icon: ClipboardList },
+  { key: 'invoices', label: 'Facturas', shortLabel: 'Facturas', icon: Receipt },
+  { key: 'chats', label: 'Chats', shortLabel: 'Chats', icon: MessageCircle },
+  { key: 'reports', label: 'Reportes', shortLabel: 'Reportes', icon: Flag },
+  { key: 'security', label: 'Seguridad', shortLabel: 'Seguridad', icon: Lock },
 ];
 
 function readSection(value: string | null): SectionType {
@@ -67,6 +68,13 @@ export default function DashboardPage() {
   const activeUserId = authStore.getUserId() ?? localStorage.getItem('userId') ?? authStore.getEmail() ?? '';
   usePayments(activeUserId || null);
 
+  // La barra inferior se desliza: al cambiar de sección se centra el botón activo para que nunca quede oculto.
+  const mobileNavRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const active = mobileNavRef.current?.querySelector<HTMLElement>('[aria-current="page"]');
+    active?.scrollIntoView?.({ inline: 'center', block: 'nearest' });
+  }, [activeSection]);
+
   return (
     <div 
       className="relative flex min-h-screen w-full overflow-hidden bg-[#eef2fb] bg-cover bg-center text-[#17213f] selection:bg-[#dce3ff] selection:text-[#17213f]"
@@ -93,7 +101,7 @@ export default function DashboardPage() {
           <button
             onClick={handleLogout}
             aria-label="Cerrar sesión"
-            className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-[#c15a6b] hover:bg-[#fff2f4]"
+            className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-[#b64055] hover:bg-[#fff2f4]"
           >
             <LogOut size={16} /> Salir
           </button>
@@ -102,20 +110,24 @@ export default function DashboardPage() {
 
       {/* 🌟 BARRA DE NAVEGACIÓN INFERIOR MÓVIL (< md) */}
       <nav
-        className="fixed inset-x-0 bottom-0 z-30 flex items-stretch justify-around border-t border-white/70 bg-white/95 backdrop-blur-xl md:hidden"
-        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+        ref={mobileNavRef}
+        aria-label="Secciones"
+        className="fixed inset-x-0 bottom-0 z-30 flex items-stretch overflow-x-auto overscroll-x-contain scroll-smooth snap-x border-t border-white/70 bg-white/95 backdrop-blur-xl [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:hidden"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)', touchAction: 'pan-x' }}
       >
-        {NAV_ITEMS.map(({ key, label, icon: Icon }) => (
+        {NAV_ITEMS.map(({ key, label, shortLabel, icon: Icon }) => (
           <button
             key={key}
+            type="button"
             onClick={() => setActiveSection(key)}
-            aria-current={activeSection === key}
-            className={`flex flex-1 flex-col items-center gap-0.5 px-2 py-2.5 text-[11px] font-medium transition-colors ${
+            aria-label={label}
+            aria-current={activeSection === key ? 'page' : undefined}
+            className={`flex min-h-[60px] w-[84px] shrink-0 snap-center flex-col items-center justify-center gap-1 px-1 text-[11px] font-medium leading-tight transition-colors ${
               activeSection === key ? 'text-[#263BAA]' : 'text-[#5b6685]'
             }`}
           >
-            <Icon size={20} strokeWidth={activeSection === key ? 2.5 : 2} />
-            <span className="max-w-[72px] truncate">{label}</span>
+            <Icon size={22} strokeWidth={activeSection === key ? 2.5 : 2} />
+            <span className="w-full text-center">{shortLabel}</span>
           </button>
         ))}
       </nav>
@@ -247,7 +259,7 @@ export default function DashboardPage() {
           <button 
             type="button"
             onClick={handleLogout}
-            className="w-full cursor-pointer overflow-hidden rounded-xl border border-transparent px-4 py-3 text-left text-sm font-medium text-[#c15a6b] transition-all hover:border-[#f0ccd3] hover:bg-[#fff2f4] hover:text-[#a73e51] flex items-center gap-4"
+            className="w-full cursor-pointer overflow-hidden rounded-xl border border-transparent px-4 py-3 text-left text-sm font-medium text-[#b64055] transition-all hover:border-[#f0ccd3] hover:bg-[#fff2f4] hover:text-[#a73e51] flex items-center gap-4"
           >
             <LogOut size={20} strokeWidth={2} className="flex-shrink-0" />
             <span className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap transition-opacity truncate">Cerrar sesión</span>

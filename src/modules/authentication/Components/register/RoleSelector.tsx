@@ -9,7 +9,7 @@ interface RoleSelectorProps {
 export default function RoleSelector({ selectedRole, onSelectRole }: RoleSelectorProps) {
   return (
     <div className="flex flex-col gap-1.5 mt-1">
-      <label className="text-xs font-semibold text-[#66718e]">Elige tu rol principal:</label>
+      <label className="text-xs font-semibold text-[#5b6685]">Elige tu rol principal:</label>
       <div className="grid grid-cols-1 gap-2.5 min-[420px]:grid-cols-2 sm:gap-3">
         <div
           onClick={() => onSelectRole('SEEKER')}

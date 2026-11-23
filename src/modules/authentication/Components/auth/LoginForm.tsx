@@ -70,7 +70,7 @@ export default function LoginForm() {
       {/* 🌟 Botones de inicio de sesión social */}
       <div className="relative flex items-center py-2">
         <div className="flex-grow border-t border-[#d7d3e3]"></div>
-        <span className="mx-4 flex-shrink text-xs uppercase tracking-wider text-[#a3afc8]">o</span>
+        <span className="mx-4 flex-shrink text-xs uppercase tracking-wider text-[#5b6685]">o</span>
         <div className="flex-grow border-t border-[#d7d3e3]"></div>
       </div>
 
@@ -88,7 +88,7 @@ export default function LoginForm() {
       />
 
       <div className="flex flex-col items-center gap-1.5 mt-2">
-        <p className="text-center text-xs text-[#6b7696]">
+        <p className="text-center text-xs text-[#5b6685]">
           ¿No tienes una cuenta?{' '}
           <Link to="/register" className="font-semibold text-[#263BAA] hover:underline">
             Regístrate aquí

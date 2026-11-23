@@ -47,38 +47,38 @@ export default function ReasonPromptModal({
         initial={{ opacity: 0, scale: 0.95, y: 10 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 10 }}
-        className="w-full max-w-[420px] rounded-2xl border border-[rgba(255,255,255,0.15)] bg-[#171A34] p-6 shadow-2xl text-white relative"
+        className="w-full max-w-[420px] rounded-2xl border border-[#d7d3e3] bg-white p-6 shadow-2xl text-[#17213f] relative"
       >
         <button
           type="button"
           onClick={onClose}
           aria-label="Cerrar"
-          className="absolute top-4 right-4 p-1.5 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+          className="absolute top-4 right-4 p-1.5 text-[#5b6685] hover:text-[#17213f] hover:bg-[#eef1ff] rounded-lg transition-colors"
         >
           <X size={18} />
         </button>
 
         <h3 className="pr-6 text-base font-semibold">{title}</h3>
-        {description && <p className="mt-1 text-xs text-white/50">{description}</p>}
+        {description && <p className="mt-1 text-xs text-[#5b6685]">{description}</p>}
 
-        <label className="mt-4 flex flex-col gap-1.5 text-sm text-white/70">
+        <label className="mt-4 flex flex-col gap-1.5 text-sm text-[#34405f]">
           Motivo {requireReason ? '' : '(opcional)'}
           <textarea
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             rows={3}
             maxLength={500}
-            className="rounded-lg border border-white/15 bg-white/5 p-2.5 text-sm text-white outline-none focus:border-[#263BAA]"
+            className="rounded-lg border border-[#d7d3e3] bg-white p-2.5 text-sm text-[#17213f] outline-none focus:border-[#263BAA]"
           />
         </label>
 
-        {error && <p className="mt-2 text-sm text-rose-400">{error}</p>}
+        {error && <p className="mt-2 text-sm text-[#b64055]">{error}</p>}
 
         <div className="mt-4 flex justify-end gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-xl border border-white/15 px-5 py-2.5 text-sm font-medium text-white/70 hover:text-white transition-colors"
+            className="rounded-xl border border-[#d7d3e3] px-5 py-2.5 text-sm font-medium text-[#34405f] hover:text-[#17213f] transition-colors"
           >
             Cancelar
           </button>

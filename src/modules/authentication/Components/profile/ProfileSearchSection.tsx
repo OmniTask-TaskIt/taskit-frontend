@@ -41,19 +41,19 @@ export default function ProfileSearchSection() {
         
         <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#17213f]/40" size={18} />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#5b6685]" size={18} />
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Buscar por nombre..."
-              className="w-full rounded-xl border border-[rgba(255,255,255,0.08)] bg-white/5 pl-10 pr-4 py-3 text-sm text-[#17213f] outline-none placeholder:text-[#17213f]/30 focus:border-[#263BAA]"
+              className="w-full rounded-xl border border-[#e2e5f5] bg-white pl-10 pr-4 py-3 text-sm text-[#17213f] outline-none placeholder:text-[#6b7696] focus:border-[#263BAA]"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="flex items-center justify-center gap-2 rounded-xl bg-[#263BAA] px-6 py-3 text-sm font-medium text-[#17213f] hover:bg-[#1a297a] transition-colors cursor-pointer disabled:opacity-60 shadow-md"
+            className="flex items-center justify-center gap-2 rounded-xl bg-[#263BAA] px-6 py-3 text-sm font-semibold text-white hover:bg-[#1a297a] transition-colors cursor-pointer disabled:opacity-60 shadow-md"
           >
             {loading ? 'Buscando...' : 'Buscar'}
           </button>
@@ -62,7 +62,7 @@ export default function ProfileSearchSection() {
         {/* Lista de Resultados */}
         <div className="mt-6 flex flex-col gap-3">
           {results.length === 0 && !loading && (
-            <p className="text-sm text-[#17213f]/50 text-center py-8">No se encontraron profesionales con ese criterio.</p>
+            <p className="text-sm text-[#5b6685] text-center py-8">No se encontraron profesionales con ese criterio.</p>
           )}
 
           {results.map((prof) => {
@@ -77,7 +77,7 @@ export default function ProfileSearchSection() {
                   setSelectedProfile(prof);
                   setReportingProfile(false);
                 }}
-                className="flex items-center justify-between p-4 rounded-xl border border-[rgba(255,255,255,0.08)] bg-white/5 hover:bg-white/10 transition-all cursor-pointer shadow-md"
+                className="flex items-center justify-between p-4 rounded-xl border border-[#e2e5f5] bg-white hover:bg-[#eef1ff] transition-all cursor-pointer shadow-md"
               >
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-full overflow-hidden bg-[#FFF4D6] text-[#0B132B] flex items-center justify-center font-bold text-lg flex-shrink-0 shadow-inner">
@@ -92,19 +92,19 @@ export default function ProfileSearchSection() {
                       <h2 className="text-sm font-semibold text-[#17213f]">{prof.fullName || 'Profesional TaskIt'}</h2>
                       {isVerified ? (
                         <span title="Verificado">
-                          <ShieldCheck size={14} className="text-emerald-400 cursor-pointer" />
+                          <ShieldCheck size={14} className="text-[#177245] cursor-pointer" />
                         </span>
                       ) : isPending ? (
                         <span title="Pendiente de revisión">
-                          <ShieldAlert size={14} className="text-amber-400 cursor-pointer" />
+                          <ShieldAlert size={14} className="text-[#9a5b00] cursor-pointer" />
                         </span>
                       ) : null}
                     </div>
-                    <p className="text-xs text-[#17213f]/60 mt-0.5 truncate max-w-[240px] sm:max-w-md">
+                    <p className="text-xs text-[#5b6685] mt-0.5 truncate max-w-[240px] sm:max-w-md">
                       {prof.description || 'Sin descripción disponible'}
                     </p>
                     {prof.locationCoverage && (
-                      <span className="flex items-center gap-1 text-[11px] text-[#17213f]/50 mt-1">
+                      <span className="flex items-center gap-1 text-[11px] text-[#5b6685] mt-1">
                         <MapPin size={12} /> Zona: {prof.locationCoverage}
                       </span>
                     )}
@@ -113,10 +113,10 @@ export default function ProfileSearchSection() {
 
                 <div className="flex flex-col items-end gap-1 flex-shrink-0">
                   <span className="flex items-center gap-1 text-xs font-semibold text-[#17213f]">
-                    <Star size={14} className="fill-amber-400 text-amber-400" />
-                    {prof.reputationScore} <span className="text-[#17213f]/40">({prof.totalReviews})</span>
+                    <Star size={14} className="fill-amber-400 text-[#9a5b00]" />
+                    {prof.reputationScore} <span className="text-[#5b6685]">({prof.totalReviews})</span>
                   </span>
-                  <span className="text-[11px] text-[#7c93fc] font-medium hover:underline">Ver perfil</span>
+                  <span className="text-[11px] text-[#263BAA] font-medium hover:underline">Ver perfil</span>
                 </div>
               </motion.div>
             );
@@ -136,13 +136,13 @@ export default function ProfileSearchSection() {
             >
               <button
                 onClick={() => setSelectedProfile(null)}
-                className="absolute top-5 right-5 p-2 text-[#17213f]/60 hover:text-[#17213f] hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+                className="absolute top-5 right-5 p-2 text-[#5b6685] hover:text-[#17213f] hover:bg-[#eef1ff] rounded-lg transition-colors cursor-pointer"
               >
                 <X size={20} />
               </button>
 
               {/* Cabecera del Modal */}
-              <div className="flex items-center gap-5 border-b border-[rgba(255,255,255,0.08)] pb-6">
+              <div className="flex items-center gap-4 border-b border-[#e2e5f5] pb-6 pr-10 sm:gap-5">
                 <div className="w-20 h-20 rounded-full overflow-hidden bg-[#FFF4D6] text-[#0B132B] flex items-center justify-center font-black text-2xl flex-shrink-0 shadow-inner">
                   {selectedProfile.photoUrl ? (
                     <img src={selectedProfile.photoUrl} alt={selectedProfile.fullName} className="w-full h-full object-cover" />
@@ -150,25 +150,25 @@ export default function ProfileSearchSection() {
                     <span>{(selectedProfile.fullName || 'U').charAt(0).toUpperCase()}</span>
                   )}
                 </div>
-                <div>
-                  <div className="flex items-center gap-3">
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                     <h2 className="text-xl font-bold">{selectedProfile.fullName || 'Profesional'}</h2>
                     {selectedProfile.identityVerificationStatus === 'VERIFIED' ? (
-                      <span className="flex items-center gap-1 rounded-md bg-emerald-500/15 px-2 py-0.5 text-xs font-semibold text-emerald-400 border border-emerald-500/30">
+                      <span className="flex items-center gap-1 rounded-md bg-emerald-500/15 px-2 py-0.5 text-xs font-semibold text-[#177245] border border-emerald-500/30">
                         <ShieldCheck size={12} /> Verificado
                       </span>
                     ) : (
-                      <span className="flex items-center gap-1 rounded-md bg-amber-500/15 px-2 py-0.5 text-xs font-semibold text-amber-400 border border-amber-500/30">
+                      <span className="flex items-center gap-1 rounded-md bg-amber-500/15 px-2 py-0.5 text-xs font-semibold text-[#9a5b00] border border-amber-500/30">
                         <ShieldAlert size={12} /> Pendiente
                       </span>
                     )}
                   </div>
                   <div className="mt-2 flex items-center gap-2">
-                    <span className="flex items-center gap-1 text-sm font-medium text-amber-400">
+                    <span className="flex items-center gap-1 text-sm font-medium text-[#9a5b00]">
                       <Star size={16} className="fill-amber-400" />
                       {selectedProfile.reputationScore}
                     </span>
-                    <span className="text-xs text-[#17213f]/50">({selectedProfile.totalReviews} reseñas)</span>
+                    <span className="text-xs text-[#5b6685]">({selectedProfile.totalReviews} reseñas)</span>
                   </div>
                 </div>
               </div>
@@ -176,18 +176,18 @@ export default function ProfileSearchSection() {
               {/* Cuerpo del Detalle */}
               <div className="mt-6 flex flex-col gap-6">
                 <div>
-                  <div className="flex items-center gap-2 text-[#17213f]/70 mb-2">
-                    <FileText {...iconProps} className="text-[#17213f]/40" />
+                  <div className="flex items-center gap-2 text-[#34405f] mb-2">
+                    <FileText {...iconProps} className="text-[#5b6685]" />
                     <h3 className="text-sm font-medium">Descripción profesional</h3>
                   </div>
-                  <p className="text-sm text-[#17213f]/90 leading-relaxed bg-white/5 p-4 rounded-xl border border-[rgba(255,255,255,0.05)]">
+                  <p className="text-sm text-[#34405f] leading-relaxed bg-white p-4 rounded-xl border border-[rgba(255,255,255,0.05)]">
                     {selectedProfile.description || 'Este usuario aún no ha agregado una descripción.'}
                   </p>
                 </div>
 
                 <div>
-                  <div className="flex items-center gap-2 text-[#17213f]/70 mb-2">
-                    <MapPin {...iconProps} className="text-[#17213f]/40" />
+                  <div className="flex items-center gap-2 text-[#34405f] mb-2">
+                    <MapPin {...iconProps} className="text-[#5b6685]" />
                     <h3 className="text-sm font-medium">Zona de cobertura</h3>
                   </div>
                   <p className="text-sm text-[#17213f]">
@@ -196,41 +196,41 @@ export default function ProfileSearchSection() {
                 </div>
 
                 <div>
-                  <div className="flex items-center gap-2 text-[#17213f]/70 mb-2">
-                    <Tag {...iconProps} className="text-[#17213f]/40" />
+                  <div className="flex items-center gap-2 text-[#34405f] mb-2">
+                    <Tag {...iconProps} className="text-[#5b6685]" />
                     <h3 className="text-sm font-medium">Categorías y servicios</h3>
                   </div>
                   {selectedProfile.categories && selectedProfile.categories.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
                       {selectedProfile.categories.map((cat) => (
-                        <span key={cat} className="rounded-md border border-[rgba(255,255,255,0.08)] bg-white/5 px-3 py-1.5 text-xs text-[#17213f]">
+                        <span key={cat} className="rounded-md border border-[#e2e5f5] bg-white px-3 py-1.5 text-xs text-[#17213f]">
                           {cat}
                         </span>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-sm text-[#17213f]/50">Sin categorías registradas.</p>
+                    <p className="text-sm text-[#5b6685]">Sin categorías registradas.</p>
                   )}
                 </div>
 
                 <div>
-                  <div className="flex items-center gap-2 text-[#17213f]/70 mb-2">
-                    <MessageSquare {...iconProps} className="text-[#17213f]/40" />
+                  <div className="flex items-center gap-2 text-[#34405f] mb-2">
+                    <MessageSquare {...iconProps} className="text-[#5b6685]" />
                     <h3 className="text-sm font-medium">Reseñas</h3>
                   </div>
                   {selectedProfile.userId ? (
                     <ProfileReviews userId={selectedProfile.userId} />
                   ) : (
-                    <p className="text-sm text-[#17213f]/50">No disponible.</p>
+                    <p className="text-sm text-[#5b6685]">No disponible.</p>
                   )}
                 </div>
               </div>
 
-              <div className="mt-8 pt-4 border-t border-[rgba(255,255,255,0.08)] flex items-center justify-between">
+              <div className="mt-8 pt-4 border-t border-[#e2e5f5] flex items-center justify-between">
                 {selectedProfile.userId && selectedProfile.userId !== ownUserId ? (
                   <button
                     onClick={() => setReportingProfile(true)}
-                    className="flex items-center gap-1.5 text-xs font-semibold text-rose-400 hover:text-rose-300 transition-colors cursor-pointer"
+                    className="flex items-center gap-1.5 text-xs font-semibold text-[#b64055] hover:text-[#b64055] transition-colors cursor-pointer"
                   >
                     <Flag size={14} /> Reportar perfil
                   </button>
@@ -239,7 +239,7 @@ export default function ProfileSearchSection() {
                 )}
                 <button
                   onClick={() => setSelectedProfile(null)}
-                  className="rounded-xl bg-[#263BAA] px-6 py-2.5 text-sm font-medium text-[#17213f] hover:bg-[#1a297a] transition-colors cursor-pointer shadow-md"
+                  className="rounded-xl bg-[#263BAA] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#1a297a] transition-colors cursor-pointer shadow-md"
                 >
                   Cerrar
                 </button>

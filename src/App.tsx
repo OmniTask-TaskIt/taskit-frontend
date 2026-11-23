@@ -26,7 +26,7 @@ function TaskShortcut() {
 
 function App() {
   return (
-    <main className="min-h-screen w-full bg-[#0B132B]">
+    <main className="min-h-screen w-full bg-[#eef2fb]">
       <PaymentPushToast />
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />

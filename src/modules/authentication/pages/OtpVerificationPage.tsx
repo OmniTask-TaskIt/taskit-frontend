@@ -112,7 +112,7 @@ export default function OtpVerificationPage() {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="w-full bg-red-500/20 border border-red-500 text-vanilla p-3 rounded-xl text-xs sm:text-center font-medium"
+              className="w-full rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-medium text-[#b42318] sm:text-center"
             >
               {error}
             </motion.div>
@@ -122,7 +122,7 @@ export default function OtpVerificationPage() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="w-full bg-green-500/20 border border-green-500 text-vanilla p-3 rounded-xl text-xs sm:text-center font-medium"
+              className="w-full rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-xs font-medium text-emerald-800 sm:text-center"
             >
               {successMsg}
             </motion.div>
@@ -144,20 +144,20 @@ export default function OtpVerificationPage() {
                 isSuccessAnim
                   ? {
                         y: [0, -12, 0, -6, 0],
-                      backgroundColor: ['#1e2e85', '#2eeba8', '#1e2e85'],
-                      borderColor: '#2eeba8',
+                      backgroundColor: ['#ffffff', '#bbf7d0', '#ffffff'],
+                      borderColor: '#22c55e',
                       transition: { delay: index * 0.08, duration: 0.6 }
                     }
                   : {
                       scale: digit ? 1.08 : 1,
                       y: digit ? -4 : 0,
-                      borderColor: digit ? 'rgba(46, 235, 168, 0.7)' : 'rgba(255, 255, 255, 0.2)',
+                      borderColor: digit ? 'rgba(34, 197, 94, 0.8)' : '#c9d2f7',
                     }
               }
-              whileFocus={{ scale: 1.12, borderColor: 'rgba(255, 255, 255, 0.9)' }}
+              whileFocus={{ scale: 1.12, borderColor: '#263BAA' }}
               transition={{ type: 'spring', stiffness: 350, damping: 18 }}
-              className={`w-11 h-14 sm:w-12 sm:h-15 text-center text-xl sm:text-2xl font-bold rounded-xl bg-[#1e2e85]/60 border text-vanilla outline-none transition-colors shadow-inner ${
-                digit ? 'bg-[#25399e] shadow-lg shadow-black/40' : ''
+              className={`w-11 h-14 sm:w-12 sm:h-15 text-center text-xl sm:text-2xl font-bold rounded-xl bg-white border text-[#17213f] outline-none transition-colors shadow-inner ${
+                digit ? 'bg-[#f3f6ff] shadow-lg shadow-[#263BAA]/20' : ''
               }`}
             />
           ))}
@@ -169,14 +169,14 @@ export default function OtpVerificationPage() {
           whileTap={{ scale: 0.97 }}
           type="submit"
           disabled={loading || isSuccessAnim}
-          className="w-full py-3.5 bg-vanilla text-[#0B132B] font-bold rounded-xl hover:bg-white transition-all shadow-lg disabled:opacity-70 cursor-pointer flex items-center justify-center gap-2 text-sm mt-1"
+          className="w-full py-3.5 bg-[#263BAA] text-white font-bold rounded-xl hover:bg-[#1a297a] transition-all shadow-[0_12px_28px_rgba(38,59,170,0.28)] disabled:opacity-70 cursor-pointer flex items-center justify-center gap-2 text-sm mt-1"
         >
           {loading ? (
             <>
               <motion.svg 
                 animate={{ rotate: 360 }}
                 transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                className="w-5 h-5 text-[#0B132B]" 
+                className="w-5 h-5 text-white" 
                 fill="none" 
                 viewBox="0 0 24 24"
               >
@@ -194,18 +194,18 @@ export default function OtpVerificationPage() {
 
         {/* Opciones adicionales */}
         <div className="flex flex-col items-center gap-2 mt-2">
-          <div className="text-xs text-center text-vanilla/70">
+          <div className="text-xs text-center text-[#5b6685]">
             ¿No recibiste el código?{' '}
             <button
               type="button"
               onClick={handleResendCode}
-              className="underline font-semibold hover:text-white cursor-pointer bg-transparent border-none text-vanilla"
+              className="underline font-semibold hover:text-[#1a297a] cursor-pointer bg-transparent border-none text-[#263BAA]"
             >
               Reenviar
             </button>
           </div>
 
-          <Link to="/login" className="text-xs text-vanilla/60 hover:text-vanilla transition-colors mt-1">
+          <Link to="/login" className="text-xs text-[#5b6685] hover:text-[#263BAA] transition-colors mt-1">
             ← Volver al inicio de sesión
           </Link>
         </div>

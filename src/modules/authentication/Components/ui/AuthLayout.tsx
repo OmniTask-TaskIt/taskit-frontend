@@ -50,11 +50,11 @@ export default function AuthLayout({ children, title, subtitle }: { children: Re
             />
 
           </div>
-          <span className="mt-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#6b7696]">Tu tiempo, nuestra tarea</span>
+          <span className="mt-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#5b6685]">Tu tiempo, nuestra tarea</span>
         </motion.div>
 
         <h2 className="text-2xl sm:text-3xl font-bold mb-1 text-center">{title}</h2>
-        <p className="text-xs sm:text-sm text-[#66718e] mb-6 text-center px-4">{subtitle}</p>
+        <p className="text-xs sm:text-sm text-[#5b6685] mb-6 text-center px-4">{subtitle}</p>
         
         {children}
       </motion.div>
