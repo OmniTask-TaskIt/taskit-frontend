@@ -1,6 +1,6 @@
-import { env } from '../../authentication/Config/env';
+import { env, stripTrailingSlashes } from '../../authentication/Config/env';
 
-const normalizedBase = env.chatApiUrl.trim().replace(/\/+$/, '');
+const normalizedBase = stripTrailingSlashes(env.chatApiUrl.trim());
 
 export const CHAT_API_BASE = normalizedBase ? `${normalizedBase}/api/v1` : '';
 export const CHAT_WS_URL = normalizedBase

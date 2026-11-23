@@ -1,7 +1,7 @@
-import { env } from '../../authentication/Config/env';
+import { env, stripTrailingSlashes } from '../../authentication/Config/env';
 import type { TaskSort, TaskStatus, TaskTab } from '../types/task.types';
 export const TASKS_API_CONFIG_ERROR = 'VITE_TASKS_API_URL no está configurada. Define la URL del microservicio de tareas para cargar y gestionar tareas.';
-const configuredTasksBase = env.tasksApiUrl.trim().replace(/\/+$/, '');
+const configuredTasksBase = stripTrailingSlashes(env.tasksApiUrl.trim());
 export const TASKS_API_BASE = configuredTasksBase
   ? `${configuredTasksBase}/api/tasks`
   : '';

@@ -12,10 +12,12 @@ const ONE_YEAR_SECONDS = 60 * 60 * 24 * 365;
 let cached: string | null = null;
 
 function generateId(): string {
-  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+  if (typeof crypto.randomUUID === 'function') {
     return crypto.randomUUID();
   }
-  return `dev-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
+  // randomUUID solo existe en contextos seguros (https/localhost); getRandomValues funciona también en http.
+  const bytes = crypto.getRandomValues(new Uint8Array(16));
+  return `dev-${Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('')}`;
 }
 
 function readCookie(): string | null {

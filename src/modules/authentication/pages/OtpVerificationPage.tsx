@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import AuthLayout from '../Components/ui/AuthLayout';
 import { authService } from '../services/authService';
 
+const DIGITS_ONLY = /^\d*$/;
+
 export default function OtpVerificationPage() {
   const navigate = useNavigate();
   const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']);
@@ -17,7 +19,7 @@ export default function OtpVerificationPage() {
   const email = localStorage.getItem('userEmail') || '';
 
   const handleChange = (index: number, value: string) => {
-    if (isNaN(Number(value))) return;
+    if (!DIGITS_ONLY.test(value)) return;
 
     const newOtp = [...otp];
     newOtp[index] = value.substring(value.length - 1);
@@ -37,7 +39,7 @@ export default function OtpVerificationPage() {
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
     const pastedData = e.clipboardData.getData('text').trim();
-    if (pastedData.length === otp.length && !isNaN(Number(pastedData))) {
+    if (pastedData.length === otp.length && DIGITS_ONLY.test(pastedData)) {
       const digits = pastedData.split('');
       setOtp(digits);
       inputRefs.current[otp.length - 1]?.focus();

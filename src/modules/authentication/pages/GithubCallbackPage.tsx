@@ -42,7 +42,7 @@ export default function GithubCallbackPage() {
       return;
     }
 
-    (async () => {
+    void (async () => {
       // Protección CSRF: el `state` de vuelta debe ser el que este navegador generó al salir.
       if (!consumeOauthState(state)) {
         sessionStorage.removeItem('githubOauthTermsAccepted');
@@ -70,9 +70,7 @@ export default function GithubCallbackPage() {
         }
 
         authStore.setTokens(data.accessToken, data.refreshToken);
-        if (data.email) {
-          localStorage.setItem('userEmail', data.email);
-        }
+        authStore.setUserEmail(data.email);
 
         navigate('/select-role', { replace: true });
       } catch (err: unknown) {

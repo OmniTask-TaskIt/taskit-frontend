@@ -34,4 +34,16 @@ describe('twoFactorChallenge', () => {
 
     expect(twoFactorChallenge.get()).toBeNull();
   });
+
+  it('no guarda el reto si el challengeId no tiene forma de identificador', () => {
+    expect(twoFactorChallenge.start({ challengeId: '"><script>', email: 'ana@gmail.com' })).toBe(false);
+
+    expect(twoFactorChallenge.get()).toBeNull();
+  });
+
+  it('guarda el reto con el correo vacío si el correo no es válido', () => {
+    expect(twoFactorChallenge.start({ challengeId: 'ch-1', email: '<b>' })).toBe(true);
+
+    expect(twoFactorChallenge.get()).toEqual({ challengeId: 'ch-1', email: '' });
+  });
 });

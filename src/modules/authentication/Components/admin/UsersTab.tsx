@@ -47,7 +47,7 @@ export default function UsersTab() {
 
   useEffect(() => {
     let cancelled = false;
-    (async () => {
+    void (async () => {
       if (cancelled) return;
       await fetchUsers(0);
     })();
@@ -59,7 +59,7 @@ export default function UsersTab() {
 
   const handleSearchSubmit = (e: FormEvent) => {
     e.preventDefault();
-    fetchUsers(0);
+    void fetchUsers(0);
   };
 
   const applyStatusChange = async (reason: string) => {

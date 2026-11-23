@@ -1,7 +1,12 @@
 import { AxiosError, type AxiosResponse } from 'axios';
 
-const b64url = (value: unknown) =>
-  btoa(JSON.stringify(value)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+const b64url = (value: unknown) => {
+  const base64 = btoa(JSON.stringify(value)).replaceAll('+', '-').replaceAll('/', '_');
+  // Se quita el relleno '=' final con un bucle: evita la regex /=+$/ (backtracking super-lineal).
+  let end = base64.length;
+  while (end > 0 && base64.charCodeAt(end - 1) === 61) end -= 1;
+  return base64.slice(0, end);
+};
 
 /** Construye un JWT sin firma válida (solo sirve para probar la lectura del payload en el front). */
 export function makeJwt({

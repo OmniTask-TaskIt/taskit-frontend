@@ -62,7 +62,7 @@ export default function ReportsTab() {
 
   useEffect(() => {
     let cancelled = false;
-    (async () => {
+    void (async () => {
       if (cancelled) return;
       await fetchReports(0);
     })();

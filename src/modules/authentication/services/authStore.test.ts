@@ -118,4 +118,21 @@ describe('authStore', () => {
     expect(authStore.getRole()).toBe('ADMIN');
     expect(authStore.getEmail()).toBe('x?y?z@gmail.com');
   });
+
+  it('no guarda nada y lanza un error si el servidor devuelve tokens con formato inválido', () => {
+    expect(() => authStore.setTokens('<script>alert(1)</script>', 'refresh')).toThrow();
+    expect(() => authStore.setTokens('access', undefined)).toThrow();
+
+    expect(authStore.getAccessToken()).toBeNull();
+    expect(authStore.getRefreshToken()).toBeNull();
+  });
+
+  it('setUserEmail guarda solo correos válidos', () => {
+    expect(authStore.setUserEmail(' ana@taskit.com ')).toBe(true);
+    expect(localStorage.getItem('userEmail')).toBe('ana@taskit.com');
+
+    expect(authStore.setUserEmail('<img src=x onerror=alert(1)>')).toBe(false);
+    expect(authStore.setUserEmail(undefined)).toBe(false);
+    expect(localStorage.getItem('userEmail')).toBe('ana@taskit.com');
+  });
 });

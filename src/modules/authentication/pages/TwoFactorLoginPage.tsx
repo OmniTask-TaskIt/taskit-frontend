@@ -39,7 +39,7 @@ export default function TwoFactorLoginPage() {
 
       twoFactorChallenge.clear();
       authStore.setTokens(data.accessToken, data.refreshToken);
-      localStorage.setItem('userEmail', data.email ?? challenge.email);
+      authStore.setUserEmail(data.email ?? challenge.email);
       // Igual que el login normal: el administrador va directo a su panel y no elige rol.
       navigate(authStore.getRole() === 'ADMIN' ? '/admin' : '/select-role', { replace: true });
     } catch (err) {

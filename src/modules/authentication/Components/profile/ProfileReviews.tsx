@@ -41,7 +41,7 @@ export default function ProfileReviews({ userId }: { userId: string }) {
       }
     }
 
-    fetchFirstPage();
+    void fetchFirstPage();
     return () => {
       cancelled = true;
     };

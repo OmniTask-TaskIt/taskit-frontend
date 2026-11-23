@@ -78,7 +78,7 @@ export default function UserProfileCard() {
         setLoading(false);
       }
     };
-    fetchMyProfile();
+    void fetchMyProfile();
   }, [userEmail]);
 
   const openEditor = () => {
@@ -209,9 +209,11 @@ export default function UserProfileCard() {
       >
         <header ref={headerRef} className="flex scroll-mt-20 flex-col items-start justify-between gap-6 border-b border-[#e4e8f3] p-6 sm:flex-row sm:items-center md:scroll-mt-4 md:p-8">
           <div className="flex w-full min-w-0 flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-5">
-            <div 
+            <button
+              type="button"
               onClick={() => photoInputRef.current?.click()}
-              className="relative group flex h-20 w-20 flex-shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#FFF4D6] text-[#0B132B] shadow-inner"
+              aria-label="Cambiar foto de perfil"
+              className="relative group flex h-20 w-20 flex-shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#FFF4D6] text-[#0B132B] shadow-inner focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#263BAA]"
               title="Haz clic para cambiar tu foto"
             >
               {profile.photoUrl && !photoFailed ? (
@@ -225,7 +227,7 @@ export default function UserProfileCard() {
                 <span className="text-2xl font-black">{displayName.charAt(0).toUpperCase()}</span>
               )}
               
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white text-xs">
+              <span className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity flex flex-col items-center justify-center text-white text-xs">
                 {uploadingPhoto ? (
                   <span className="animate-pulse">Cargando...</span>
                 ) : (
@@ -234,8 +236,8 @@ export default function UserProfileCard() {
                     <span>Editar</span>
                   </>
                 )}
-              </div>
-            </div>
+              </span>
+            </button>
             <input type="file" ref={photoInputRef} onChange={handlePhotoChange} accept="image/*" className="hidden" />
 
             <div className="min-w-0 max-w-full">

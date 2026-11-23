@@ -1,4 +1,4 @@
-import { env } from '../../authentication/Config/env';
+import { env, stripTrailingSlashes } from '../../authentication/Config/env';
 
 /** La generación con IA suele tardar varios segundos; 45s evita cortes prematuros. */
 export const AITA_TIMEOUT_MS = 45_000;
@@ -6,7 +6,7 @@ export const AITA_TIMEOUT_MS = 45_000;
 export const AITA_CONFIG_ERROR =
   'VITE_AITA_API_URL no está configurada. Define la URL del microservicio AITA.';
 
-const configuredBase = env.aitaApiUrl.trim().replace(/\/+$/, '');
+const configuredBase = stripTrailingSlashes(env.aitaApiUrl.trim());
 
 export const AITA_API_BASE = configuredBase;
 
