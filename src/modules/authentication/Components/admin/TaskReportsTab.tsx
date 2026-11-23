@@ -396,13 +396,13 @@ export default function TaskReportsTab({ fixedUserId }: TaskReportsTabProps = {}
       )}
       {error && <div role="alert" className="rounded-xl border border-rose-400/20 bg-rose-400/10 px-4 py-3 text-sm text-[#b64055]">{error}</div>}
       {loading ? (
-        <p className={fixedMode ? 'py-6 text-center text-sm text-[#5b6685]' : 'py-6 text-center text-sm text-[#5b6685]'}>
+        <p className="py-6 text-center text-sm text-[#5b6685]">
           Cargando reportes de tarea...
         </p>
       ) : reports.length === 0 ? (
         <div className={fixedMode ? 'rounded-xl border border-dashed border-[#d9deef] bg-[#f8f9fd] px-4 py-10 text-center' : 'rounded-xl border border-dashed border-[#d7d3e3] px-4 py-10 text-center'}>
-          <ClipboardList className={fixedMode ? 'mx-auto mb-2 text-[#5b6685]' : 'mx-auto mb-2 text-[#5b6685]'} size={22} />
-          <p className={fixedMode ? 'text-sm text-[#5b6685]' : 'text-sm text-[#5b6685]'}>
+          <ClipboardList className="mx-auto mb-2 text-[#5b6685]" size={22} />
+          <p className="text-sm text-[#5b6685]">
             {fixedUserId ? 'No hay reportes vinculados a tu sesión.' : 'No hay reportes de tarea.'}
           </p>
         </div>
@@ -417,20 +417,20 @@ export default function TaskReportsTab({ fixedUserId }: TaskReportsTabProps = {}
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className={fixedMode ? 'text-xs font-semibold uppercase tracking-wide text-[#5b6685]' : 'text-xs font-semibold uppercase tracking-wide text-[#5b6685]'}>Tarea</p>
-                  {report.taskName && <p className={fixedMode ? 'mt-1 break-words text-sm font-semibold text-[#17213f]' : 'mt-1 break-words text-sm font-semibold text-[#17213f]'}>{report.taskName}</p>}
-                  <p className={fixedMode ? 'mt-1 break-all font-mono text-xs text-[#5b6685]' : 'mt-1 break-all font-mono text-xs text-[#5b6685]'}>{report.taskId}</p>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-[#5b6685]">Tarea</p>
+                  {report.taskName && <p className="mt-1 break-words text-sm font-semibold text-[#17213f]">{report.taskName}</p>}
+                  <p className="mt-1 break-all font-mono text-xs text-[#5b6685]">{report.taskId}</p>
                 </div>
-                {formatDate(report.createdAt) && <time dateTime={report.createdAt} className={fixedMode ? 'text-xs text-[#5b6685]' : 'text-xs text-[#5b6685]'}>{formatDate(report.createdAt)}</time>}
+                {formatDate(report.createdAt) && <time dateTime={report.createdAt} className="text-xs text-[#5b6685]">{formatDate(report.createdAt)}</time>}
               </div>
-              <p className={fixedMode ? 'mt-3 whitespace-pre-wrap text-sm text-[#17213f]' : 'mt-3 whitespace-pre-wrap text-sm text-[#17213f]'}>{report.reason}</p>
+              <p className="mt-3 whitespace-pre-wrap text-sm text-[#17213f]">{report.reason}</p>
               {report.users && report.users.length > 0 && (
-                <div className={fixedMode ? 'mt-3 flex items-start gap-2 text-xs text-[#5b6685]' : 'mt-3 flex items-start gap-2 text-xs text-[#5b6685]'}>
+                <div className="mt-3 flex items-start gap-2 text-xs text-[#5b6685]">
                   <Users size={14} className="mt-0.5 shrink-0" />
                   <span className="break-all">Participantes: {report.users.join(', ')}</span>
                 </div>
               )}
-              {report.id && <p className={fixedMode ? 'mt-2 text-[11px] text-[#5b6685]' : 'mt-2 text-[11px] text-[#5b6685]'}>Reporte: {report.id}</p>}
+              {report.id && <p className="mt-2 text-[11px] text-[#5b6685]">Reporte: {report.id}</p>}
               <div className="mt-4 flex flex-wrap gap-2">
                 <button
                   type="button"

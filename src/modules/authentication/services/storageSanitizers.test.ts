@@ -19,8 +19,9 @@ describe('storageSanitizers', () => {
   });
 
   describe('sanitizeEmail', () => {
-    it('acepta un correo normal y le quita los espacios de los extremos', () => {
-      expect(sanitizeEmail('  ana@taskit.com ')).toBe('ana@taskit.com');
+    it('acepta correos normales, incluidos los que llevan caracteres como ? o +', () => {
+      expect(sanitizeEmail('ana@taskit.com')).toBe('ana@taskit.com');
+      expect(sanitizeEmail('x?y+z@mail.example.co')).toBe('x?y+z@mail.example.co');
     });
 
     it('rechaza correos con forma inválida o caracteres peligrosos', () => {
@@ -32,6 +33,8 @@ describe('storageSanitizers', () => {
       expect(sanitizeEmail('ana@taskit')).toBeNull();
       expect(sanitizeEmail('ana@taskit.')).toBeNull();
       expect(sanitizeEmail('an a@taskit.com')).toBeNull();
+      expect(sanitizeEmail(' ana@taskit.com')).toBeNull();
+      expect(sanitizeEmail('ana@taskit..com')).toBeNull();
       expect(sanitizeEmail('<b>@taskit.com')).toBeNull();
       expect(sanitizeEmail(`${'a'.repeat(250)}@taskit.com`)).toBeNull();
     });

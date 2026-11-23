@@ -128,7 +128,7 @@ describe('authStore', () => {
   });
 
   it('setUserEmail guarda solo correos válidos', () => {
-    expect(authStore.setUserEmail(' ana@taskit.com ')).toBe(true);
+    expect(authStore.setUserEmail('ana@taskit.com')).toBe(true);
     expect(localStorage.getItem('userEmail')).toBe('ana@taskit.com');
 
     expect(authStore.setUserEmail('<img src=x onerror=alert(1)>')).toBe(false);

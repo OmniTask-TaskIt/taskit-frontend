@@ -11,7 +11,9 @@ const MAX_ID_LENGTH = 128;
 
 const TOKEN_CHAR = /^[\w.~+/=-]+$/;
 const ID_CHAR = /^[\w.:-]+$/;
-const UNSAFE_EMAIL_CHAR = /[\s<>"'`\\]/;
+// Parte local, una arroba y un dominio con al menos un punto. Los segmentos del dominio no admiten '.', así que no hay
+// ambigüedad entre cuantificadores y la regex se evalúa en tiempo lineal.
+const EMAIL_PATTERN = /^[^\s@<>"'`\\]+@[^\s@.<>"'`\\]+(?:\.[^\s@.<>"'`\\]+)+$/;
 
 /** Token JWT u opaco: solo caracteres base64url/base64 y puntos, con un tamaño razonable. */
 export function sanitizeToken(value: unknown): string | null {
@@ -20,19 +22,11 @@ export function sanitizeToken(value: unknown): string | null {
   return TOKEN_CHAR.test(value) ? value : null;
 }
 
-/** Correo con una sola arroba, dominio con punto y sin espacios ni caracteres de marcado. */
+/** Correo con una sola arroba, dominio con punto y sin espacios ni caracteres de marcado. No se recorta ni se transforma. */
 export function sanitizeEmail(value: unknown): string | null {
   if (typeof value !== 'string') return null;
-  const email = value.trim();
-  if (email.length === 0 || email.length > MAX_EMAIL_LENGTH) return null;
-  if (UNSAFE_EMAIL_CHAR.test(email)) return null;
-
-  const at = email.indexOf('@');
-  if (at < 1 || at !== email.lastIndexOf('@')) return null;
-
-  const domain = email.slice(at + 1);
-  const dot = domain.lastIndexOf('.');
-  return dot > 0 && dot < domain.length - 1 ? email : null;
+  if (value.length === 0 || value.length > MAX_EMAIL_LENGTH) return null;
+  return EMAIL_PATTERN.test(value) ? value : null;
 }
 
 /** Identificador opaco (challengeId, etc.): letras, números, guion, guion bajo, punto y dos puntos. */
