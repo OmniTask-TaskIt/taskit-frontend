@@ -41,7 +41,13 @@ self.addEventListener('fetch', (event) => {
         .then((response) => {
           if (response && response.status === 200) {
             const clone = response.clone();
-            caches.open(CACHE_VERSION).then((cache) => cache.put(request, clone));
+            // waitUntil mantiene vivo el SW hasta que termine de guardar; el catch evita un rechazo sin manejar.
+            event.waitUntil(
+              caches
+                .open(CACHE_VERSION)
+                .then((cache) => cache.put(request, clone))
+                .catch(() => undefined)
+            );
           }
           return response;
         })

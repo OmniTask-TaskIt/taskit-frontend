@@ -101,10 +101,10 @@ export default function PublicProfilePage() {
                   {profile.totalReviews > 0 ? (
                     <span className="flex items-center gap-1 font-medium">
                       <Star size={18} className="fill-amber-400 text-amber-400" />
-                      {profile.reputationScore} <span className="text-[#17213f]/80">({profile.totalReviews} reseñas)</span>
+                      {profile.reputationScore} <span className="text-[#34405f]">({profile.totalReviews} reseñas)</span>
                     </span>
                   ) : (
-                    <span className="text-[#17213f]/80">Sin reseñas todavía</span>
+                    <span className="text-[#34405f]">Sin reseñas todavía</span>
                   )}
                 </div>
                 <ProfileActivity tasksCompleted={profile.tasksCompleted} memberSince={profile.memberSince} />
@@ -113,17 +113,17 @@ export default function PublicProfilePage() {
 
             <div className="flex flex-col gap-8 p-6 md:p-8">
               <section>
-                <div className="mb-2 flex items-center gap-2 text-[#17213f]/80"><FileText {...iconProps} /><h2 className="text-sm font-medium">Descripción</h2></div>
+                <div className="mb-2 flex items-center gap-2 text-[#34405f]"><FileText {...iconProps} /><h2 className="text-sm font-medium">Descripción</h2></div>
                 <p className="text-sm leading-relaxed">{profile.description?.trim() || 'Este usuario aún no ha agregado una descripción.'}</p>
               </section>
 
               <section className="border-t border-[#e4e8f3] pt-8">
-                <div className="mb-2 flex items-center gap-2 text-[#17213f]/80"><MapPin {...iconProps} /><h2 className="text-sm font-medium">Zona de cobertura</h2></div>
+                <div className="mb-2 flex items-center gap-2 text-[#34405f]"><MapPin {...iconProps} /><h2 className="text-sm font-medium">Zona de cobertura</h2></div>
                 <p className="text-sm">{profile.locationCoverage?.trim() || 'No especificada'}</p>
               </section>
 
               <section className="border-t border-[#e4e8f3] pt-8">
-                <div className="mb-3 flex items-center gap-2 text-[#17213f]/80"><Tag {...iconProps} /><h2 className="text-sm font-medium">Categorías de servicio</h2></div>
+                <div className="mb-3 flex items-center gap-2 text-[#34405f]"><Tag {...iconProps} /><h2 className="text-sm font-medium">Categorías de servicio</h2></div>
                 {profile.categories?.length ? (
                   <div className="flex flex-wrap gap-2">
                     {profile.categories.map((c) => (
@@ -131,16 +131,13 @@ export default function PublicProfilePage() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-[#17213f]/80">Sin categorías registradas.</p>
+                  <p className="text-sm text-[#34405f]">Sin categorías registradas.</p>
                 )}
               </section>
 
               <section className="border-t border-[#e4e8f3] pt-8">
-                <div className="mb-3 flex items-center gap-2 text-[#17213f]/80"><MessageSquare {...iconProps} /><h2 className="text-sm font-medium">Reseñas</h2></div>
-                {/* ProfileReviews está diseñado para fondo oscuro: se muestra en su propio panel. */}
-                <div className="rounded-xl bg-[#171A34] p-4 text-white">
-                  <ProfileReviews userId={profile.userId || userId} />
-                </div>
+                <div className="mb-3 flex items-center gap-2 text-[#34405f]"><MessageSquare {...iconProps} /><h2 className="text-sm font-medium">Reseñas</h2></div>
+                <ProfileReviews userId={profile.userId || userId} />
               </section>
 
               {(profile.userId || userId) !== ownUserId && (

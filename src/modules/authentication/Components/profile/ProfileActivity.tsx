@@ -14,7 +14,7 @@ export default function ProfileActivity({ tasksCompleted, memberSince }: Profile
   const validSince = since && !Number.isNaN(since.getTime()) ? since : null;
 
   return (
-    <ul className="mt-2 flex flex-col gap-1 text-sm text-[#17213f]/80 sm:flex-row sm:flex-wrap sm:gap-x-4">
+    <ul className="mt-2 flex flex-col gap-1 text-sm text-[#34405f] sm:flex-row sm:flex-wrap sm:gap-x-4">
       <li className="flex items-center gap-1.5">
         <ClipboardCheck size={16} className="text-[#263BAA]" aria-hidden="true" />
         {completed === 1 ? '1 tarea completada' : `${completed} tareas completadas`}

@@ -83,7 +83,7 @@ export default function ActiveSessionsSection() {
         <h2 id="sesiones-activas" className="flex items-center gap-2 text-lg font-bold text-[#263BAA]">
           <ShieldCheck size={20} /> Sesiones activas
         </h2>
-        <p className="text-sm text-[#66718e]">
+        <p className="text-sm text-[#5b6685]">
           Estos son los dispositivos con la sesión iniciada en tu cuenta. Si ves uno que no reconoces, ciérralo y cambia tu
           contraseña.
         </p>
@@ -102,11 +102,11 @@ export default function ActiveSessionsSection() {
       </div>
 
       {loading ? (
-        <p role="status" className="flex items-center gap-2 text-sm text-[#66718e]">
+        <p role="status" className="flex items-center gap-2 text-sm text-[#5b6685]">
           <Loader2 size={16} className="animate-spin" /> Cargando sesiones…
         </p>
       ) : sessions.length === 0 ? (
-        !error && <p className="text-sm text-[#66718e]">No hay sesiones activas para mostrar.</p>
+        !error && <p className="text-sm text-[#5b6685]">No hay sesiones activas para mostrar.</p>
       ) : (
         <ul className="flex flex-col gap-3">
           {sessions.map((session) => (
@@ -125,9 +125,9 @@ export default function ActiveSessionsSection() {
                       </span>
                     )}
                   </p>
-                  <p className="break-all text-[#66718e]">IP {session.ipAddress}</p>
-                  <p className="text-[#66718e]">Último uso: {formatDate(session.lastActiveAt)}</p>
-                  <p className="text-[#66718e]">Inició: {formatDate(session.createdAt)}</p>
+                  <p className="break-all text-[#5b6685]">IP {session.ipAddress}</p>
+                  <p className="text-[#5b6685]">Último uso: {formatDate(session.lastActiveAt)}</p>
+                  <p className="text-[#5b6685]">Inició: {formatDate(session.createdAt)}</p>
                 </div>
               </div>
 

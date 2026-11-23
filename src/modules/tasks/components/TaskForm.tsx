@@ -151,7 +151,7 @@ export default function TaskForm({ value, onChange, onCancel, onSubmit, submitLa
             min="1"
             className={`${aiPrice ? aiFieldClass : fieldClass} h-11`}
           />
-          <label className="mt-3 block text-xs font-medium text-[#657399]">
+          <label className="mt-3 block text-xs font-medium text-[#5b6685]">
             Ciudad para la estimación
             <input
               value={location}
@@ -190,7 +190,7 @@ export default function TaskForm({ value, onChange, onCancel, onSubmit, submitLa
       </div>
 
       <div className="sticky bottom-0 z-10 -mx-6 flex justify-end gap-3 border-t border-[#f0f2f8] bg-white px-6 py-3">
-        <button type="button" onClick={onCancel} className="rounded-xl px-4 py-2.5 text-sm font-semibold text-[#657399]">Cancelar</button>
+        <button type="button" onClick={onCancel} className="rounded-xl px-4 py-2.5 text-sm font-semibold text-[#5b6685]">Cancelar</button>
         <button type="submit" className="rounded-xl bg-[#263BAA] px-4 py-2.5 text-sm font-bold text-white">{submitLabel}</button>
       </div>
     </form>

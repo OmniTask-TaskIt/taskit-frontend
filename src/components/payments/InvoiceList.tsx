@@ -86,7 +86,7 @@ export default function InvoiceList({ userId, onExploreTasks }: { userId: string
         </div>
       )}
 
-      {loading && items.length === 0 && <p className="text-sm text-[#657399]">Cargando movimientos...</p>}
+      {loading && items.length === 0 && <p className="text-sm text-[#5b6685]">Cargando movimientos...</p>}
 
       {!loading && items.length === 0 && !error && (
         <div className="rounded-3xl border border-[#e4e8f3] bg-white/90 p-6">
@@ -122,14 +122,14 @@ export default function InvoiceList({ userId, onExploreTasks }: { userId: string
                     <p className={`text-xs font-semibold ${payer ? 'text-[#263BAA]' : 'text-emerald-700'}`}>
                       {payer ? 'Comprobante de pago' : 'Comprobante de ingreso'}
                     </p>
-                    <p className="mt-1 text-xs text-[#8290ae]">{formatPaymentDate(item.occurredAt)}</p>
+                    <p className="mt-1 text-xs text-[#5b6685]">{formatPaymentDate(item.occurredAt)}</p>
                   </div>
                   <p className={`text-lg font-semibold tabular-nums ${payer ? 'text-[#17213f]' : 'text-emerald-800'}`}>
                     {payer ? '−' : '+'}{formatPaymentAmount(item.amount, item.currency)}
                   </p>
                 </div>
                 <div className="mt-3 flex items-center justify-between gap-2">
-                  <span className="font-mono text-xs text-[#657399]">{shortTransactionId(item.transactionId)}</span>
+                  <span className="font-mono text-xs text-[#5b6685]">{shortTransactionId(item.transactionId)}</span>
                   <span
                     role="presentation"
                     onClick={(event) => {
@@ -148,7 +148,7 @@ export default function InvoiceList({ userId, onExploreTasks }: { userId: string
       </ul>
 
       {!loading && items.length > 0 && visible.length === 0 && (
-        <p className="mt-4 text-sm text-[#657399]">No hay movimientos con este filtro.</p>
+        <p className="mt-4 text-sm text-[#5b6685]">No hay movimientos con este filtro.</p>
       )}
 
       <InvoiceDetailModal invoice={selected} onClose={() => setSelected(null)} />

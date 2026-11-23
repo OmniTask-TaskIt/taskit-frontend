@@ -16,7 +16,7 @@ interface OAuthConsentCheckboxProps {
  */
 export default function OAuthConsentCheckbox({ checked, onChange }: OAuthConsentCheckboxProps) {
   return (
-    <label className="flex cursor-pointer items-start gap-2.5 text-[11px] text-[#66718e]">
+    <label className="flex cursor-pointer items-start gap-2.5 text-[11px] text-[#5b6685]">
       <input
         type="checkbox"
         checked={checked}

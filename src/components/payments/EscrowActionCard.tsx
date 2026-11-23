@@ -115,7 +115,7 @@ export default function EscrowActionCard({ task, currentUserId, onChanged }: Pro
   if (isPayee) {
     return (
       <section className="mt-5 rounded-2xl border border-[#e4e8f3] bg-[#f8f9fd] p-4">
-        <p className="text-xs font-semibold uppercase tracking-wide text-[#8290ae]">Cobro en escrow</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-[#5b6685]">Cobro en escrow</p>
         <p className="mt-2 text-sm leading-6 text-[#2f3b63]">{payeeCopy(paymentStatus, semiCompleted, amountLabel)}</p>
         {(paymentStatus === 'RELEASED' || paymentStatus === 'REFUNDED') && (
           <Link to={invoiceHref} className="mt-3 inline-flex text-sm font-semibold text-[#263BAA]">
@@ -175,7 +175,7 @@ export default function EscrowActionCard({ task, currentUserId, onChanged }: Pro
       >
         {connecting ? 'Conectando con Mercado Pago...' : 'Pagar y asegurar en Escrow'}
       </button>
-      {!canPay && <p className="mt-2 text-xs leading-5 text-[#657399]">{hint}</p>}
+      {!canPay && <p className="mt-2 text-xs leading-5 text-[#5b6685]">{hint}</p>}
       {message && <p className="mt-2 text-sm text-[#9a3412]" role="alert">{message}</p>}
     </section>
   );

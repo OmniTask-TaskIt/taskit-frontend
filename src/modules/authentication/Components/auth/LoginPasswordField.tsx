@@ -24,7 +24,7 @@ export default function LoginPasswordField({ value, onChange }: LoginPasswordFie
         type="button"
         whileTap={{ scale: 0.85 }}
         onClick={() => setShowPassword(!showPassword)}
-        className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-[#8a94ae] hover:text-[#34405f] focus:outline-none"
+        className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-[#5b6685] hover:text-[#34405f] focus:outline-none"
       >
         {showPassword ? (
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">

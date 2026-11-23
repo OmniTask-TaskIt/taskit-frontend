@@ -70,7 +70,7 @@ export default function PaymentCallbackPage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#f5f7fb] px-4">
       <section className="w-full max-w-md rounded-3xl border border-[#e6eaf4] bg-white p-8 text-center shadow-[0_18px_50px_rgba(47,61,110,0.08)]">
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8290ae]">
+        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#5b6685]">
           {ready ? 'Listo' : 'Verificando estado de tu pago...'}
         </p>
         <h1 className="mt-3 text-2xl font-bold text-[#17213f]">{ready ? copy.title : 'Un momento'}</h1>

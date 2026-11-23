@@ -156,7 +156,7 @@ export default function TaskModule({ focusTaskId = null }: { focusTaskId?: strin
       )}
       {publishedTask && (
         <TaskModal title="Tarea publicada" onClose={() => setPublishedTask(null)}>
-          <p className="text-sm text-[#657399]">Tu tarea ya está publicada. Estos son los profesionales que AITA recomienda para invitar.</p>
+          <p className="text-sm text-[#5b6685]">Tu tarea ya está publicada. Estos son los profesionales que AITA recomienda para invitar.</p>
           {publishedTask.taskId
             ? <AitaProviderSearch task={publishedTask} />
             : <p className="mt-3 text-sm text-[#5b6685]">La tarea se guardó, pero no llegó su identificador. Ábrela en el detalle para ver las sugerencias.</p>}
@@ -164,18 +164,18 @@ export default function TaskModule({ focusTaskId = null }: { focusTaskId?: strin
       )}
       {dialog === 'delete' && selected && (
         <TaskModal title="Eliminar tarea" onClose={close}>
-          <p className="text-sm text-[#657399]">Esta acción no se puede deshacer. ¿Deseas eliminar esta tarea?</p>
+          <p className="text-sm text-[#5b6685]">Esta acción no se puede deshacer. ¿Deseas eliminar esta tarea?</p>
           <div className="mt-6 flex justify-end gap-3">
-            <button type="button" onClick={close} className="rounded-xl px-4 py-2.5 text-sm font-semibold text-[#657399]">Cancelar</button>
+            <button type="button" onClick={close} className="rounded-xl px-4 py-2.5 text-sm font-semibold text-[#5b6685]">Cancelar</button>
             <button type="button" onClick={() => { void remove(); }} className="rounded-xl bg-[#b42318] px-4 py-2.5 text-sm font-bold text-white">Eliminar</button>
           </div>
         </TaskModal>
       )}
       {dialog === 'accept' && selected && (
         <TaskModal title="Aceptar tarea" onClose={close}>
-          <p className="text-sm text-[#657399]">Confirma que deseas aceptar esta tarea.</p>
+          <p className="text-sm text-[#5b6685]">Confirma que deseas aceptar esta tarea.</p>
           <div className="mt-6 flex justify-end gap-3">
-            <button type="button" onClick={close} className="rounded-xl px-4 py-2.5 text-sm font-semibold text-[#657399]">Cancelar</button>
+            <button type="button" onClick={close} className="rounded-xl px-4 py-2.5 text-sm font-semibold text-[#5b6685]">Cancelar</button>
             <button type="button" onClick={() => { void accept(selected); }} className="rounded-xl bg-[#263BAA] px-4 py-2.5 text-sm font-bold text-white">Confirmar</button>
           </div>
         </TaskModal>

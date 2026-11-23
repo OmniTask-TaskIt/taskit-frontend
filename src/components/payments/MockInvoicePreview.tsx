@@ -15,7 +15,7 @@ export default function MockInvoicePreview({ onOpen }: { onOpen: (invoice: Payme
         <span className="text-sm font-semibold tabular-nums text-[#17213f]">$120.000 COP</span>
       </div>
       <p className="mt-3 text-sm font-semibold text-[#17213f]">Diseño de identidad visual — Tarea #demo-01</p>
-      <p className="mt-1 text-xs text-[#657399]">Así se verá un comprobante real cuando completes y pagues una tarea. No representa dinero.</p>
+      <p className="mt-1 text-xs text-[#5b6685]">Así se verá un comprobante real cuando completes y pagues una tarea. No representa dinero.</p>
     </button>
   );
 }

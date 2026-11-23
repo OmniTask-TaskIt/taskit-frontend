@@ -1,3 +1,5 @@
+import { sanitizeEmail, sanitizeToken } from './storageSanitizers';
+
 /**
  * Decodifica el payload de un JWT sin validar la firma (eso lo hace el
  * backend). Los JWT usan base64url ('-' y '_' en vez de '+' y '/'), que
@@ -14,9 +16,23 @@ function readPayload(token: string | null): Record<string, unknown> | null {
 }
 
 export const authStore = {
-  setTokens(accessToken: string, refreshToken: string) {
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('refreshToken', refreshToken);
+  /** Guarda los tokens solo si tienen forma de token; si no, no persiste nada y lanza un error. */
+  setTokens(accessToken: unknown, refreshToken: unknown) {
+    const safeAccess = sanitizeToken(accessToken);
+    const safeRefresh = sanitizeToken(refreshToken);
+    if (!safeAccess || !safeRefresh) {
+      throw new Error('El servidor devolvió tokens con un formato inválido.');
+    }
+    localStorage.setItem('accessToken', safeAccess);
+    localStorage.setItem('refreshToken', safeRefresh);
+  },
+
+  /** Guarda el correo de la sesión si es válido. Devuelve false (y no guarda nada) si no lo es. */
+  setUserEmail(email: unknown): boolean {
+    const safeEmail = sanitizeEmail(email);
+    if (!safeEmail) return false;
+    localStorage.setItem('userEmail', safeEmail);
+    return true;
   },
   
   getAccessToken(): string | null {

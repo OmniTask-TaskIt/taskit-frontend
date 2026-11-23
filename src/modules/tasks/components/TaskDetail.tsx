@@ -33,17 +33,17 @@ export default function TaskDetail({
     <div className="rounded-3xl border border-white bg-white p-6 shadow-2xl">
       <div className="mb-4 flex items-center justify-between">
         <TaskStatusBadge status={task.status!} />
-        <button onClick={onClose} className="text-sm font-semibold text-[#657399]">Cerrar</button>
+        <button onClick={onClose} className="text-sm font-semibold text-[#5b6685]">Cerrar</button>
       </div>
       <h2 className="text-2xl font-extrabold text-[#0B132B]">{task.title}</h2>
       <p className="mt-3 text-sm leading-6 text-[#5b6685]">{task.description}</p>
       <div className="mt-5 grid grid-cols-2 gap-3 rounded-2xl bg-[#f6f7fc] p-4 text-sm">
         <div>
-          <p className="text-xs text-[#8290ae]">Precio</p>
+          <p className="text-xs text-[#5b6685]">Precio</p>
           <p className="mt-1 font-bold text-[#263BAA]">{price(task.price)}</p>
         </div>
         <div>
-          <p className="text-xs text-[#8290ae]">Categoría</p>
+          <p className="text-xs text-[#5b6685]">Categoría</p>
           <p className="mt-1 font-semibold text-[#0B132B]">{task.category === 'ARREGLOS' ? 'Arreglos' : 'Educación'}</p>
         </div>
       </div>

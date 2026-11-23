@@ -25,11 +25,11 @@ function formatDate(iso: string) {
 /** Persona involucrada en un reporte: nombre y correo si existen; si la cuenta ya no existe, su ID. */
 function Person({ id, name, email }: { id: string; name?: string | null; email?: string | null }) {
   const label = name || email;
-  if (!label) return <code className="text-white/60">{id}</code>;
+  if (!label) return <code className="text-[#5b6685]">{id}</code>;
   return (
     <span title={id}>
-      <strong className="font-semibold text-white/70">{label}</strong>
-      {name && email && <span className="text-white/40"> ({email})</span>}
+      <strong className="font-semibold text-[#34405f]">{label}</strong>
+      {name && email && <span className="text-[#5b6685]"> ({email})</span>}
     </span>
   );
 }
@@ -62,7 +62,7 @@ export default function ReportsTab() {
 
   useEffect(() => {
     let cancelled = false;
-    (async () => {
+    void (async () => {
       if (cancelled) return;
       await fetchReports(0);
     })();
@@ -88,7 +88,7 @@ export default function ReportsTab() {
             key={f.value}
             onClick={() => setStatus(f.value)}
             className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
-              status === f.value ? 'bg-[#263BAA] text-white' : 'bg-white/5 text-white/60 hover:bg-white/10'
+              status === f.value ? 'bg-[#263BAA] text-white' : 'bg-white text-[#5b6685] hover:bg-[#eef1ff]'
             }`}
           >
             {f.label}
@@ -96,45 +96,45 @@ export default function ReportsTab() {
         ))}
       </div>
 
-      {error && <p className="text-sm text-rose-400">{error}</p>}
+      {error && <p className="text-sm text-[#b64055]">{error}</p>}
       {loading ? (
-        <p className="text-sm text-white/40">Cargando reportes...</p>
+        <p className="text-sm text-[#5b6685]">Cargando reportes...</p>
       ) : reports.length === 0 ? (
-        <p className="text-sm text-white/40">No hay reportes con ese filtro.</p>
+        <p className="text-sm text-[#5b6685]">No hay reportes con ese filtro.</p>
       ) : (
         <div className="flex flex-col gap-2">
           {reports.map((report) => (
-            <div key={report.id} className="rounded-xl border border-white/10 bg-white/5 p-4">
+            <div key={report.id} className="rounded-xl border border-[#e2e5f5] bg-white p-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <span className="text-sm font-semibold text-white">{report.reason}</span>
+                <span className="text-sm font-semibold text-[#17213f]">{report.reason}</span>
                 <div className="flex items-center gap-2">
                   <StatusBadge status={report.status} />
-                  <span className="text-[11px] text-white/40">{formatDate(report.createdAt)}</span>
+                  <span className="text-[11px] text-[#5b6685]">{formatDate(report.createdAt)}</span>
                 </div>
               </div>
 
-              {report.comment && <p className="mt-2 text-sm text-white/70">{report.comment}</p>}
+              {report.comment && <p className="mt-2 text-sm text-[#34405f]">{report.comment}</p>}
 
-              <p className="mt-2 text-[11px] text-white/40">
+              <p className="mt-2 text-[11px] text-[#5b6685]">
                 Reportado por <Person id={report.reporterId} name={report.reporterName} email={report.reporterEmail} /> contra{' '}
                 <Person id={report.revieweeId} name={report.revieweeName} email={report.revieweeEmail} />
               </p>
 
               {report.resolutionNote && (
-                <p className="mt-1 text-[11px] text-white/40">Resolución: {report.resolutionNote}</p>
+                <p className="mt-1 text-[11px] text-[#5b6685]">Resolución: {report.resolutionNote}</p>
               )}
 
               {report.status === 'OPEN' && (
                 <div className="mt-3 flex flex-wrap gap-2">
                   <button
                     onClick={() => setPendingAction({ report, nextStatus: 'RESOLVED' })}
-                    className="flex items-center gap-1 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-400 hover:bg-emerald-500/20 transition-colors"
+                    className="flex items-center gap-1 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-[#177245] hover:bg-emerald-500/20 transition-colors"
                   >
                     <Check size={13} /> Resolver
                   </button>
                   <button
                     onClick={() => setPendingAction({ report, nextStatus: 'DISMISSED' })}
-                    className="flex items-center gap-1 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/60 hover:bg-white/10 transition-colors"
+                    className="flex items-center gap-1 rounded-lg border border-[#d7d3e3] bg-white px-3 py-1.5 text-xs font-semibold text-[#5b6685] hover:bg-[#eef1ff] transition-colors"
                   >
                     <XIcon size={13} /> Descartar
                   </button>
@@ -144,11 +144,11 @@ export default function ReportsTab() {
           ))}
 
           {totalPages > 1 && (
-            <div className="mt-2 flex items-center justify-center gap-3 text-xs text-white/50">
+            <div className="mt-2 flex items-center justify-center gap-3 text-xs text-[#5b6685]">
               <button
                 disabled={page === 0}
                 onClick={() => fetchReports(page - 1)}
-                className="rounded-lg border border-white/15 px-3 py-1.5 disabled:opacity-30"
+                className="rounded-lg border border-[#d7d3e3] px-3 py-1.5 disabled:opacity-30"
               >
                 Anterior
               </button>
@@ -158,7 +158,7 @@ export default function ReportsTab() {
               <button
                 disabled={page + 1 >= totalPages}
                 onClick={() => fetchReports(page + 1)}
-                className="rounded-lg border border-white/15 px-3 py-1.5 disabled:opacity-30"
+                className="rounded-lg border border-[#d7d3e3] px-3 py-1.5 disabled:opacity-30"
               >
                 Siguiente
               </button>

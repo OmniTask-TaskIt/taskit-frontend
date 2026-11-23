@@ -141,10 +141,8 @@ describe('GithubCallbackPage', () => {
     renderCallback('?code=abc123');
 
     await waitFor(() => expect(screen.getByTestId('location')).toHaveTextContent('/verify-2fa'));
-    expect(JSON.parse(sessionStorage.getItem('twoFactorChallenge') ?? 'null')).toEqual({
-      challengeId: 'ch-1',
-      email: 'gh@taskit.com',
-    });
+    expect(sessionStorage.getItem('twoFactorChallengeId')).toBe('ch-1');
+    expect(sessionStorage.getItem('twoFactorChallengeEmail')).toBe('gh@taskit.com');
     expect(authStore.getAccessToken()).toBeNull();
   });
 });

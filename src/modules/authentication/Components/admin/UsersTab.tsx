@@ -47,7 +47,7 @@ export default function UsersTab() {
 
   useEffect(() => {
     let cancelled = false;
-    (async () => {
+    void (async () => {
       if (cancelled) return;
       await fetchUsers(0);
     })();
@@ -59,7 +59,7 @@ export default function UsersTab() {
 
   const handleSearchSubmit = (e: FormEvent) => {
     e.preventDefault();
-    fetchUsers(0);
+    void fetchUsers(0);
   };
 
   const applyStatusChange = async (reason: string) => {
@@ -73,21 +73,21 @@ export default function UsersTab() {
     <div className="flex flex-col gap-4">
       <form onSubmit={handleSearchSubmit} className="flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40" size={16} />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#5b6685]" size={16} />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Buscar por correo..."
-            className="w-full rounded-xl border border-white/15 bg-white/5 pl-10 pr-4 py-2.5 text-sm text-white outline-none placeholder:text-white/30 focus:border-[#263BAA]"
+            className="w-full rounded-xl border border-[#d7d3e3] bg-white pl-10 pr-4 py-2.5 text-sm text-[#17213f] outline-none placeholder:text-[#5b6685] focus:border-[#263BAA]"
           />
         </div>
         <select
           value={status}
           onChange={(e) => setStatus(e.target.value as AccountStatus | '')}
-          className="rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 text-sm text-white outline-none focus:border-[#263BAA]"
+          className="rounded-xl border border-[#d7d3e3] bg-white px-3 py-2.5 text-sm text-[#17213f] outline-none focus:border-[#263BAA]"
         >
           {STATUS_FILTERS.map((f) => (
-            <option key={f.value} value={f.value} className="bg-[#171A34]">
+            <option key={f.value} value={f.value} className="bg-white">
               {f.label}
             </option>
           ))}
@@ -100,31 +100,31 @@ export default function UsersTab() {
         </button>
       </form>
 
-      {error && <p className="text-sm text-rose-400">{error}</p>}
+      {error && <p className="text-sm text-[#b64055]">{error}</p>}
       {loading ? (
-        <p className="text-sm text-white/40">Cargando usuarios...</p>
+        <p className="text-sm text-[#5b6685]">Cargando usuarios...</p>
       ) : users.length === 0 ? (
-        <p className="text-sm text-white/40">No se encontraron usuarios con ese criterio.</p>
+        <p className="text-sm text-[#5b6685]">No se encontraron usuarios con ese criterio.</p>
       ) : (
         <div className="flex flex-col gap-2">
           {users.map((user) => (
             <div
               key={user.id}
-              className="flex flex-col gap-3 rounded-xl border border-white/10 bg-white/5 p-4 sm:flex-row sm:items-center sm:justify-between"
+              className="flex flex-col gap-3 rounded-xl border border-[#e2e5f5] bg-white p-4 sm:flex-row sm:items-center sm:justify-between"
             >
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="truncate text-sm font-semibold text-white">{user.name || user.email}</span>
+                  <span className="truncate text-sm font-semibold text-[#17213f]">{user.name || user.email}</span>
                   <StatusBadge status={user.accountStatus} />
-                  <span className="rounded-md border border-white/10 bg-white/5 px-1.5 py-0.5 text-[10px] text-white/50">
+                  <span className="rounded-md border border-[#e2e5f5] bg-white px-1.5 py-0.5 text-[10px] text-[#5b6685]">
                     {user.role}
                   </span>
                 </div>
-                <p className="mt-0.5 truncate text-xs text-white/50">
+                <p className="mt-0.5 truncate text-xs text-[#5b6685]">
                   {user.email} · {user.authProvider}
                 </p>
                 {user.blockReason && (
-                  <p className="mt-1 text-[11px] text-rose-400/90">Motivo: {user.blockReason}</p>
+                  <p className="mt-1 text-[11px] text-[#b64055]/90">Motivo: {user.blockReason}</p>
                 )}
               </div>
 
@@ -133,13 +133,13 @@ export default function UsersTab() {
                   <>
                     <button
                       onClick={() => setPendingAction({ user, nextStatus: 'SUSPENDED' })}
-                      className="flex items-center gap-1 rounded-lg border border-orange-500/30 bg-orange-500/10 px-3 py-1.5 text-xs font-semibold text-orange-400 hover:bg-orange-500/20 transition-colors"
+                      className="flex items-center gap-1 rounded-lg border border-orange-500/30 bg-orange-500/10 px-3 py-1.5 text-xs font-semibold text-[#9a3412] hover:bg-orange-500/20 transition-colors"
                     >
                       <Ban size={13} /> Suspender
                     </button>
                     <button
                       onClick={() => setPendingAction({ user, nextStatus: 'BLOCKED' })}
-                      className="flex items-center gap-1 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 text-xs font-semibold text-rose-400 hover:bg-rose-500/20 transition-colors"
+                      className="flex items-center gap-1 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 text-xs font-semibold text-[#b64055] hover:bg-rose-500/20 transition-colors"
                     >
                       <Ban size={13} /> Bloquear
                     </button>
@@ -147,7 +147,7 @@ export default function UsersTab() {
                 ) : (
                   <button
                     onClick={() => setPendingAction({ user, nextStatus: 'ACTIVE' })}
-                    className="flex items-center gap-1 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-400 hover:bg-emerald-500/20 transition-colors"
+                    className="flex items-center gap-1 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-[#177245] hover:bg-emerald-500/20 transition-colors"
                   >
                     <ShieldCheck size={13} /> Reactivar
                   </button>
@@ -157,11 +157,11 @@ export default function UsersTab() {
           ))}
 
           {totalPages > 1 && (
-            <div className="mt-2 flex items-center justify-center gap-3 text-xs text-white/50">
+            <div className="mt-2 flex items-center justify-center gap-3 text-xs text-[#5b6685]">
               <button
                 disabled={page === 0}
                 onClick={() => fetchUsers(page - 1)}
-                className="rounded-lg border border-white/15 px-3 py-1.5 disabled:opacity-30"
+                className="rounded-lg border border-[#d7d3e3] px-3 py-1.5 disabled:opacity-30"
               >
                 Anterior
               </button>
@@ -171,7 +171,7 @@ export default function UsersTab() {
               <button
                 disabled={page + 1 >= totalPages}
                 onClick={() => fetchUsers(page + 1)}
-                className="rounded-lg border border-white/15 px-3 py-1.5 disabled:opacity-30"
+                className="rounded-lg border border-[#d7d3e3] px-3 py-1.5 disabled:opacity-30"
               >
                 Siguiente
               </button>

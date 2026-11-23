@@ -82,8 +82,10 @@ export default function GoogleLoginButton({ onError, disabled, onBlockedClick }:
         // Google renderiza su botón dentro de un iframe propio; para poder
         // bloquear el click y mostrar el aviso de "acepta los términos"
         // se superpone una capa transparente en vez de depender de `disabled`.
-        <div
-          className="absolute inset-0 z-10 cursor-not-allowed rounded-full"
+        <button
+          type="button"
+          aria-label="Acepta los términos para continuar con Google"
+          className="absolute inset-0 z-10 cursor-not-allowed rounded-full bg-transparent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#263BAA]"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -91,13 +93,7 @@ export default function GoogleLoginButton({ onError, disabled, onBlockedClick }:
           }}
         />
       )}
-      <div
-        className={disabled ? 'pointer-events-none opacity-50 grayscale' : ''}
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-        }}
-      >
+      <div className={disabled ? 'pointer-events-none opacity-50 grayscale' : ''}>
         <GoogleLogin
         onSuccess={async (credentialResponse) => {
           try {
@@ -109,9 +105,7 @@ export default function GoogleLoginButton({ onError, disabled, onBlockedClick }:
             const decodedToken = parseJwt(credentialResponse.credential);
             const googleEmail = decodedToken?.email;
 
-            if (googleEmail) {
-              localStorage.setItem('userEmail', googleEmail);
-            }
+            authStore.setUserEmail(googleEmail);
 
             const data = await authService.googleLogin(credentialResponse.credential, true);
 
@@ -129,9 +123,7 @@ export default function GoogleLoginButton({ onError, disabled, onBlockedClick }:
 
             authStore.setTokens(data.accessToken, data.refreshToken);
             
-            if (data.email) {
-              localStorage.setItem('userEmail', data.email);
-            }
+            authStore.setUserEmail(data.email);
 
             navigate('/select-role');
           } catch (err: unknown) {

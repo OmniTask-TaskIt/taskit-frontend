@@ -41,7 +41,7 @@ export default function SelectRolePage() {
     <AuthLayout title="¿Cómo deseas ingresar hoy?" subtitle="Selecciona tu perfil en TaskIt">
       <div className="w-full flex flex-col gap-4">
         {error && (
-          <div className="bg-red-500/20 border border-red-500 text-vanilla p-3 rounded-xl text-xs text-center font-medium">
+          <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-center text-xs font-medium text-[#b42318]">
             {error}
           </div>
         )}
@@ -51,27 +51,27 @@ export default function SelectRolePage() {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             onClick={() => !loading && handleSelectRole('SEEKER')}
-            className="cursor-pointer p-6 rounded-2xl bg-[#1e2e85]/50 border border-white/15 flex flex-col items-center text-center transition-all hover:bg-[#1e2e85] hover:border-vanilla/50 shadow-lg"
+            className="cursor-pointer p-6 rounded-2xl border border-[#d7d3e3] bg-white text-[#17213f] flex flex-col items-center text-center transition-all hover:border-[#263BAA] hover:bg-[#eef1ff] shadow-[0_10px_24px_rgba(47,61,110,0.1)]"
           >
-            <Search size={30} strokeWidth={2} className="mb-2 text-vanilla" />
-            <h3 className="text-base font-bold text-vanilla">Demandante</h3>
-            <p className="text-xs text-vanilla/70 mt-1">Buscar y contratar servicios</p>
+            <Search size={30} strokeWidth={2} className="mb-2 text-[#263BAA]" />
+            <h3 className="text-base font-bold text-[#17213f]">Demandante</h3>
+            <p className="text-xs text-[#5b6685] mt-1">Buscar y contratar servicios</p>
           </motion.div>
 
           <motion.div
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             onClick={() => !loading && handleSelectRole('PROVIDER')}
-            className="cursor-pointer p-6 rounded-2xl bg-[#1e2e85]/50 border border-white/15 flex flex-col items-center text-center transition-all hover:bg-[#1e2e85] hover:border-vanilla/50 shadow-lg"
+            className="cursor-pointer p-6 rounded-2xl border border-[#d7d3e3] bg-white text-[#17213f] flex flex-col items-center text-center transition-all hover:border-[#263BAA] hover:bg-[#eef1ff] shadow-[0_10px_24px_rgba(47,61,110,0.1)]"
           >
-            <BriefcaseBusiness size={30} strokeWidth={2} className="mb-2 text-vanilla" />
-            <h3 className="text-base font-bold text-vanilla">Prestador</h3>
-            <p className="text-xs text-vanilla/70 mt-1">Ofrecer servicios y ver tareas</p>
+            <BriefcaseBusiness size={30} strokeWidth={2} className="mb-2 text-[#263BAA]" />
+            <h3 className="text-base font-bold text-[#17213f]">Prestador</h3>
+            <p className="text-xs text-[#5b6685] mt-1">Ofrecer servicios y ver tareas</p>
           </motion.div>
         </div>
 
         {loading && (
-          <p className="text-xs text-center text-vanilla/60 animate-pulse">
+          <p className="text-xs text-center text-[#5b6685] animate-pulse">
             Configurando tu perfil...
           </p>
         )}

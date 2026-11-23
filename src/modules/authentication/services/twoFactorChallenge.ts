@@ -2,7 +2,10 @@
  * Reto del segundo factor (RF-AUTH-9). Cuando el login responde `twoFactorRequired`, el challengeId y el correo se
  * guardan en sessionStorage (mueren al cerrar la pestaña) y la pantalla /verify-2fa los usa para pedir el código.
  */
-const KEY = 'twoFactorChallenge';
+import { sanitizeEmail, sanitizeId } from './storageSanitizers';
+
+const ID_KEY = 'twoFactorChallengeId';
+const EMAIL_KEY = 'twoFactorChallengeEmail';
 
 export interface TwoFactorChallenge {
   challengeId: string;
@@ -10,20 +13,29 @@ export interface TwoFactorChallenge {
 }
 
 export const twoFactorChallenge = {
-  start(challenge: TwoFactorChallenge) {
-    sessionStorage.setItem(KEY, JSON.stringify(challenge));
+  /** Valida el reto antes de guardarlo; con un challengeId inválido no guarda nada y devuelve false. */
+  start(challenge: TwoFactorChallenge): boolean {
+    const challengeId = sanitizeId(challenge.challengeId);
+    if (!challengeId) return false;
+    sessionStorage.setItem(ID_KEY, challengeId);
+
+    const email = sanitizeEmail(challenge.email);
+    if (email) {
+      sessionStorage.setItem(EMAIL_KEY, email);
+    } else {
+      sessionStorage.removeItem(EMAIL_KEY);
+    }
+    return true;
   },
 
   get(): TwoFactorChallenge | null {
-    try {
-      const parsed = JSON.parse(sessionStorage.getItem(KEY) ?? 'null') as Partial<TwoFactorChallenge> | null;
-      return parsed?.challengeId ? { challengeId: parsed.challengeId, email: parsed.email ?? '' } : null;
-    } catch {
-      return null;
-    }
+    const challengeId = sessionStorage.getItem(ID_KEY);
+    if (!challengeId) return null;
+    return { challengeId, email: sessionStorage.getItem(EMAIL_KEY) ?? '' };
   },
 
   clear() {
-    sessionStorage.removeItem(KEY);
+    sessionStorage.removeItem(ID_KEY);
+    sessionStorage.removeItem(EMAIL_KEY);
   },
 };
