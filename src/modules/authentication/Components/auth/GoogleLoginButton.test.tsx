@@ -127,10 +127,8 @@ describe('GoogleLoginButton', () => {
     await userEvent.click(screen.getByText('google-ok'));
 
     await waitFor(() => expect(screen.getByTestId('location')).toHaveTextContent('/verify-2fa'));
-    expect(JSON.parse(sessionStorage.getItem('twoFactorChallenge') ?? 'null')).toEqual({
-      challengeId: 'ch-1',
-      email: 'ana@gmail.com',
-    });
+    expect(sessionStorage.getItem('twoFactorChallengeId')).toBe('ch-1');
+    expect(sessionStorage.getItem('twoFactorChallengeEmail')).toBe('ana@gmail.com');
     expect(authStore.getAccessToken()).toBeNull();
     sessionStorage.clear();
   });

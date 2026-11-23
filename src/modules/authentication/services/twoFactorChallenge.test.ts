@@ -14,16 +14,14 @@ describe('twoFactorChallenge', () => {
     expect(twoFactorChallenge.get()).toBeNull();
   });
 
-  it('devuelve null si lo guardado está corrupto o no trae challengeId', () => {
-    sessionStorage.setItem('twoFactorChallenge', '{no es json');
-    expect(twoFactorChallenge.get()).toBeNull();
+  it('devuelve null si no hay challengeId guardado', () => {
+    sessionStorage.setItem('twoFactorChallengeEmail', 'ana@gmail.com');
 
-    sessionStorage.setItem('twoFactorChallenge', JSON.stringify({ email: 'ana@gmail.com' }));
     expect(twoFactorChallenge.get()).toBeNull();
   });
 
   it('completa el correo vacío si no venía', () => {
-    sessionStorage.setItem('twoFactorChallenge', JSON.stringify({ challengeId: 'ch-1' }));
+    sessionStorage.setItem('twoFactorChallengeId', 'ch-1');
 
     expect(twoFactorChallenge.get()).toEqual({ challengeId: 'ch-1', email: '' });
   });
@@ -45,5 +43,12 @@ describe('twoFactorChallenge', () => {
     expect(twoFactorChallenge.start({ challengeId: 'ch-1', email: '<b>' })).toBe(true);
 
     expect(twoFactorChallenge.get()).toEqual({ challengeId: 'ch-1', email: '' });
+  });
+
+  it('borra un correo anterior si el nuevo reto llega sin correo válido', () => {
+    twoFactorChallenge.start({ challengeId: 'ch-1', email: 'ana@gmail.com' });
+    twoFactorChallenge.start({ challengeId: 'ch-2', email: '' });
+
+    expect(twoFactorChallenge.get()).toEqual({ challengeId: 'ch-2', email: '' });
   });
 });

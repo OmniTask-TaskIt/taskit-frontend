@@ -4,7 +4,8 @@
  */
 import { sanitizeEmail, sanitizeId } from './storageSanitizers';
 
-const KEY = 'twoFactorChallenge';
+const ID_KEY = 'twoFactorChallengeId';
+const EMAIL_KEY = 'twoFactorChallengeEmail';
 
 export interface TwoFactorChallenge {
   challengeId: string;
@@ -16,21 +17,25 @@ export const twoFactorChallenge = {
   start(challenge: TwoFactorChallenge): boolean {
     const challengeId = sanitizeId(challenge.challengeId);
     if (!challengeId) return false;
-    const email = sanitizeEmail(challenge.email) ?? '';
-    sessionStorage.setItem(KEY, JSON.stringify({ challengeId, email }));
+    sessionStorage.setItem(ID_KEY, challengeId);
+
+    const email = sanitizeEmail(challenge.email);
+    if (email) {
+      sessionStorage.setItem(EMAIL_KEY, email);
+    } else {
+      sessionStorage.removeItem(EMAIL_KEY);
+    }
     return true;
   },
 
   get(): TwoFactorChallenge | null {
-    try {
-      const parsed = JSON.parse(sessionStorage.getItem(KEY) ?? 'null') as Partial<TwoFactorChallenge> | null;
-      return parsed?.challengeId ? { challengeId: parsed.challengeId, email: parsed.email ?? '' } : null;
-    } catch {
-      return null;
-    }
+    const challengeId = sessionStorage.getItem(ID_KEY);
+    if (!challengeId) return null;
+    return { challengeId, email: sessionStorage.getItem(EMAIL_KEY) ?? '' };
   },
 
   clear() {
-    sessionStorage.removeItem(KEY);
+    sessionStorage.removeItem(ID_KEY);
+    sessionStorage.removeItem(EMAIL_KEY);
   },
 };
