@@ -100,7 +100,7 @@ describe('TaskReportsTab', () => {
 
     const reason = await screen.findByText('Problema visible');
     expect(reason).toBeInTheDocument();
-    expect(reason).toHaveClass('text-[#17213f]');
+    expect(reason).toHaveClass('text-adm-text');
     expect(screen.getByText('Reparar equipo')).toBeInTheDocument();
   });
 

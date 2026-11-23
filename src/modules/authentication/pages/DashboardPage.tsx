@@ -11,9 +11,8 @@ import ProfileSearchSection from '../Components/profile/ProfileSearchSection';
 import UserProfileCard from '../Components/profile/UserProfileCard';
 import ActiveSessionsSection from '../Components/security/ActiveSessionsSection';
 import TwoFactorSection from '../Components/security/TwoFactorSection';
-import { authService } from '../services/authService';
 import { authStore } from '../services/authStore';
-import { redirectToLogin } from '../../../utils/navigation';
+import { logoutAndRedirect } from '../services/logout';
 import { ClipboardList, Flag, Lock, LogOut, MessageCircle, Receipt, Search, ShieldCheck, UserRound } from 'lucide-react';
 
 import fondoImage from '../../../assets/FondoP.jpeg';
@@ -34,19 +33,6 @@ const NAV_ITEMS: { key: SectionType; label: string; shortLabel: string; icon: ty
 
 function readSection(value: string | null): SectionType {
   return NAV_ITEMS.some((item) => item.key === value) ? (value as SectionType) : 'profile';
-}
-
-async function handleLogout() {
-  try {
-    // RF-AUTH-8: primero se revocan los tokens en el backend (hace falta el access token todavía guardado).
-    await authService.logout();
-  } catch {
-    // Si el backend no responde (red caída, token ya vencido) la sesión local se cierra igual.
-  } finally {
-    authStore.clearSession();
-    localStorage.clear();
-    redirectToLogin();
-  }
 }
 
 export default function DashboardPage() {
@@ -99,7 +85,7 @@ export default function DashboardPage() {
             </Link>
           )}
           <button
-            onClick={handleLogout}
+            onClick={logoutAndRedirect}
             aria-label="Cerrar sesión"
             className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-[#b64055] hover:bg-[#fff2f4]"
           >
@@ -258,7 +244,7 @@ export default function DashboardPage() {
           )}
           <button 
             type="button"
-            onClick={handleLogout}
+            onClick={logoutAndRedirect}
             className="w-full cursor-pointer overflow-hidden rounded-xl border border-transparent px-4 py-3 text-left text-sm font-medium text-[#b64055] transition-all hover:border-[#f0ccd3] hover:bg-[#fff2f4] hover:text-[#a73e51] flex items-center gap-4"
           >
             <LogOut size={20} strokeWidth={2} className="flex-shrink-0" />
