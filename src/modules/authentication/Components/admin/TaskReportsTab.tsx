@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 import { Check, ClipboardList, Download, FileText, LoaderCircle, MessageCircle, Paperclip, RefreshCw, Search, Trash2, Users, X } from 'lucide-react';
 import { adminService } from '../../services/adminService';
 import { taskService } from '../../../tasks/services/taskService';
 import { reportService } from '../../../chat/services/reportService';
+import { AdminListSkeleton } from '../ui/AdminFeedback';
 import type { ReportFile, ReportMessage, TaskReport } from '../../types/profile.types';
 
 function formatDate(value?: string) {
@@ -355,89 +357,90 @@ export default function TaskReportsTab({ fixedUserId }: TaskReportsTabProps = {}
             className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
               statusFilter === value
                 ? 'bg-[#263BAA] text-white'
-                : 'border border-[#d9deef] bg-white text-[#5b6685] hover:bg-[#eef1ff]'
+                : 'border border-adm-line-strong bg-adm-surface text-adm-muted hover:bg-adm-hover hover:text-adm-hover-text hover:border-adm-hover-border'
             }`}
           >
             {label}
           </button>
         ))}
       </div>
-      {uploadNotice && <p role="status" className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">{uploadNotice}</p>}
-      {uploadError && <p role="alert" className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{uploadError}</p>}
+      {uploadNotice && <p role="status" className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm font-medium text-adm-ok">{uploadNotice}</p>}
+      {uploadError && <p role="alert" className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-adm-danger">{uploadError}</p>}
       {!fixedMode && <form onSubmit={submitFilter} className="flex flex-col gap-2 sm:flex-row">
         <label htmlFor="task-report-user" className="sr-only">Filtrar por ID de usuario</label>
-        <div className="flex min-w-0 flex-1 items-center gap-2 rounded-xl border border-[#d7d3e3] bg-white px-3 focus-within:border-[#7183ff]">
-          <Search size={16} className="shrink-0 text-[#5b6685]" />
+        <div className="flex min-w-0 flex-1 items-center gap-2 rounded-xl border border-adm-line-strong bg-adm-surface px-3 focus-within:border-adm-accent">
+          <Search size={16} className="shrink-0 text-adm-muted" />
           <input
             id="task-report-user"
             value={userId}
             onChange={(event) => setUserId(event.target.value)}
             placeholder="Filtrar por ID de usuario"
-            className="min-w-0 flex-1 bg-transparent py-2.5 text-sm text-[#17213f] outline-none placeholder:text-[#5b6685]"
+            className="min-w-0 flex-1 bg-transparent py-2.5 text-sm text-adm-text outline-none placeholder:text-adm-muted"
           />
         </div>
         <button type="submit" disabled={loading} className="rounded-xl bg-[#263BAA] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#334bd1] disabled:opacity-50">
           Buscar
         </button>
-        {activeUserId && <button type="button" onClick={clearFilter} disabled={loading} className="rounded-xl border border-[#d7d3e3] px-4 py-2.5 text-sm font-semibold text-[#34405f] hover:bg-[#eef1ff] disabled:opacity-50">Ver todos</button>}
-        <button type="button" aria-label="Actualizar reportes" onClick={() => void loadReports(activeUserId)} disabled={loading} className="flex items-center justify-center rounded-xl border border-[#d7d3e3] px-3 py-2.5 text-[#34405f] hover:bg-[#eef1ff] disabled:opacity-50">
+        {activeUserId && <button type="button" onClick={clearFilter} disabled={loading} className="rounded-xl border border-adm-line-strong px-4 py-2.5 text-sm font-semibold text-adm-text2 hover:bg-adm-hover hover:text-adm-hover-text hover:border-adm-hover-border disabled:opacity-50">Ver todos</button>}
+        <button type="button" aria-label="Actualizar reportes" onClick={() => void loadReports(activeUserId)} disabled={loading} className="flex items-center justify-center rounded-xl border border-adm-line-strong px-3 py-2.5 text-adm-text2 hover:bg-adm-hover hover:text-adm-hover-text hover:border-adm-hover-border disabled:opacity-50">
           <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
         </button>
       </form>}
 
       {fixedMode ? (
         <div className="flex items-center justify-end">
-          <button type="button" aria-label="Actualizar reportes" onClick={() => void loadReports(fixedUserId?.trim() || '')} disabled={loading} className="flex items-center justify-center rounded-xl border border-[#d9deef] bg-white px-3 py-2 text-sm text-[#263BAA] shadow-sm hover:bg-[#f4f6fc] disabled:opacity-50">
+          <button type="button" aria-label="Actualizar reportes" onClick={() => void loadReports(fixedUserId?.trim() || '')} disabled={loading} className="flex items-center justify-center rounded-xl border border-adm-line-strong bg-adm-surface px-3 py-2 text-sm text-adm-accent shadow-sm hover:bg-adm-hover hover:text-adm-hover-text hover:border-adm-hover-border disabled:opacity-50">
             <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
           </button>
         </div>
       ) : activeUserId && (
-        <p className="text-xs text-[#5b6685]">Filtrando por usuario: <code className="text-[#34405f]">{activeUserId}</code></p>
+        <p className="text-xs text-adm-muted">Filtrando por usuario: <code className="text-adm-text2">{activeUserId}</code></p>
       )}
-      {error && <div role="alert" className="rounded-xl border border-rose-400/20 bg-rose-400/10 px-4 py-3 text-sm text-[#b64055]">{error}</div>}
+      {error && <div role="alert" className="rounded-xl border border-rose-400/20 bg-rose-400/10 px-4 py-3 text-sm text-adm-danger">{error}</div>}
       {loading ? (
-        <p className="py-6 text-center text-sm text-[#5b6685]">
-          Cargando reportes de tarea...
-        </p>
+        <AdminListSkeleton label="Cargando reportes de tarea..." rows={3} />
       ) : reports.length === 0 ? (
-        <div className={fixedMode ? 'rounded-xl border border-dashed border-[#d9deef] bg-[#f8f9fd] px-4 py-10 text-center' : 'rounded-xl border border-dashed border-[#d7d3e3] px-4 py-10 text-center'}>
-          <ClipboardList className="mx-auto mb-2 text-[#5b6685]" size={22} />
-          <p className="text-sm text-[#5b6685]">
+        <div className={fixedMode ? 'rounded-xl border border-dashed border-adm-line-strong bg-adm-soft px-4 py-10 text-center' : 'rounded-xl border border-dashed border-adm-line-strong px-4 py-10 text-center'}>
+          <ClipboardList className="mx-auto mb-2 text-adm-muted" size={22} />
+          <p className="text-sm text-adm-muted">
             {fixedUserId ? 'No hay reportes vinculados a tu sesión.' : 'No hay reportes de tarea.'}
           </p>
         </div>
       ) : (
         <div className="flex flex-col gap-2">
           {reports.map((report, index) => (
-            <article
+            <motion.article
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.28, delay: Math.min(index, 8) * 0.04, ease: 'easeOut' }}
               key={getReportId(report) ?? `${report.taskId}-${index}`}
               className={fixedMode
-                ? 'rounded-xl border border-[#dfe4f2] bg-[#f8f9fd] p-4 text-[#17213f]'
-                : 'rounded-xl border border-[#e2e5f5] bg-white p-4'}
+                ? 'rounded-xl border border-adm-line bg-adm-soft p-4 text-adm-text'
+                : 'rounded-xl border border-adm-line bg-adm-surface p-4'}
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-[#5b6685]">Tarea</p>
-                  {report.taskName && <p className="mt-1 break-words text-sm font-semibold text-[#17213f]">{report.taskName}</p>}
-                  <p className="mt-1 break-all font-mono text-xs text-[#5b6685]">{report.taskId}</p>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-adm-muted">Tarea</p>
+                  {report.taskName && <p className="mt-1 break-words text-sm font-semibold text-adm-text">{report.taskName}</p>}
+                  <p className="mt-1 break-all font-mono text-xs text-adm-muted">{report.taskId}</p>
                 </div>
-                {formatDate(report.createdAt) && <time dateTime={report.createdAt} className="text-xs text-[#5b6685]">{formatDate(report.createdAt)}</time>}
+                {formatDate(report.createdAt) && <time dateTime={report.createdAt} className="text-xs text-adm-muted">{formatDate(report.createdAt)}</time>}
               </div>
-              <p className="mt-3 whitespace-pre-wrap text-sm text-[#17213f]">{report.reason}</p>
+              <p className="mt-3 whitespace-pre-wrap text-sm text-adm-text">{report.reason}</p>
               {report.users && report.users.length > 0 && (
-                <div className="mt-3 flex items-start gap-2 text-xs text-[#5b6685]">
+                <div className="mt-3 flex items-start gap-2 text-xs text-adm-muted">
                   <Users size={14} className="mt-0.5 shrink-0" />
                   <span className="break-all">Participantes: {report.users.join(', ')}</span>
                 </div>
               )}
-              {report.id && <p className="mt-2 text-[11px] text-[#5b6685]">Reporte: {report.id}</p>}
+              {report.id && <p className="mt-2 text-[11px] text-adm-muted">Reporte: {report.id}</p>}
               <div className="mt-4 flex flex-wrap gap-2">
                 <button
                   type="button"
                   onClick={() => void openMessages(report)}
                   className={fixedMode
                     ? 'flex items-center gap-1.5 rounded-lg bg-[#263BAA] px-3 py-2 text-xs font-semibold text-white hover:bg-[#1a297a]'
-                    : 'flex items-center gap-1.5 rounded-lg border border-[#7183ff]/30 bg-[#263BAA]/25 px-3 py-2 text-xs font-semibold text-[#17213f] hover:bg-[#263BAA]/40'}
+                    : 'flex items-center gap-1.5 rounded-lg border border-adm-accent/30 bg-[#263BAA]/25 px-3 py-2 text-xs font-semibold text-adm-text hover:bg-[#263BAA]/40'}
                 >
                   <MessageCircle size={14} /> Ver mensajes
                 </button>
@@ -445,8 +448,8 @@ export default function TaskReportsTab({ fixedUserId }: TaskReportsTabProps = {}
                   type="button"
                   onClick={() => void openFiles(report)}
                   className={fixedMode
-                    ? 'flex items-center gap-1.5 rounded-lg border border-[#cfd6ea] bg-white px-3 py-2 text-xs font-semibold text-[#263BAA] hover:bg-[#eef1ff]'
-                    : 'flex items-center gap-1.5 rounded-lg border border-[#d7d3e3] bg-white px-3 py-2 text-xs font-semibold text-[#34405f] hover:bg-[#eef1ff]'}
+                    ? 'flex items-center gap-1.5 rounded-lg border border-adm-line-strong bg-adm-surface px-3 py-2 text-xs font-semibold text-adm-accent hover:bg-adm-hover hover:text-adm-hover-text hover:border-adm-hover-border'
+                    : 'flex items-center gap-1.5 rounded-lg border border-adm-line-strong bg-adm-surface px-3 py-2 text-xs font-semibold text-adm-text2 hover:bg-adm-hover hover:text-adm-hover-text hover:border-adm-hover-border'}
                 >
                   <FileText size={14} /> Ver archivos adjuntos
                 </button>
@@ -455,7 +458,7 @@ export default function TaskReportsTab({ fixedUserId }: TaskReportsTabProps = {}
                     type="button"
                     onClick={() => setResolveTarget(report)}
                     disabled={Boolean(resolvingReportId)}
-                    className="flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs font-semibold text-[#177245] hover:bg-emerald-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs font-semibold text-adm-ok hover:bg-emerald-500/20 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {resolvingReportId === getReportId(report) ? (
                       <LoaderCircle size={14} className="animate-spin" />
@@ -470,7 +473,7 @@ export default function TaskReportsTab({ fixedUserId }: TaskReportsTabProps = {}
                     type="button"
                     onClick={() => startUpload(report)}
                     disabled={Boolean(uploadingReportId)}
-                    className="flex items-center gap-1.5 rounded-lg border border-[#cfd6ea] bg-white px-3 py-2 text-xs font-semibold text-[#177245] hover:bg-[#e8f7ef] disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex items-center gap-1.5 rounded-lg border border-adm-line-strong bg-adm-surface px-3 py-2 text-xs font-semibold text-adm-ok hover:bg-emerald-500/15 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {uploadingReportId === getReportId(report) ? (
                       <LoaderCircle size={14} className="animate-spin" />
@@ -485,13 +488,13 @@ export default function TaskReportsTab({ fixedUserId }: TaskReportsTabProps = {}
                     type="button"
                     onClick={() => setDeleteTarget(report)}
                     disabled={Boolean(deletingReportId)}
-                    className="flex items-center gap-1.5 rounded-lg border border-rose-200 bg-white px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex items-center gap-1.5 rounded-lg border border-rose-500/30 bg-adm-surface px-3 py-2 text-xs font-semibold text-adm-danger hover:bg-rose-500/10 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     <Trash2 size={14} /> Eliminar reporte
                   </button>
                 )}
               </div>
-            </article>
+            </motion.article>
           ))}
         </div>
       )}
@@ -508,37 +511,37 @@ export default function TaskReportsTab({ fixedUserId }: TaskReportsTabProps = {}
           <section
             role="dialog"
             aria-modal="true"
-            className="relative z-10 max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-[#e4e8f3] bg-white p-5 text-[#17213f] shadow-2xl sm:p-6"
+            className="relative z-10 max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-adm-line bg-adm-surface p-5 text-adm-text shadow-2xl sm:p-6"
           >
-            <header className="flex items-start justify-between gap-4 border-b border-[#e4e8f3] pb-4">
+            <header className="flex items-start justify-between gap-4 border-b border-adm-line pb-4">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-[#5b6685]">
+                <p className="text-xs font-semibold uppercase tracking-wide text-adm-muted">
                   {detailView === 'messages' ? 'Mensajes del reporte' : 'Archivos adjuntos'}
                 </p>
                 <h2 className="mt-1 text-lg font-bold">{selectedReport.taskName || selectedReport.taskId}</h2>
-                {selectedReport.taskName && <p className="mt-1 break-all font-mono text-xs text-[#5b6685]">{selectedReport.taskId}</p>}
+                {selectedReport.taskName && <p className="mt-1 break-all font-mono text-xs text-adm-muted">{selectedReport.taskId}</p>}
               </div>
-              <button type="button" aria-label="Cerrar" onClick={closeDetail} className="rounded-lg p-2 text-[#5b6685] hover:bg-[#f1f3fa] hover:text-[#17213f]">
+              <button type="button" aria-label="Cerrar" onClick={closeDetail} className="rounded-lg p-2 text-adm-muted hover:bg-adm-hover hover:text-adm-hover-text hover:border-adm-hover-border hover:text-adm-text">
                 <X size={18} />
               </button>
             </header>
 
             {detailLoading ? (
-              <div className="flex items-center justify-center gap-2 py-10 text-sm text-[#5b6685]">
+              <div className="flex items-center justify-center gap-2 py-10 text-sm text-adm-muted">
                 <LoaderCircle size={17} className="animate-spin" /> Cargando...
               </div>
             ) : detailError ? (
-              <p role="alert" className="mt-4 rounded-xl bg-[#fff0f2] px-4 py-3 text-sm text-[#b64055]">{detailError}</p>
+              <p role="alert" className="mt-4 rounded-xl bg-rose-500/10 px-4 py-3 text-sm text-adm-danger">{detailError}</p>
             ) : detailView === 'messages' ? (
               messages.length === 0 ? (
-                <p className="py-8 text-center text-sm text-[#5b6685]">Este reporte no tiene mensajes disponibles.</p>
+                <p className="py-8 text-center text-sm text-adm-muted">Este reporte no tiene mensajes disponibles.</p>
               ) : (
                 <div className="mt-4 flex flex-col gap-3">
                   {messages.map((message, index) => (
-                    <article key={message.messageId ?? `${message.timestamp}-${index}`} className="rounded-xl border border-[#e4e8f3] bg-[#f8f9fd] p-4">
+                    <article key={message.messageId ?? `${message.timestamp}-${index}`} className="rounded-xl border border-adm-line bg-adm-soft p-4">
                       <div className="flex flex-wrap justify-between gap-2">
-                        <span className="break-all text-xs font-semibold text-[#263BAA]">{message.senderId}</span>
-                        {formatDate(message.timestamp) && <time className="text-xs text-[#5b6685]">{formatDate(message.timestamp)}</time>}
+                        <span className="break-all text-xs font-semibold text-adm-accent">{message.senderId}</span>
+                        {formatDate(message.timestamp) && <time className="text-xs text-adm-muted">{formatDate(message.timestamp)}</time>}
                       </div>
                       <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed">{message.content}</p>
                     </article>
@@ -546,7 +549,7 @@ export default function TaskReportsTab({ fixedUserId }: TaskReportsTabProps = {}
                 </div>
               )
             ) : files.length === 0 ? (
-              <p className="py-8 text-center text-sm text-[#5b6685]">Este reporte no tiene archivos adjuntos.</p>
+              <p className="py-8 text-center text-sm text-adm-muted">Este reporte no tiene archivos adjuntos.</p>
             ) : (
               <div className="mt-4 flex flex-col gap-2">
                 {files.map((file, index) => (
@@ -555,13 +558,13 @@ export default function TaskReportsTab({ fixedUserId }: TaskReportsTabProps = {}
                     href={file.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center justify-between gap-3 rounded-xl border border-[#e4e8f3] px-4 py-3 hover:bg-[#f8f9fd]"
+                    className="flex items-center justify-between gap-3 rounded-xl border border-adm-line px-4 py-3 hover:bg-adm-hover hover:text-adm-hover-text hover:border-adm-hover-border"
                   >
                     <div className="min-w-0">
                       <p className="truncate text-sm font-semibold">{file.fileName || 'Archivo adjunto'}</p>
-                      <p className="mt-1 text-xs text-[#5b6685]">{formatFileSize(file.size)}</p>
+                      <p className="mt-1 text-xs text-adm-muted">{formatFileSize(file.size)}</p>
                     </div>
-                    <Download size={17} className="shrink-0 text-[#263BAA]" />
+                    <Download size={17} className="shrink-0 text-adm-accent" />
                   </a>
                 ))}
               </div>
@@ -580,18 +583,18 @@ export default function TaskReportsTab({ fixedUserId }: TaskReportsTabProps = {}
             onClick={() => setDeleteTarget(null)}
             className="fixed inset-0 h-full w-full cursor-default border-0 bg-transparent"
           />
-          <section role="dialog" aria-modal="true" aria-labelledby="delete-report-title" className="relative z-10 w-full max-w-md rounded-2xl border border-[#e4e8f3] bg-white p-6 text-[#17213f] shadow-2xl">
+          <section role="dialog" aria-modal="true" aria-labelledby="delete-report-title" className="relative z-10 w-full max-w-md rounded-2xl border border-adm-line bg-adm-surface p-6 text-adm-text shadow-2xl">
             <div className="flex items-start gap-3">
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-rose-50 text-rose-600">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-rose-500/10 text-adm-danger">
                 <Trash2 size={19} />
               </span>
               <div>
                 <h2 id="delete-report-title" className="text-lg font-bold">¿Estás seguro que quieres eliminar este reporte?</h2>
-                <p className="mt-2 text-sm leading-relaxed text-[#5b6685]">Esta acción eliminará el reporte de forma permanente.</p>
+                <p className="mt-2 text-sm leading-relaxed text-adm-muted">Esta acción eliminará el reporte de forma permanente.</p>
               </div>
             </div>
             <footer className="mt-6 flex justify-end gap-3">
-              <button type="button" disabled={Boolean(deletingReportId)} onClick={() => setDeleteTarget(null)} className="rounded-xl border border-[#d9deef] px-4 py-2.5 text-sm font-semibold text-[#5b6685] hover:bg-[#f4f6fc] disabled:opacity-50">Cancelar</button>
+              <button type="button" disabled={Boolean(deletingReportId)} onClick={() => setDeleteTarget(null)} className="rounded-xl border border-adm-line-strong px-4 py-2.5 text-sm font-semibold text-adm-muted hover:bg-adm-hover hover:text-adm-hover-text hover:border-adm-hover-border disabled:opacity-50">Cancelar</button>
               <button type="button" disabled={Boolean(deletingReportId)} onClick={() => void confirmDeleteReport()} className="rounded-xl bg-rose-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-50">
                 {deletingReportId ? 'Eliminando...' : 'Sí, eliminar reporte'}
               </button>
@@ -609,13 +612,13 @@ export default function TaskReportsTab({ fixedUserId }: TaskReportsTabProps = {}
             onClick={() => setResolveTarget(null)}
             className="fixed inset-0 h-full w-full cursor-default border-0 bg-transparent"
           />
-          <section role="dialog" aria-modal="true" aria-labelledby="resolve-report-title" className="relative z-10 w-full max-w-md rounded-2xl border border-[#e4e8f3] bg-white p-6 text-[#17213f] shadow-2xl">
+          <section role="dialog" aria-modal="true" aria-labelledby="resolve-report-title" className="relative z-10 w-full max-w-md rounded-2xl border border-adm-line bg-adm-surface p-6 text-adm-text shadow-2xl">
             <h2 id="resolve-report-title" className="text-lg font-bold">¿Resolver este reporte de tarea?</h2>
-            <p className="mt-2 text-sm leading-relaxed text-[#5b6685]">
+            <p className="mt-2 text-sm leading-relaxed text-adm-muted">
               El reporte quedará marcado como RESOLVED.
             </p>
             <footer className="mt-6 flex justify-end gap-3">
-              <button type="button" disabled={Boolean(resolvingReportId)} onClick={() => setResolveTarget(null)} className="rounded-xl border border-[#d9deef] px-4 py-2.5 text-sm font-semibold text-[#5b6685] hover:bg-[#f4f6fc] disabled:opacity-50">Cancelar</button>
+              <button type="button" disabled={Boolean(resolvingReportId)} onClick={() => setResolveTarget(null)} className="rounded-xl border border-adm-line-strong px-4 py-2.5 text-sm font-semibold text-adm-muted hover:bg-adm-hover hover:text-adm-hover-text hover:border-adm-hover-border disabled:opacity-50">Cancelar</button>
               <button type="button" disabled={Boolean(resolvingReportId)} onClick={() => void confirmResolveReport()} className="rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50">
                 {resolvingReportId ? 'Resolviendo...' : 'Resolver reporte'}
               </button>

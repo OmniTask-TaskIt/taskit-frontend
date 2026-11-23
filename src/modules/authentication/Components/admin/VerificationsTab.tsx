@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
-import { ChevronLeft, ChevronRight, ExternalLink, ShieldCheck, ShieldX } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ExternalLink, ShieldCheck, ShieldX, UserCheck } from 'lucide-react';
 import { adminService } from '../../services/adminService';
 import type { Profile, VerificationStatus } from '../../types/profile.types';
 import type { VerificationDecision } from '../../types/admin.types';
 import StatusBadge from '../ui/StatusBadge';
 import ReasonPromptModal from '../ui/ReasonPromptModal';
+import { AdminEmptyState, AdminListSkeleton, AdminRow } from '../ui/AdminFeedback';
 
 const STATUS_FILTERS: { value: VerificationStatus; label: string }[] = [
   { value: 'PENDING_REVIEW', label: 'En revisión' },
@@ -92,7 +93,7 @@ export default function VerificationsTab() {
             onClick={() => setStatus(f.value)}
             aria-pressed={status === f.value}
             className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
-              status === f.value ? 'bg-[#263BAA] text-white' : 'bg-white text-[#5b6685] hover:bg-[#eef1ff]'
+              status === f.value ? 'bg-[#263BAA] text-white' : 'bg-adm-surface text-adm-muted hover:bg-adm-hover hover:text-adm-hover-text hover:border-adm-hover-border'
             }`}
           >
             {f.label}
@@ -100,35 +101,36 @@ export default function VerificationsTab() {
         ))}
       </div>
 
-      {error && <p className="text-sm text-[#b64055]">{error}</p>}
-      {docError && <p className="text-sm text-[#b64055]">{docError}</p>}
+      {error && <p className="text-sm text-adm-danger">{error}</p>}
+      {docError && <p className="text-sm text-adm-danger">{docError}</p>}
 
       {loading ? (
-        <p className="text-sm text-[#5b6685]">Cargando verificaciones...</p>
+        <AdminListSkeleton label="Cargando verificaciones..." />
       ) : profiles.length === 0 ? (
-        <p className="text-sm text-[#5b6685]">No hay verificaciones con ese estado.</p>
+        <AdminEmptyState icon={<UserCheck size={22} />}>No hay verificaciones con ese estado.</AdminEmptyState>
       ) : (
         <div className="flex flex-col gap-2">
-          {profiles.map((profile) => (
-            <div
+          {profiles.map((profile, index) => (
+            <AdminRow
               key={profile.userId}
-              className="flex flex-col gap-3 rounded-xl border border-[#e2e5f5] bg-white p-4 sm:flex-row sm:items-center sm:justify-between"
+              index={index}
+              className="flex flex-col gap-3 rounded-xl border border-adm-line bg-adm-surface p-4 transition-colors hover:border-adm-hover-border sm:flex-row sm:items-center sm:justify-between"
             >
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="truncate text-sm font-semibold text-[#17213f]">
+                  <span className="truncate text-sm font-semibold text-adm-text">
                     {profile.fullName || 'Profesional TaskIt'}
                   </span>
                   <StatusBadge status={profile.identityVerificationStatus} />
                 </div>
-                <p className="mt-0.5 truncate text-xs text-[#5b6685]">{profile.userId}</p>
+                <p className="mt-0.5 truncate text-xs text-adm-muted">{profile.userId}</p>
               </div>
 
               <div className="flex flex-shrink-0 flex-wrap gap-2">
                 <button
                   onClick={() => viewDocument(profile.userId)}
                   disabled={loadingDoc === profile.userId}
-                  className="flex items-center gap-1 rounded-lg border border-[#d7d3e3] bg-white px-3 py-1.5 text-xs font-semibold text-[#34405f] hover:bg-[#eef1ff] transition-colors disabled:opacity-60"
+                  className="flex items-center gap-1 rounded-lg border border-adm-line-strong bg-adm-surface px-3 py-1.5 text-xs font-semibold text-adm-text2 hover:bg-adm-hover hover:text-adm-hover-text hover:border-adm-hover-border transition-colors disabled:opacity-60"
                 >
                   <ExternalLink size={13} /> {loadingDoc === profile.userId ? 'Abriendo...' : 'Ver documento'}
                 </button>
@@ -136,31 +138,31 @@ export default function VerificationsTab() {
                   <>
                     <button
                       onClick={() => setPendingDecision({ profile, decision: 'APPROVED' })}
-                      className="flex items-center gap-1 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-[#177245] hover:bg-emerald-500/20 transition-colors"
+                      className="flex items-center gap-1 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-adm-ok hover:bg-emerald-500/20 transition-colors"
                     >
                       <ShieldCheck size={13} /> Aprobar
                     </button>
                     <button
                       onClick={() => setPendingDecision({ profile, decision: 'REJECTED' })}
-                      className="flex items-center gap-1 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 text-xs font-semibold text-[#b64055] hover:bg-rose-500/20 transition-colors"
+                      className="flex items-center gap-1 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 text-xs font-semibold text-adm-danger hover:bg-rose-500/20 transition-colors"
                     >
                       <ShieldX size={13} /> Rechazar
                     </button>
                   </>
                 )}
               </div>
-            </div>
+            </AdminRow>
           ))}
         </div>
       )}
 
       {totalPages > 1 && (
-        <div className="flex items-center justify-between text-xs text-[#5b6685]">
+        <div className="flex items-center justify-between text-xs text-adm-muted">
           <button
             onClick={() => fetchQueue(page - 1)}
             disabled={page === 0 || loading}
             aria-label="Página anterior"
-            className="flex items-center gap-1 rounded-lg bg-white px-3 py-1.5 hover:bg-[#eef1ff] disabled:opacity-40"
+            className="flex items-center gap-1 rounded-lg bg-adm-surface px-3 py-1.5 hover:bg-adm-hover hover:text-adm-hover-text hover:border-adm-hover-border disabled:opacity-40"
           >
             <ChevronLeft size={14} /> Anterior
           </button>
@@ -171,7 +173,7 @@ export default function VerificationsTab() {
             onClick={() => fetchQueue(page + 1)}
             disabled={page + 1 >= totalPages || loading}
             aria-label="Página siguiente"
-            className="flex items-center gap-1 rounded-lg bg-white px-3 py-1.5 hover:bg-[#eef1ff] disabled:opacity-40"
+            className="flex items-center gap-1 rounded-lg bg-adm-surface px-3 py-1.5 hover:bg-adm-hover hover:text-adm-hover-text hover:border-adm-hover-border disabled:opacity-40"
           >
             Siguiente <ChevronRight size={14} />
           </button>

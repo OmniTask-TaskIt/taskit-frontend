@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Check, X as XIcon } from 'lucide-react';
+import { Check, Flag, X as XIcon } from 'lucide-react';
 import { adminService } from '../../services/adminService';
 import type { AdminReport, Report } from '../../types/profile.types';
 import StatusBadge from '../ui/StatusBadge';
 import ReasonPromptModal from '../ui/ReasonPromptModal';
+import { AdminEmptyState, AdminListSkeleton, AdminRow } from '../ui/AdminFeedback';
 
 const STATUS_FILTERS: { value: Report['status'] | ''; label: string }[] = [
   { value: 'OPEN', label: 'Abiertos' },
@@ -25,11 +26,11 @@ function formatDate(iso: string) {
 /** Persona involucrada en un reporte: nombre y correo si existen; si la cuenta ya no existe, su ID. */
 function Person({ id, name, email }: { id: string; name?: string | null; email?: string | null }) {
   const label = name || email;
-  if (!label) return <code className="text-[#5b6685]">{id}</code>;
+  if (!label) return <code className="text-adm-muted">{id}</code>;
   return (
     <span title={id}>
-      <strong className="font-semibold text-[#34405f]">{label}</strong>
-      {name && email && <span className="text-[#5b6685]"> ({email})</span>}
+      <strong className="font-semibold text-adm-text2">{label}</strong>
+      {name && email && <span className="text-adm-muted"> ({email})</span>}
     </span>
   );
 }
@@ -88,7 +89,7 @@ export default function ReportsTab() {
             key={f.value}
             onClick={() => setStatus(f.value)}
             className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
-              status === f.value ? 'bg-[#263BAA] text-white' : 'bg-white text-[#5b6685] hover:bg-[#eef1ff]'
+              status === f.value ? 'bg-[#263BAA] text-white' : 'bg-adm-surface text-adm-muted hover:bg-adm-hover hover:text-adm-hover-text hover:border-adm-hover-border'
             }`}
           >
             {f.label}
@@ -96,59 +97,63 @@ export default function ReportsTab() {
         ))}
       </div>
 
-      {error && <p className="text-sm text-[#b64055]">{error}</p>}
+      {error && <p className="text-sm text-adm-danger">{error}</p>}
       {loading ? (
-        <p className="text-sm text-[#5b6685]">Cargando reportes...</p>
+        <AdminListSkeleton label="Cargando reportes..." />
       ) : reports.length === 0 ? (
-        <p className="text-sm text-[#5b6685]">No hay reportes con ese filtro.</p>
+        <AdminEmptyState icon={<Flag size={22} />}>No hay reportes con ese filtro.</AdminEmptyState>
       ) : (
         <div className="flex flex-col gap-2">
-          {reports.map((report) => (
-            <div key={report.id} className="rounded-xl border border-[#e2e5f5] bg-white p-4">
+          {reports.map((report, index) => (
+            <AdminRow
+              key={report.id}
+              index={index}
+              className="rounded-xl border border-adm-line bg-adm-surface p-4 transition-colors hover:border-adm-hover-border"
+            >
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <span className="text-sm font-semibold text-[#17213f]">{report.reason}</span>
+                <span className="text-sm font-semibold text-adm-text">{report.reason}</span>
                 <div className="flex items-center gap-2">
                   <StatusBadge status={report.status} />
-                  <span className="text-[11px] text-[#5b6685]">{formatDate(report.createdAt)}</span>
+                  <span className="text-[11px] text-adm-muted">{formatDate(report.createdAt)}</span>
                 </div>
               </div>
 
-              {report.comment && <p className="mt-2 text-sm text-[#34405f]">{report.comment}</p>}
+              {report.comment && <p className="mt-2 text-sm text-adm-text2">{report.comment}</p>}
 
-              <p className="mt-2 text-[11px] text-[#5b6685]">
+              <p className="mt-2 text-[11px] text-adm-muted">
                 Reportado por <Person id={report.reporterId} name={report.reporterName} email={report.reporterEmail} /> contra{' '}
                 <Person id={report.revieweeId} name={report.revieweeName} email={report.revieweeEmail} />
               </p>
 
               {report.resolutionNote && (
-                <p className="mt-1 text-[11px] text-[#5b6685]">Resolución: {report.resolutionNote}</p>
+                <p className="mt-1 text-[11px] text-adm-muted">Resolución: {report.resolutionNote}</p>
               )}
 
               {report.status === 'OPEN' && (
                 <div className="mt-3 flex flex-wrap gap-2">
                   <button
                     onClick={() => setPendingAction({ report, nextStatus: 'RESOLVED' })}
-                    className="flex items-center gap-1 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-[#177245] hover:bg-emerald-500/20 transition-colors"
+                    className="flex items-center gap-1 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-adm-ok hover:bg-emerald-500/20 transition-colors"
                   >
                     <Check size={13} /> Resolver
                   </button>
                   <button
                     onClick={() => setPendingAction({ report, nextStatus: 'DISMISSED' })}
-                    className="flex items-center gap-1 rounded-lg border border-[#d7d3e3] bg-white px-3 py-1.5 text-xs font-semibold text-[#5b6685] hover:bg-[#eef1ff] transition-colors"
+                    className="flex items-center gap-1 rounded-lg border border-adm-line-strong bg-adm-surface px-3 py-1.5 text-xs font-semibold text-adm-muted hover:bg-adm-hover hover:text-adm-hover-text hover:border-adm-hover-border transition-colors"
                   >
                     <XIcon size={13} /> Descartar
                   </button>
                 </div>
               )}
-            </div>
+            </AdminRow>
           ))}
 
           {totalPages > 1 && (
-            <div className="mt-2 flex items-center justify-center gap-3 text-xs text-[#5b6685]">
+            <div className="mt-2 flex items-center justify-center gap-3 text-xs text-adm-muted">
               <button
                 disabled={page === 0}
                 onClick={() => fetchReports(page - 1)}
-                className="rounded-lg border border-[#d7d3e3] px-3 py-1.5 disabled:opacity-30"
+                className="rounded-lg border border-adm-line-strong px-3 py-1.5 disabled:opacity-30"
               >
                 Anterior
               </button>
@@ -158,7 +163,7 @@ export default function ReportsTab() {
               <button
                 disabled={page + 1 >= totalPages}
                 onClick={() => fetchReports(page + 1)}
-                className="rounded-lg border border-[#d7d3e3] px-3 py-1.5 disabled:opacity-30"
+                className="rounded-lg border border-adm-line-strong px-3 py-1.5 disabled:opacity-30"
               >
                 Siguiente
               </button>

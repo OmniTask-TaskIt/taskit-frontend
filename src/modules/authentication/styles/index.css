@@ -6,6 +6,123 @@
   --color-nordicDark: #1a297a;
 }
 
+/*
+ * Tokens del panel de administración (modo claro / oscuro).
+ * Se exponen como utilidades de Tailwind: bg-adm-surface, text-adm-muted, border-adm-line, etc.
+ * Los valores claros viven en :root para que los componentes compartidos con el dashboard
+ * (p. ej. TaskReportsTab) sigan viéndose igual fuera del panel.
+ */
+@theme inline {
+  --color-adm-bg: var(--adm-bg);
+  --color-adm-surface: var(--adm-surface);
+  --color-adm-soft: var(--adm-soft);
+  --color-adm-line: var(--adm-line);
+  --color-adm-line-strong: var(--adm-line-strong);
+  --color-adm-text: var(--adm-text);
+  --color-adm-text2: var(--adm-text2);
+  --color-adm-muted: var(--adm-muted);
+  --color-adm-accent: var(--adm-accent);
+  --color-adm-hover: var(--adm-hover);
+  --color-adm-hover-text: var(--adm-hover-text);
+  --color-adm-hover-border: var(--adm-hover-border);
+  --color-adm-ok: var(--adm-ok);
+  --color-adm-warn: var(--adm-warn);
+  --color-adm-orange: var(--adm-orange);
+  --color-adm-danger: var(--adm-danger);
+}
+
+:root,
+.admin-theme {
+  --adm-bg: #eef2fb;
+  --adm-surface: #ffffff;
+  --adm-soft: #f5f7ff;
+  --adm-line: #e2e5f5;
+  --adm-line-strong: #d7d3e3;
+  --adm-text: #17213f;
+  --adm-text2: #34405f;
+  --adm-muted: #5b6685;
+  --adm-accent: #263baa;
+  /* Hover azul (como el menú de TaskIt): los controles neutros se llenan de azul al pasar el cursor */
+  --adm-hover: #4f63d8;
+  --adm-hover-text: #ffffff;
+  --adm-hover-border: #4f63d8;
+  --adm-ok: #177245;
+  --adm-warn: #9a5b00;
+  --adm-orange: #9a3412;
+  --adm-danger: #b64055;
+}
+
+.admin-theme[data-theme='dark'] {
+  color-scheme: dark;
+  --adm-bg: #080d20;
+  --adm-surface: #121932;
+  --adm-soft: #0d1329;
+  --adm-line: #212a4a;
+  --adm-line-strong: #2e3963;
+  --adm-text: #eef1ff;
+  --adm-text2: #c5cdea;
+  --adm-muted: #8e9abd;
+  --adm-accent: #8fa0ff;
+  --adm-hover: rgba(113, 131, 255, 0.3);
+  --adm-hover-text: #ffffff;
+  --adm-hover-border: #6d7df0;
+  --adm-ok: #5fd69b;
+  --adm-warn: #f5bd4f;
+  --adm-orange: #fb9d62;
+  --adm-danger: #ff7f95;
+}
+
+/* Detalles de interacción del panel: foco visible, respuesta al presionar y transiciones suaves */
+.admin-theme :where(button, a, select, input, textarea) {
+  transition-property: background-color, color, border-color, box-shadow, transform, opacity;
+  transition-duration: 0.18s;
+  transition-timing-function: ease;
+}
+.admin-theme :where(button, a):focus-visible,
+.admin-theme :where(select, input, textarea):focus-visible {
+  outline: 2px solid var(--adm-accent);
+  outline-offset: 2px;
+}
+.admin-theme button:not(:disabled):active {
+  transform: scale(0.97);
+}
+.admin-theme button:not(:disabled):hover {
+  box-shadow: 0 6px 16px -8px rgba(38, 59, 170, 0.5);
+}
+.admin-theme[data-theme='dark'] button:not(:disabled):hover {
+  box-shadow: 0 6px 18px -8px rgba(113, 131, 255, 0.55);
+}
+
+/* Esqueleto de carga */
+@keyframes adm-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+.adm-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--adm-line);
+}
+.adm-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(143, 160, 255, 0.18), transparent);
+  animation: adm-shimmer 1.4s infinite;
+}
+
+/* Brillo que cruza las tarjetas al pasar el cursor (pantalla de selección de rol) */
+.role-card .role-shine {
+  transform: translateX(-120%) skewX(-18deg);
+  transition: transform 0.7s ease;
+}
+.role-card:hover .role-shine,
+.role-card:focus-visible .role-shine {
+  transform: translateX(260%) skewX(-18deg);
+}
+
 body {
   background-color: #f5f7fb;
   color: #17213f;
